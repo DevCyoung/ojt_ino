@@ -18,7 +18,7 @@ PathManager::PathManager()
 		}			
 	}
 
-	wcscat_s(mResourcePath, L"\\Resources");
+	wcscat_s(mResourcePath, L"\\bin\\Resources");
 }
 
 PathManager::~PathManager()
