@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>$(SolutionDir)ojt_c41;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(SolutionDIr)lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin\Release</OutDir>
+    <OutDir>$(SolutionDir)bin\Release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -1,6 +1,4 @@
-﻿// ojt_c41.cpp : 애플리케이션에 대한 진입점을 정의합니다.
-//
-#include "pch.h"
+﻿#include "pch.h"
 #include "framework.h"
 #include "ojt_c41.h"
 
@@ -10,6 +8,9 @@
 #include "SceneManager.h"
 
 #define MAX_LOADSTRING 100
+
+
+
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -224,3 +225,4 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
+
