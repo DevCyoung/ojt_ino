@@ -373,7 +373,7 @@
     <ClCompile Include="MeshRendererUI.cpp" />
     <ClCompile Include="MeshUI.cpp" />
     <ClCompile Include="MessageManager.cpp" />
-    <ClCompile Include="ojt_c41.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="PanelUI.cpp" />
     <ClCompile Include="PanelUIManager.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />

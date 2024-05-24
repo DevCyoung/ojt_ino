@@ -776,7 +776,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>windows</Filter>
     </ClCompile>
-    <ClCompile Include="ojt_c41.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
