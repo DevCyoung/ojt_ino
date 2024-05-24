@@ -1,16 +1,11 @@
 ﻿#include "pch.h"
 #include "framework.h"
 #include "ojt_c41.h"
-
 #include "Engine.h"
 #include "Editor.h"
-
 #include "SceneManager.h"
 
 #define MAX_LOADSTRING 100
-
-
-
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -225,4 +220,3 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
-
