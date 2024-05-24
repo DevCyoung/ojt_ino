@@ -59,7 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // 기본 메시지 루프입니다:
 
-    Engine::initialize(gHwnd, 1280, 720);
+    Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
     //Content::initialize();
     SceneManager::GetInstance()->LoadScene(new Scene);
     Editor::initialize();
@@ -109,7 +109,11 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
+
+    //Editor
+    wcex.lpfnWndProc = WndProcImGUI;
+    //wcex.lpfnWndProc    = WndProc;
+
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;

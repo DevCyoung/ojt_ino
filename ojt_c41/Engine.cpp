@@ -23,7 +23,7 @@ Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderT
 	, mGraphicDevice(new GraphicDeviceDX11(mHwnd, mRenderTargetWidth, mRenderTargetHeight))
 {
 	setWindowSize(mRenderTargetWidth, mRenderTargetHeight);
-	//FBXLoadManager::initialize();
+	FBXLoadManager::initialize();
 	//Fmod::Initialize();	
 	TimeManager::initialize();
 	WindowManager::initialize();
