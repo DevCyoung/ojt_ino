@@ -71,23 +71,28 @@ void EditorSetting::drawForm()
 
 
 	//if (CarSimulation.)
+
+	const float GRAPH_MIN = -0.05f;
+	const float GRAPH_MAX =  0.05f;
+	const float GRAPH_HEIGHT = 100.f;
+
 	if (mCarSumulation.GetSampleDataCount() >= 70)
 	{
-		ImGui::PlotLines("ZsPos"	, funcZsPos		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotLines("ZsSpeed"	, funcZsSpeed	, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotLines("ZsAcc"	, funcZsAcc		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotLines("ZuPos"	, funcZuPos		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotLines("ZuSpeed"	, funcZuSpeed	, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotLines("ZuAcc"	, funcZuAcc		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotLines("Zr"		, funcZr		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotLines("ZsPos"	, funcZsPos		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotLines("ZsSpeed"	, funcZsSpeed	, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotLines("ZsAcc"	, funcZsAcc		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotLines("ZuPos"	, funcZuPos		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotLines("ZuSpeed"	, funcZuSpeed	, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotLines("ZuAcc"	, funcZuAcc		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotLines("Zr"		, funcZr		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
 
-		ImGui::PlotHistogram("ZsPos", funcZsPos, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotHistogram("ZsSpeed", funcZsSpeed, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotHistogram("ZsAcc", funcZsAcc, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotHistogram("ZuPos", funcZuPos, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotHistogram("ZuSpeed", funcZuSpeed, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotHistogram("ZuAcc", funcZuAcc, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
-		ImGui::PlotHistogram("Zr", funcZr, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotHistogram("ZsPos", funcZsPos		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotHistogram("ZsSpeed", funcZsSpeed	, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotHistogram("ZsAcc", funcZsAcc		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotHistogram("ZuPos", funcZuPos		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotHistogram("ZuSpeed", funcZuSpeed	, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotHistogram("ZuAcc", funcZuAcc		, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+		ImGui::PlotHistogram("Zr", funcZr			, &mCarSumulation, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
 
 		//ImGui::PlotLines("XPos", func, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
 		//ImGui::PlotLines("XSpeed", func, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));		
