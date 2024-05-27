@@ -10,8 +10,8 @@ CarSimulation::CarSimulation()
 	, mCS(1000.0f)
 	, mKT(18000.0f)
 	, mSpeed(10.0f)
-	, mBumpStart(5.0f)
-	, mBumpEnd(10.0f)
+	, mBumpStart(0.0f)
+	, mBumpEnd(3.0f)
 	, mBumpAmp(0.05f)
 	, mSimTime(0.0f)
 	, x{0, }
@@ -38,19 +38,19 @@ void CarSimulation::Update()
 
 	if (t1 <= mSimTime && mSimTime < t2)
 	{
-		zr = -mBumpAmp * sin(2.0f * XM_PI * (t2 - t1) / 2.0f * (mSimTime - t1));
+		zr = -mBumpAmp * sin(2.0f * XM_PI/(t2 - t1) / 2.0f * (mSimTime - t1));
 	}
 
-	xdot[0] = x[1];	
-	xdot[1] = (-mKS * (x[0] - x[2]) - mCS * (x[1] - x[3])) / mMS;
+	xdot[0] = x[1];
+	xdot[1] = (-mKS * (x[0] - x[2]) -mCS * (x[1] - x[3])) / mMS;
 	xdot[2] = x[3];
 	xdot[3] = (mKS * (x[0] - x[2]) + mCS * (x[1] - x[3]) - mKT * (x[2] - zr)) / mMU;
 
 	//РћКа
-	x[0] +=  mSimTime * xdot[0];
-	x[1] +=  mSimTime * xdot[1];
-	x[2] +=  mSimTime * xdot[2];
-	x[3] +=  mSimTime * xdot[3];
+	x[0] = x[0] + mSamplingTime * xdot[0];
+	x[1] = x[1] + mSamplingTime * xdot[1];
+	x[2] = x[2] + mSamplingTime * xdot[2];
+	x[3] = x[3] + mSamplingTime * xdot[3];
 
 	tSampleData sampleData = {};
 
@@ -69,7 +69,7 @@ void CarSimulation::Update()
 }
 
 void CarSimulation::SaveData(const wchar_t* const filePath)
-{
+{	
 	//FILE* file = nullptr;
 	//_wfopen_s(&file, filePath, L"wb");
 	//

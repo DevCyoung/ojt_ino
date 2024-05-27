@@ -38,6 +38,61 @@ void EditorSetting::drawForm()
 
 	ImGui::Begin("Editor Setting");		
 
+
+	static int func_type = 0, display_count = 10000;
+
+	
+
+	struct Funcs
+	{
+		static float ZsPos(CarSimulation* carSim, int i) { return carSim->GetSampleData(i).ZsPos; }
+		static float ZsSpeed(CarSimulation* carSim, int i) { return carSim->GetSampleData(i).ZsSpeed; }
+		static float ZsAcc(CarSimulation* carSim, int i) { return carSim->GetSampleData(i).ZsAcc; }
+		static float ZuPos(CarSimulation* carSim, int i) { return carSim->GetSampleData(i).ZuPos; }
+		static float ZuSpeed(CarSimulation* carSim, int i) { return carSim->GetSampleData(i).ZuSpeed; }
+		static float ZuAcc(CarSimulation* carSim, int i) {	return carSim->GetSampleData(i).ZuAcc; }
+		static float Zr(CarSimulation* carSim, int i) {		return carSim->GetSampleData(i).Zr; }
+		static float XPos(CarSimulation* carSim, int i) { return carSim->GetSampleData(i).xPos; }
+		static float XSpeed(CarSimulation* carSim, int i) { return carSim->GetSampleData(i).xSpeed; }
+		//static float Saw(void*, int i) { return (i & 1) ? 1.0f : -1.0f; }
+	};
+
+	float (*funcZsPos)(void*, int) = (float (*)(void*, int))Funcs::ZsPos;
+	float (*funcZsSpeed)(void*, int) = (float (*)(void*, int))Funcs::ZsSpeed;
+	float (*funcZsAcc)(void*, int) = (float (*)(void*, int))Funcs::ZsAcc;
+	float (*funcZuPos)(void*, int) = (float (*)(void*, int))Funcs::ZuPos;
+	float (*funcZuSpeed)(void*, int) = (float (*)(void*, int))Funcs::ZuSpeed;
+	float (*funcZuAcc)(void*, int) = (float (*)(void*, int))Funcs::ZuAcc;
+	float (*funcZr)(void*, int) = (float (*)(void*, int))Funcs::Zr;
+
+	//float (*funcXPos)(void*, int) = (float (*)(void*, int))Funcs::XPos;
+	//float (*funcXSpeed)(void*, int) = (float (*)(void*, int))Funcs::XSpeed;
+
+
+
+	//if (CarSimulation.)
+	if (mCarSumulation.GetSampleDataCount() >= 70)
+	{
+		ImGui::PlotLines("ZsPos"	, funcZsPos		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotLines("ZsSpeed"	, funcZsSpeed	, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotLines("ZsAcc"	, funcZsAcc		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotLines("ZuPos"	, funcZuPos		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotLines("ZuSpeed"	, funcZuSpeed	, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotLines("ZuAcc"	, funcZuAcc		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotLines("Zr"		, funcZr		, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+
+		ImGui::PlotHistogram("ZsPos", funcZsPos, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotHistogram("ZsSpeed", funcZsSpeed, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotHistogram("ZsAcc", funcZsAcc, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotHistogram("ZuPos", funcZuPos, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotHistogram("ZuSpeed", funcZuSpeed, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotHistogram("ZuAcc", funcZuAcc, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		ImGui::PlotHistogram("Zr", funcZr, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+
+		//ImGui::PlotLines("XPos", func, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
+		//ImGui::PlotLines("XSpeed", func, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));		
+	}
+
 	if (ImGui::Button("test dialog"))
 	{
 		helper::DialogPath dialogpath =  helper::SaveDialog();
@@ -47,7 +102,7 @@ void EditorSetting::drawForm()
 
 	if (ImGui::Button("Sim Test"))
 	{
-		for (int i = 0; i < 3000; ++i)
+		for (int i = 0; i < 10000; ++i)
 		{
 			mCarSumulation.Update();
 		}		

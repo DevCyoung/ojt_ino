@@ -41,6 +41,9 @@ public:
 
 	void SaveData(const wchar_t* const filePath);
 
+	const tSampleData& GetSampleData(const int idx) const { return mSampleDatas[idx]; }
+	size_t GetSampleDataCount() { return mSampleDatas.size(); }
+
 private:
 	float mSamplingTime;
 	float mMS;	//Sprung Mass
