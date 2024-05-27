@@ -4,20 +4,25 @@
 
 namespace helper
 {
+	constexpr int MAX_FILE_PATH_SIZE = 256;
+
+	//const wchar_t
+	LPCWSTR FILTER_TEX = L"Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0";
+
 	DialogPath helper::OpenDialog()
 	{
 		OPENFILENAME ofn = {};
 		std::wstring strTileFolderPath = PathManager::GetInstance()->GetResourcePath();
 
-		wchar_t szFilePath[256] = {};
+		wchar_t szFilePath[MAX_FILE_PATH_SIZE] = {};
 
 		ZeroMemory(&ofn, sizeof(ofn));														//
 		ofn.lStructSize = sizeof(ofn);														//
-		ofn.hwndOwner = NULL;																//
+		ofn.hwndOwner = NULL;																//부모 윈도우핸들
 		ofn.lpstrFile = szFilePath;															//
-		ofn.lpstrFile[0] = '\0';															//
-		ofn.nMaxFile = 256;																	//
-		ofn.lpstrFilter = nullptr;																//실습용 
+		ofn.lpstrFile[0] = L'\0';															//
+		ofn.nMaxFile = MAX_FILE_PATH_SIZE;													//
+		ofn.lpstrFilter = FILTER_TEX;														//실습용 
 		ofn.nFilterIndex = 1;																//기본필터지정
 		ofn.lpstrFileTitle = NULL;															//
 		ofn.nMaxFileTitle = 0;																//
@@ -43,15 +48,15 @@ namespace helper
 		OPENFILENAME ofn = {};
 		std::wstring strTileFolderPath = PathManager::GetInstance()->GetResourcePath();
 
-		wchar_t szFilePath[256] = {};
+		wchar_t szFilePath[MAX_FILE_PATH_SIZE] = {};
 
 		ZeroMemory(&ofn, sizeof(ofn));														//
 		ofn.lStructSize = sizeof(ofn);														//
 		ofn.hwndOwner = NULL;																//
 		ofn.lpstrFile = szFilePath;															//
 		ofn.lpstrFile[0] = '\0';															//
-		ofn.nMaxFile = 256;																	//
-		ofn.lpstrFilter = nullptr;																//실습용 
+		ofn.nMaxFile = MAX_FILE_PATH_SIZE;													//
+		ofn.lpstrFilter = FILTER_TEX;														//실습용 
 		ofn.nFilterIndex = 1;																//기본필터지정
 		ofn.lpstrFileTitle = NULL;															//
 		ofn.nMaxFileTitle = 0;																//

@@ -432,6 +432,9 @@
     <ClInclude Include="Entity.h">
       <Filter>Source\Engine\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="CarSimulation.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXMath.cpp">
@@ -805,6 +808,9 @@
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Source\Engine\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="CarSimulation.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

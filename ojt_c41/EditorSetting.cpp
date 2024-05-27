@@ -10,7 +10,7 @@
 #include "Material.h"
 #include "Builder.h"
 #include "PanelUIManager.h"
-//#include "InspectorUI.h"
+#include "EngineFile.h"
 
 float EditorSetting::SkeletonScale = 1.f;
 
@@ -37,6 +37,24 @@ void EditorSetting::drawForm()
 	static bool bStartGame = true;
 
 	ImGui::Begin("Editor Setting");		
+
+	if (ImGui::Button("test dialog"))
+	{
+		helper::DialogPath dialogpath =  helper::SaveDialog();
+		mCarSumulation.SaveData(dialogpath.path.c_str());
+
+	}
+
+	if (ImGui::Button("Sim Test"))
+	{
+		for (int i = 0; i < 3000; ++i)
+		{
+			mCarSumulation.Update();
+		}		
+
+		mCarSumulation.GetCS();
+	}
+
 	bool bWireFrame = gCurrentSceneRenderer->IsWireFrame();
 	if (ImGui::Checkbox("Wire Frame", &bWireFrame))
 	{
