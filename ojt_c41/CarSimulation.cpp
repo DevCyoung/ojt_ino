@@ -3,7 +3,7 @@
 #include "fstream"
 
 CarSimulation::CarSimulation()
-	: mSamplingTime(0.001)
+	: mSamplingTime(0.001f)
 	, mMS(363.5f)
 	, mMU(37.6f)
 	, mKS(10300.0f)
