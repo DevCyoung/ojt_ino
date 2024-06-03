@@ -23,6 +23,13 @@ SpriteRenderer::SpriteRenderer()
 {	
 	mSprite2DInfo.UV = Vector2::One;
 	SetMesh(gResourceManager->FindOrNull<Mesh>(L"FillRect2D"));
+
+	Material* mat = new Material;
+	mat->SetShader(gResourceManager->Find<Shader>(L"Sprite2D"));
+
+	std::wstring reName = L"Std2DMat" + std::to_wstring(this->GetID());
+	gResourceManager->Insert(reName, mat);
+	SetMaterial(mat, 0);
 }
 
 SpriteRenderer::~SpriteRenderer()

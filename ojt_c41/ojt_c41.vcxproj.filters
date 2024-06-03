@@ -55,11 +55,11 @@
     <Filter Include="Source\Engine\Enum">
       <UniqueIdentifier>{78c2fd4e-e1d4-49dc-bb0e-3c6472951fe3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\Editor\Panel">
-      <UniqueIdentifier>{bf1fe224-3b01-4871-ab6f-3e59fae9abca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{c51abef9-f658-46e1-8583-5a34d343ed80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Panel">
+      <UniqueIdentifier>{bf1fe224-3b01-4871-ab6f-3e59fae9abca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -438,6 +438,9 @@
     <ClInclude Include="CarSimulation.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="GraphView.h">
+      <Filter>Source\Editor\Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXMath.cpp">
@@ -814,6 +817,9 @@
     </ClCompile>
     <ClCompile Include="CarSimulation.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphView.cpp">
+      <Filter>Source\Editor\Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

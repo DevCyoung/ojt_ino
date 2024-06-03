@@ -9,7 +9,10 @@
 
 #include "Builder.h"
 #include "GameObject.h"
-
+#include "SpriteRenderer.h"
+#include "ResourceManager.h"
+#include "Texture.h"
+#include "Material.h"
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
@@ -59,16 +62,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // 기본 메시지 루프입니다:
 
     Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
+    Editor::initialize();
+
     //Content::initialize();
     Scene* scene = new Scene();
+    Texture* tex = gResourceManager->FindAndLoadOrNull<Texture>(L"\\Texture\\ImGUI\\folder.png");
 
     GameObject* car = CreateGameObject();
+    car->AddComponent<SpriteRenderer>();    
+    car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
 
     //car->AddComponent<
     scene->AddGameObject(car, eLayerType::Default);
     SceneManager::GetInstance()->LoadScene(scene);
 
-    Editor::initialize();
+    
 
     while (true)
     {
