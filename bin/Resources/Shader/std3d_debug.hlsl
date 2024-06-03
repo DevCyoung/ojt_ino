@@ -48,7 +48,7 @@ VS_OUT VS_Std3D(VS_IN _in)
 	//output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV)).xyz;
 	//output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV)).xyz;
 	//output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV)).xyz;       
-	output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
+	output.vPosition = mul(float4(_in.vPos, 1.f), B0_WVP);
 	output.vUV = _in.vUV;      
 	return output;
 }

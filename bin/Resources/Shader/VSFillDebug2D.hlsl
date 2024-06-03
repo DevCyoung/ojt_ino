@@ -15,5 +15,9 @@ tVSOut main(tVSIn In)
 	Out.UV = In.UV;
 	Out.Color = In.Color;
 	
+    //Out.Pos		= float4(In.Pos, 0.6f);
+    //Out.Color	= (1.f, 1.f, 0.f, 1.f);
+    //Out.UV		= In.UV;
+	
 	return Out;
 }

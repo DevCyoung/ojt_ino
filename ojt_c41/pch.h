@@ -401,7 +401,7 @@ private:													\
 //
 //	if (connect(ConnectSocket, (sockaddr*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
 //		std::cerr << "Connect failed.\n";
-//		closesocket(ConnectSocket);
+//		closesocket(ConnectSocket);	
 //		WSACleanup();
 //		return 1;
 //	}

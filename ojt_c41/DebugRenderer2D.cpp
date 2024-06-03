@@ -324,13 +324,16 @@ void DebugRenderer2D::render(const Camera* const camera) const
 		Assert(P_MESH, ASSERT_MSG_NULL);
 		Assert(P_SHADER, ASSERT_MSG_NULL);
 
-		const Vector3& SCALE		= Vector3(10, 10, 10.f);
-		const Matrix& SCALE_MATRIX  = Matrix::CreateScale(SCALE);
-		CBTransform.World			= SCALE_MATRIX * DRAW_INFO.WorldMatrix;
-		//CBTransform.View			= camera->GetView();
-		//CBTransform.Proj			= camera->GetProjection();
+		//const Vector3& SCALE		= Vector3(10, 10, 10.f);
+		const Matrix& SCALE_MATRIX  = Matrix::CreateScale(DRAW_INFO.Scale);
+		Matrix positionMatrix = {};
+		positionMatrix.Translation(DRAW_INFO.WorldPos);
+
+		CBTransform.World			= SCALE_MATRIX * positionMatrix;
+		CBTransform.View			= camera->GetView();
+		CBTransform.Proj			= camera->GetProjection();
 		CBTransform.WV				= CBTransform.World * CBTransform.View;
-		CBTransform.WVP				= CBTransform.WV * CBTransform.Proj;	
+		CBTransform.WVP				= CBTransform.WV * CBTransform.Proj;
 
 		gGraphicDevice->PassCB(eCBType::Transform, sizeof(CBTransform), &CBTransform);
 		gGraphicDevice->BindCB(eCBType::Transform, eShaderBindType::VS);

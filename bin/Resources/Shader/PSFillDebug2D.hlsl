@@ -8,6 +8,5 @@
 float4 main(tVSOut In) : SV_TARGET
 {
 	float4 color = FILL_COLOR;
-
-	return color;
+    return color;
 }

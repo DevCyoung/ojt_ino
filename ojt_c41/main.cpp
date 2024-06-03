@@ -7,6 +7,9 @@
 
 #define MAX_LOADSTRING 100
 
+#include "Builder.h"
+#include "GameObject.h"
+
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
@@ -57,7 +60,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
     //Content::initialize();
-    SceneManager::GetInstance()->LoadScene(new Scene);
+    Scene* scene = new Scene();
+
+    GameObject* car = CreateGameObject();
+
+    //car->AddComponent<
+    scene->AddGameObject(car, eLayerType::Default);
+    SceneManager::GetInstance()->LoadScene(scene);
+
     Editor::initialize();
 
     while (true)

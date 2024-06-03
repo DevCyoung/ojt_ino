@@ -434,120 +434,120 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\Resources\Shader\Header\ConstantBuffer.fxh" />
+    <None Include="..\bin\Resources\Shader\Header\Sampler.fxh" />
+    <None Include="..\bin\Resources\Shader\Header\Struct.fxh" />
+    <None Include="..\bin\Resources\Shader\Header\TestShaderHeader.fxh" />
+    <None Include="..\bin\Resources\Shader\Header\Texture.fxh" />
     <None Include="component.priority" />
     <None Include="DirectXTex.inl" />
     <None Include="dpend.diff" />
     <None Include="DXMath.inl" />
-    <None Include="Shader\Header\ConstantBuffer.fxh" />
-    <None Include="Shader\Header\Sampler.fxh" />
-    <None Include="Shader\Header\Struct.fxh" />
-    <None Include="Shader\Header\TestShaderHeader.fxh" />
-    <None Include="Shader\Header\Texture.fxh" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\animation3d.hlsl">
+    <None Include="..\bin\Resources\Shader\animation3d.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\ColorFun.hlsl">
+    <None Include="..\bin\Resources\Shader\ColorFun.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\copybone.hlsl">
+    <None Include="..\bin\Resources\Shader\copybone.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\deferred3d.hlsl">
+    <None Include="..\bin\Resources\Shader\deferred3d.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\Light2D.hlsl">
+    <None Include="..\bin\Resources\Shader\Light2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSAfterImage.hlsl">
+    <None Include="..\bin\Resources\Shader\PSAfterImage.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSAlphaTo.hlsl">
+    <None Include="..\bin\Resources\Shader\PSAlphaTo.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSAnimation2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSAnimation2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSFillDebug2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSFillDebug2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSGrayPostProcess.hlsl">
+    <None Include="..\bin\Resources\Shader\PSGrayPostProcess.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSGrid2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSGrid2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSLightAnimation2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSLightAnimation2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSLightSprite2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSLightSprite2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSLineDebug2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSLineDebug2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSNextScene.hlsl">
+    <None Include="..\bin\Resources\Shader\PSNextScene.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSSprite2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSSprite2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSUI2D.hlsl">
+    <None Include="..\bin\Resources\Shader\PSUI2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\PSWave.hlsl">
+    <None Include="..\bin\Resources\Shader\PSWave.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\ShadowMap.hlsl">
+    <None Include="..\bin\Resources\Shader\ShadowMap.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\std3d.hlsl">
+    <None Include="..\bin\Resources\Shader\std3d.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\std3d_debug.hlsl">
+    <None Include="..\bin\Resources\Shader\std3d_debug.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\stdCS.hlsl">
+    <None Include="..\bin\Resources\Shader\stdCS.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSAfterImage.hlsl">
+    <None Include="..\bin\Resources\Shader\VSAfterImage.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSAlphaTo.hlsl">
+    <None Include="..\bin\Resources\Shader\VSAlphaTo.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSAnimation2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSAnimation2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSFillDebug2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSFillDebug2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSGrayPostProcess.hlsl">
+    <None Include="..\bin\Resources\Shader\VSGrayPostProcess.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSGrid2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSGrid2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSLightAnimation2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSLightAnimation2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSLightSprite2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSLightSprite2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSLineDebug2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSLineDebug2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSNextScene.hlsl">
+    <None Include="..\bin\Resources\Shader\VSNextScene.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSSprite2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSSprite2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSUI2D.hlsl">
+    <None Include="..\bin\Resources\Shader\VSUI2D.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shader\VSWave.hlsl">
+    <None Include="..\bin\Resources\Shader\VSWave.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

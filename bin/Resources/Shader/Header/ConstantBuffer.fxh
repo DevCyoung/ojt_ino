@@ -3,28 +3,33 @@
 
 cbuffer Transform : register(b0)
 {
-	row_major matrix g_matWorld;
-	row_major matrix g_matWorldInv;
+    row_major matrix B0_World;
+    row_major matrix B0_WorldInv;
 	
-	row_major matrix g_matView;
-	row_major matrix g_matViewInv;
+    row_major matrix B0_View;
+    row_major matrix B0_ViewInv;
 	
-	row_major matrix g_matProj;
-	row_major matrix g_matProjInv;
+    row_major matrix B0_Projection;
+    row_major matrix B0_ProjectionInv;
 	
-	row_major matrix g_matWV;
-	row_major matrix g_matWVP;
+    row_major matrix B0_WV;
+    row_major matrix B0_WVP;
 }
 
-cbuffer Transform : register(b1)
-{
-	row_major matrix B0_World;
-	row_major matrix B0_View;
-	row_major matrix B0_Projection;
-	
-	row_major matrix B0_WV;
-	row_major matrix B0_WVP;
-}
+//cbuffer Transform : register(b1)
+//{
+//    row_major matrix B0_World;
+//    row_major matrix B0_WorldInv;
+//	
+//    row_major matrix B0_View;
+//    row_major matrix B0_ViewInv;
+//	
+//    row_major matrix B0_Projection;
+//    row_major matrix g_matProjInv;
+//	
+//    row_major matrix B0_WV;
+//    row_major matrix B0_WVP;
+//}
 
 
 cbuffer ColorInfo : register(b1)

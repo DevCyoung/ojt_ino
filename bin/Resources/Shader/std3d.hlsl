@@ -87,13 +87,13 @@ VS_OUT VS_Std3D(VS_IN _in)
 	}
 	
     // 로컬에서의 Normal 방향을 월드로 이동    
-	output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
+    output.vViewPos = mul(float4(_in.vPos, 1.f), B0_WV);
     
-	output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV)).xyz;
-	output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV)).xyz;
-	output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV)).xyz;
+    output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), B0_WV)).xyz;
+    output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), B0_WV)).xyz;
+    output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), B0_WV)).xyz;
        
-	output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
+    output.vPosition = mul(float4(_in.vPos, 1.f), B0_WVP);
 	output.vUV = _in.vUV;
       
 	return output;
@@ -126,7 +126,7 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
 		viewNormal = mul(normal, vRotateMat);
 	}
 	
-	float3 viewLightDir = normalize(mul(float4(normalize(LIGHT_DIR.xyz), 0.f), g_matView)).xyz; //광원의 방향
+	float3 viewLightDir = normalize(mul(float4(normalize(LIGHT_DIR.xyz), 0.f), B0_ViewInv)).xyz; //광원의 방향
 	float  diffuseInstensity = saturate(dot(viewNormal, -viewLightDir)); // ViewSpace 에서의 노말벡터와 광원의 방향을 내적 (램버트 코사인 법칙)
 	if (g_idebug0 == 1)
 	{

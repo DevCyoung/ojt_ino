@@ -35,10 +35,10 @@ EditorViewUI::EditorViewUI()
 		mainCamera->AddComponent<Camera>();
 		mainCamera->AddComponent<CameraInputMoveMent>();
 
-		mainCamera->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
+		mainCamera->GetComponent<Transform>()->SetPosition(0.f, 0.f, -2.5f);
 		mainCamera->GetComponent<Camera>()->SetRenderTargetSize(screenSize);
 		mainCamera->GetComponent<Camera>()->SetPriorityType(eCameraPriorityType::Editor);
-		mainCamera->GetComponent<Camera>()->SetProjectionType(eCameraProjectionType::Perspective);
+		mainCamera->GetComponent<Camera>()->SetProjectionType(eCameraProjectionType::Orthographic);
 		mainCamera->GetComponent<Camera>()->TurnOnAllLayer();		
 		mEditorCamera = mainCamera;		
 	}
@@ -61,7 +61,7 @@ void EditorViewUI::drawForm()
 	Texture* renderTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRenderTexture");
 	Texture* depThTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewDepthTexture");
 	Scene* currentScene = gCurrentScene;
-	FLOAT backgroundColor[4] = { 0.5f, 0.5f, 0.5f, 1.f };
+	FLOAT backgroundColor[4] = {0.5f, 0.5f, 0.5f, 1.f };
 	UINT cameraMask = renderer->GetCameraLayerMask();
 
 	renderer->RegisterRenderCamera(editorCamera);
