@@ -4,17 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34902.127
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "ojt_c41\ojt_c41.vcxproj", "{2D36C2EF-905E-42FA-A315-C1C063CA9458}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A84DADE8-92C7-499F-AAE2-52C31A1958DF} = {A84DADE8-92C7-499F-AAE2-52C31A1958DF}
-		{DA2D2AB8-5189-4668-94E7-EB961EEF96CE} = {DA2D2AB8-5189-4668-94E7-EB961EEF96CE}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{DA2D2AB8-5189-4668-94E7-EB961EEF96CE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A84DADE8-92C7-499F-AAE2-52C31A1958DF} = {A84DADE8-92C7-499F-AAE2-52C31A1958DF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{A84DADE8-92C7-499F-AAE2-52C31A1958DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InooOJTCore", "Core\Core.vcxproj", "{A84DADE8-92C7-499F-AAE2-52C31A1958DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

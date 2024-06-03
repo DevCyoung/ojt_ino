@@ -24,6 +24,7 @@
     <ProjectGuid>{a84dade8-92c7-499f-aae2-52c31a1958df}</ProjectGuid>
     <RootNamespace>Core</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>InooOJTCore</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -70,6 +71,16 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDIr)lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\InnoOJTCore\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDIr)lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)lib\InnoOJTCore\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -112,6 +123,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -129,6 +141,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -139,17 +152,268 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlphaHelper.h" />
+    <ClInclude Include="Anim3DBuuferCopyCS.h" />
+    <ClInclude Include="Animation2D.h" />
+    <ClInclude Include="Animation3DController.h" />
+    <ClInclude Include="Animator2D.h" />
+    <ClInclude Include="Animator3D.h" />
+    <ClInclude Include="BoneMap.h" />
+    <ClInclude Include="BSCollection.h" />
+    <ClInclude Include="Builder.h" />
+    <ClInclude Include="BuildSetting.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraInputMoveMent.h" />
+    <ClInclude Include="CarSimulation.h" />
+    <ClInclude Include="Casting.h" />
+    <ClInclude Include="CBCollection.h" />
+    <ClInclude Include="CircleCollider2D.h" />
+    <ClInclude Include="Collider2D.h" />
+    <ClInclude Include="CollisionManagement2D.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="ComponentTrait.h" />
+    <ClInclude Include="ComponentUIRender.h" />
+    <ClInclude Include="ComputeShader.h" />
+    <ClInclude Include="ComputeShaderUI.h" />
+    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="cresource.h" />
+    <ClInclude Include="DebugRenderer2D.h" />
+    <ClInclude Include="DirectXTex.h" />
+    <ClInclude Include="DockSpace.h" />
+    <ClInclude Include="DSCollection.h" />
+    <ClInclude Include="DXMath.h" />
+    <ClInclude Include="Editor.h" />
+    <ClInclude Include="EditorPanelInitialize.h" />
+    <ClInclude Include="EditorResourceLoader.h" />
+    <ClInclude Include="EditorSetting.h" />
+    <ClInclude Include="EditorViewUI.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="EngineComponentTrait.h" />
+    <ClInclude Include="EngineFile.h" />
+    <ClInclude Include="EngineMath.h" />
+    <ClInclude Include="EngineResourceLoader.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EnumComponent.h" />
+    <ClInclude Include="EnumFlag.h" />
+    <ClInclude Include="EnumLayer.h" />
+    <ClInclude Include="EnumRenderType.h" />
+    <ClInclude Include="EnumResource.h" />
+    <ClInclude Include="EnumScriptComponent.h" />
+    <ClInclude Include="EnumShaderBindStage.h" />
+    <ClInclude Include="EnumSRV.h" />
+    <ClInclude Include="ESCUI.h" />
+    <ClInclude Include="FBXLoader.h" />
+    <ClInclude Include="FBXLoadManager.h" />
+    <ClInclude Include="fbxsdk.h" />
+    <ClInclude Include="FolderUI.h" />
+    <ClInclude Include="FolderViewUI.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameSystem.h" />
+    <ClInclude Include="GraphicDeviceDx11.h" />
+    <ClInclude Include="GraphView.h" />
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_helper.h" />
+    <ClInclude Include="imgui_impl_dx11.h" />
+    <ClInclude Include="imgui_impl_win32.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="InnoOJTCore.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ItemUI.h" />
+    <ClInclude Include="Layer.h" />
+    <ClInclude Include="Light2D.h" />
+    <ClInclude Include="Light3D.h" />
+    <ClInclude Include="LineCollider2D.h" />
+    <ClInclude Include="LogUI.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialUI.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshData.h" />
+    <ClInclude Include="MeshDataUI.h" />
+    <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="MeshUI.h" />
+    <ClInclude Include="MessageManager.h" />
+    <ClInclude Include="PanelUI.h" />
+    <ClInclude Include="PanelUIManager.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PathManager.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Physics2D.h" />
+    <ClInclude Include="Prefab.h" />
+    <ClInclude Include="RectCollider2D.h" />
+    <ClInclude Include="RenderComponent.h" />
+    <ClInclude Include="RenderTargetRenderer.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResourceTypeTrait.h" />
+    <ClInclude Include="ResourceUI.h" />
+    <ClInclude Include="Rigidbody2D.h" />
+    <ClInclude Include="RSCollection.h" />
+    <ClInclude Include="SBCollection.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ScriptComponent.h" />
+    <ClInclude Include="ScriptComponentTrait.h" />
+    <ClInclude Include="ScriptType.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderUI.h" />
+    <ClInclude Include="SMCollection.h" />
+    <ClInclude Include="SpriteRenderer.h" />
+    <ClInclude Include="StringHelper.h" />
+    <ClInclude Include="StructBuffer.h" />
+    <ClInclude Include="StructuredBuffer.h" />
+    <ClInclude Include="StructVertex.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TestScene.h" />
+    <ClInclude Include="TestUI2.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureUI.h" />
+    <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="UIHelper.h" />
+    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="AlphaHelper.cpp" />
+    <ClCompile Include="Anim3DBuuferCopyCS.cpp" />
+    <ClCompile Include="Animation2D.cpp" />
+    <ClCompile Include="Animation3DController.cpp" />
+    <ClCompile Include="Animation3DControllerUI.cpp" />
+    <ClCompile Include="Animator2D.cpp" />
+    <ClCompile Include="Animator2DUI.cpp" />
+    <ClCompile Include="Animator3D.cpp" />
+    <ClCompile Include="Animator3DUI.cpp" />
+    <ClCompile Include="BoneMap.cpp" />
+    <ClCompile Include="BoneMapUI.cpp" />
+    <ClCompile Include="BSCollection.cpp" />
+    <ClCompile Include="Builder.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraInputMoveMent.cpp" />
+    <ClCompile Include="CameraUI.cpp" />
+    <ClCompile Include="CarSimulation.cpp" />
+    <ClCompile Include="CBCollection.cpp" />
+    <ClCompile Include="CircleCollider2D.cpp" />
+    <ClCompile Include="CircleCollider2DUI.cpp" />
+    <ClCompile Include="Collider2D.cpp" />
+    <ClCompile Include="Collider2DUI.cpp" />
+    <ClCompile Include="CollisionManagement2D.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentUI.cpp" />
+    <ClCompile Include="ComponentUIRender.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
+    <ClCompile Include="ComputeShaderUI.cpp" />
+    <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="DebugRenderer2D.cpp" />
+    <ClCompile Include="DockSpace.cpp" />
+    <ClCompile Include="DSCollection.cpp" />
+    <ClCompile Include="DXMath.cpp" />
+    <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="EditorPanelInitialize.cpp" />
+    <ClCompile Include="EditorResourceLoader.cpp" />
+    <ClCompile Include="EditorSetting.cpp" />
+    <ClCompile Include="EditorViewUI.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="EngineFile.cpp" />
+    <ClCompile Include="EngineMath.cpp" />
+    <ClCompile Include="EngineResourceLoader.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EnumComponent.cpp" />
+    <ClCompile Include="EnumScriptComponent.cpp" />
+    <ClCompile Include="ESCUI.cpp" />
+    <ClCompile Include="FBXLoader.cpp" />
+    <ClCompile Include="FBXLoadManager.cpp" />
+    <ClCompile Include="FolderUI.cpp" />
+    <ClCompile Include="FolderViewUI.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameSystem.cpp" />
+    <ClCompile Include="GraphicDeviceDx11.cpp" />
+    <ClCompile Include="GraphView.cpp" />
+    <None Include="imgui.cpp" />
+    <None Include="imgui_demo.cpp" />
+    <None Include="imgui_draw.cpp" />
+    <None Include="imgui_helper.cpp" />
+    <None Include="imgui_impl_dx11.cpp" />
+    <None Include="imgui_impl_win32.cpp" />
+    <None Include="imgui_tables.cpp" />
+    <None Include="imgui_widgets.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="ItemUI.cpp" />
+    <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="Light2D.cpp" />
+    <ClCompile Include="Light2DUI.cpp" />
+    <ClCompile Include="Light3D.cpp" />
+    <ClCompile Include="Light3DUI.cpp" />
+    <ClCompile Include="LineCollider2D.cpp" />
+    <ClCompile Include="LineCollider2DUI.cpp" />
+    <ClCompile Include="LogUI.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialUI.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshData.cpp" />
+    <ClCompile Include="MeshDataUI.cpp" />
+    <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="MeshRendererUI.cpp" />
+    <ClCompile Include="MeshUI.cpp" />
+    <ClCompile Include="MessageManager.cpp" />
+    <ClCompile Include="PanelUI.cpp" />
+    <ClCompile Include="PanelUIManager.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="ParticleSystemUI.cpp" />
+    <ClCompile Include="PathManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Physics2D.cpp" />
+    <ClCompile Include="Prefab.cpp" />
+    <ClCompile Include="RectCollider2D.cpp" />
+    <ClCompile Include="RectCollider2DUI.cpp" />
+    <ClCompile Include="RenderComponent.cpp" />
+    <ClCompile Include="RenderComponentUI.cpp" />
+    <ClCompile Include="RenderTargetRenderer.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ResourceUI.cpp" />
+    <ClCompile Include="Rigidbody2D.cpp" />
+    <ClCompile Include="Rigidbody2DUI.cpp" />
+    <ClCompile Include="RSCollection.cpp" />
+    <ClCompile Include="SBCollection.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ScriptComponent.cpp" />
+    <ClCompile Include="ScriptComponentUI.cpp" />
+    <ClCompile Include="ScriptComponentUIRender.cpp" />
+    <ClCompile Include="ScriptType.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderUI.cpp" />
+    <ClCompile Include="SMCollection.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
+    <ClCompile Include="SpriteRendererUI.cpp" />
+    <ClCompile Include="StringHelper.cpp" />
+    <ClCompile Include="StructBuffer.cpp" />
+    <ClCompile Include="StructuredBuffer.cpp" />
+    <ClCompile Include="StructVertex.cpp" />
+    <ClCompile Include="TestScene.cpp" />
+    <ClCompile Include="TestUI2.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureUI.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformUI.cpp" />
+    <ClCompile Include="UIHelper.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DirectXTex.inl" />
+    <None Include="DXMath.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
