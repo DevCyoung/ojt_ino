@@ -24,6 +24,7 @@
     <ProjectGuid>{2d36c2ef-905e-42fa-a315-c1c063ca9458}</ProjectGuid>
     <RootNamespace>ojtc41</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Client</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -75,13 +76,13 @@
     <LibraryPath>$(SolutionDIr)lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\Debug\</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
-    <IncludePath>$(SolutionDir)ojt_c41;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>$(SolutionDIr)lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\Release\</OutDir>
-    <IncludePath>$(SolutionDir)ojt_c41;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
