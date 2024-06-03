@@ -1,40 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="windows">
-      <UniqueIdentifier>{5b40de73-8f9e-4648-989c-6b93db1b212a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source">
-      <UniqueIdentifier>{e137d2e0-d6e2-48ca-b5ac-2a5e1b1d04d1}</UniqueIdentifier>
+      <UniqueIdentifier>{73427d39-f072-4d43-bacb-debc04ea25df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="windows">
+      <UniqueIdentifier>{d939e8a6-4dff-462f-81e1-f3e889136efc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cresource.h">
+    <ClInclude Include="targetver.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="OJTServer.h">
       <Filter>windows</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="ojt_c41.h">
-      <Filter>windows</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>windows</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>windows</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="ojt_c41.ico">
+    <Image Include="OJTServer.ico">
       <Filter>windows</Filter>
     </Image>
     <Image Include="small.ico">
@@ -42,7 +34,15 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ojt_c41.rc">
+    <ClCompile Include="main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OJTServer.rc">
       <Filter>windows</Filter>
     </ResourceCompile>
   </ItemGroup>

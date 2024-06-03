@@ -1,25 +1,26 @@
-﻿#include "pch.h"
+﻿// OJTClient.cpp : 애플리케이션에 대한 진입점을 정의합니다.
+#include "pch.h"
 #include "framework.h"
-//#include "ojt_c41.h"
-#include "Engine.h"
-#include "Editor.h"
-#include "SceneManager.h"
+#include "OJTClient.h"
 
-#define MAX_LOADSTRING 100
-
-#include "Builder.h"
-#include "GameObject.h"
-#include "SpriteRenderer.h"
-#include "ResourceManager.h"
-#include "Texture.h"
-#include "Material.h"
-#include "Material.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "\\InnoOJTCore\\Debug\\InooOJTCore.lib")
 #else
 #pragma comment(lib, "\\InnoOJTCore\\Release\\InooOJTCore.lib")
 #endif
+
+#include <Engine.h>
+#include <Editor.h>
+#include <SceneManager.h>
+#include <Builder.h>
+#include <GameObject.h>
+#include <SpriteRenderer.h>
+#include <ResourceManager.h>
+#include <Texture.h>
+#include <Material.h>
+
+#define MAX_LOADSTRING 100
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -40,8 +41,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: 여기에 코드를 입력합니다.
-
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #if DEBUG_TARGET
@@ -49,11 +48,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #endif
 #endif
 
-
+    // TODO: 여기에 코드를 입력합니다.
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_OJTC41, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_OJTCLIENT, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 애플리케이션 초기화를 수행합니다:
@@ -62,11 +61,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_OJTC41));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_OJTCLIENT));
 
     MSG msg;
 
-    // 기본 메시지 루프입니다:
 
     Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
     Editor::initialize();
@@ -76,14 +74,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Texture* tex = gResourceManager->FindAndLoadOrNull<Texture>(L"\\Texture\\ImGUI\\folder.png");
 
     GameObject* car = CreateGameObject();
-    car->AddComponent<SpriteRenderer>();    
+    car->AddComponent<SpriteRenderer>();
     car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
 
     //car->AddComponent<
     scene->AddGameObject(car, eLayerType::Default);
     SceneManager::GetInstance()->LoadScene(scene);
-
-    
 
     while (true)
     {
@@ -113,7 +109,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Editor::deleteInstance();
     Engine::deleteInstance();
 
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
 
 
@@ -130,19 +126,16 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style          = CS_HREDRAW | CS_VREDRAW;
-
-    //Editor
     wcex.lpfnWndProc = WndProcImGUI;
-    //wcex.lpfnWndProc    = WndProc;
 
+    //wcex.lpfnWndProc    = WndProc;
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_OJTC41));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_OJTCLIENT));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    //wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_OJTC41);
-    wcex.lpszMenuName   = NULL;
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_OJTCLIENT);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -170,9 +163,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
-
    gHwnd = hWnd;
-
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 

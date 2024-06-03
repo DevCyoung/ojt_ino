@@ -58,6 +58,9 @@
     <Filter Include="Source\Load">
       <UniqueIdentifier>{b2131637-0c2a-4460-84bc-348828bddfdf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{8547ac3a-a47a-4396-9781-0dad207daede}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InnoOJTCore.h">
@@ -443,30 +446,6 @@
     <ClCompile Include="CarSimulation.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_demo.cpp">
-      <Filter>Source\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>Source\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_helper.cpp">
-      <Filter>Source\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>Source\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>Source\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_tables.cpp">
-      <Filter>Source\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
-      <Filter>Source\ImGUI</Filter>
-    </ClCompile>
     <ClCompile Include="AlphaHelper.cpp">
       <Filter>Source\Render</Filter>
     </ClCompile>
@@ -812,6 +791,16 @@
     <ClCompile Include="EngineMath.cpp">
       <Filter>Source\Heper</Filter>
     </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Source\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_helper.cpp" />
+    <ClCompile Include="imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">
@@ -819,9 +808,6 @@
     </None>
     <None Include="DXMath.inl">
       <Filter>Source\Heper</Filter>
-    </None>
-    <None Include="imgui.cpp">
-      <Filter>Source\ImGUI</Filter>
     </None>
   </ItemGroup>
 </Project>
