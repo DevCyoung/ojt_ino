@@ -1,14 +1,35 @@
 #include "pch.h"
 #include "InnoOJTServer.h"
-#include "LogListUI.h"
-#include "PanelUIManager.h"
-static std::vector<SOCKET> clients;
+
+#define PACKET_SIZE 2048
+
+InnoOJTServer::InnoOJTServer()
+	: mPanelManager(nullptr)
+	, mChannel(nullptr)
+	, mLogListUI(nullptr)
+	, mListenUI(nullptr)
+{
+	mPanelManager = PanelUIManager::GetInstance();
+	mChannel = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
+	mLogListUI = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
+	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
+
+	assert(mPanelManager);
+	assert(mChannel);
+	assert(mLogListUI);
+	assert(mListenUI);
+}
+
+InnoOJTServer::~InnoOJTServer()
+{
+
+}
+
+//static std::vector<SOCKET> clients;
 static std::mutex clients_mutex;
 static SOCKET ListenSocket = INVALID_SOCKET;
 
 #define DEFAULT_PORT 54000
-
-
 
 std::string GetClientIP(SOCKET clientSocket) {
 	sockaddr_in clientAddr;
@@ -17,7 +38,6 @@ std::string GetClientIP(SOCKET clientSocket) {
 	// 클라이언트 소켓 주소 정보 가져오기
 	if (getpeername(clientSocket, (sockaddr*)&clientAddr, &addrLen) == SOCKET_ERROR) 
 	{
-
 		//std::cerr << "getpeername failed: " << WSAGetLastError() << std::endl;
 		return "";
 	}
@@ -39,7 +59,7 @@ std::string GetClientIP(SOCKET clientSocket) {
 //};
 
 // 패킷 ID를 확인하는 함수
-int getPacketId(char (&buffer)[512], int recvSize) {
+int getPacketId(char (&buffer)[PACKET_SIZE], int recvSize) {
 	// 버퍼가 헤더 크기보다 작으면 유효한 패킷이 아님
 	if (recvSize < sizeof(int))
 	{
@@ -53,17 +73,15 @@ int getPacketId(char (&buffer)[512], int recvSize) {
 	return header;
 }
 
-
-
 // 클라이언트 핸들링 함수
 static void handle_client(SOCKET client_socket) {
-	char recvbuf[512];
-	int recvbuflen = 512;
+	char recvbuf[PACKET_SIZE];
+	int recvbuflen = PACKET_SIZE;
 	int result;
 
 	InnoOJTServer* server = InnoOJTServer::GetInstance();
-	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
-
+	LogListUI* logList = server->mLogListUI;
+	
 	while ((result = recv(client_socket, recvbuf, recvbuflen, 0)) > 0)
 	{
 		//auto start = std::chrono::high_resolution_clock::now();  // 시작 시간 기록
@@ -80,9 +98,7 @@ static void handle_client(SOCKET client_socket) {
 		//		send(client, message.c_str(), message.size(), 0);
 		//	}
 		//}
-
 		int packetId = getPacketId(recvbuf, recvbuflen);
-
 		std::lock_guard<std::mutex> guard(clients_mutex);
 		switch (packetId)
 		{
@@ -118,16 +134,13 @@ static void handle_client(SOCKET client_socket) {
 			logList->WriteLine("invalie packet");
 			break;
 		}
-
-		//auto end = std::chrono::high_resolution_clock::now();  // 종료 시간 기록
-		//std::chrono::duration<double> elapsed = end - start;
-		//std::cout << "Elapsed time: " << elapsed.count() << " seconds\n";  // 경과 시간 출력
 	}
 
 	// 클라이언트 소켓을 리스트에서 제거
-	std::lock_guard<std::mutex> guard(clients_mutex);
-	clients.erase(std::remove(clients.begin(), clients.end(), client_socket), clients.end());
-	closesocket(client_socket);
+	//std::lock_guard<std::mutex> guard(clients_mutex);
+	//clients.erase(std::remove(clients.begin(), clients.end(), client_socket), clients.end());
+	//closesocket(client_socket);
+	server->Disconnect(client_socket);
 }
 
 static void handle_accept()
@@ -149,25 +162,17 @@ static void handle_accept()
 		{
 			std::lock_guard<std::mutex> guard(clients_mutex);
 			InnoOJTServer::GetInstance()->Accept(ClientSocket);
+
 			char buff[256] = { 0, };
 			sprintf_s(buff, "%s %s", GetClientIP(ClientSocket).c_str(), "Enter");
 			logList->WriteLine(buff);
-			clients.push_back(ClientSocket);
+
+			InnoOJTServer::GetInstance()->AddClient(ClientSocket);
 		}
 
 		// 새로운 클라이언트를 처리하는 쓰레드 시작
 		std::thread(handle_client, ClientSocket).detach();		
 	}
-}
-
-
-InnoOJTServer::InnoOJTServer()
-{
-}
-
-InnoOJTServer::~InnoOJTServer()
-{
-
 }
 
 void InnoOJTServer::run()

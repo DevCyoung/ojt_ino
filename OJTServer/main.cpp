@@ -70,9 +70,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Editor::initialize();
 
+    PanelLoader::initialize();
+
     InnoOJTServer::initialize();
 
-    PanelLoader::initialize();
 
     //Content::initialize();
     Scene* scene = new Scene();
