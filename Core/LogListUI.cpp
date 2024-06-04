@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "LogListUI.h"
 
+static std::mutex WriteMutex;
 
 LogListUI::LogListUI()
 {
@@ -26,5 +27,6 @@ void LogListUI::drawForm()
 
 void LogListUI::WriteLine(const std::string& message)
 {
+	std::lock_guard guard(WriteMutex);
 	mLogs.push_back(message);
 }
