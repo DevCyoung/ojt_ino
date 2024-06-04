@@ -16,6 +16,7 @@ void EngineResourceLoader::loadResource()
 {
 	loadMesh();
 	loadShader();
+
 	loadComputeShader();
 	loadTexture();
 	loadMaterial();
@@ -631,6 +632,7 @@ void EngineResourceLoader::loadShader()
 				eBSType::AlphaBlend);
 		gResourceManager->Insert(L"Animation2D", animationShader);
 	}
+	
 
 	//Fill2D Debug
 	{

@@ -1,9 +1,5 @@
-﻿#ifndef PCH_H
-#define PCH_H
-
+﻿#pragma once
 #include "InnoOJTCore.h"
-
-#endif
 
 
 //OJT Server

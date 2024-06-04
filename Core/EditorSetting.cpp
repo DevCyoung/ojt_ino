@@ -36,7 +36,7 @@ void EditorSetting::drawForm()
 {
 	static bool bStartGame = true;
 
-	ImGui::Begin("Editor Setting");		
+	ImGui::Begin("Editor Setting");	
 
 
 	static int func_type = 0, display_count = 10000;

@@ -245,6 +245,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Physics2D.h" />
     <ClInclude Include="Prefab.h" />
+    <ClInclude Include="Protocal.h" />
     <ClInclude Include="RectCollider2D.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderTargetRenderer.h" />
@@ -397,6 +398,7 @@
     </ClCompile>
     <ClCompile Include="Physics2D.cpp" />
     <ClCompile Include="Prefab.cpp" />
+    <ClCompile Include="Protocal.cpp" />
     <ClCompile Include="RectCollider2D.cpp" />
     <ClCompile Include="RectCollider2DUI.cpp" />
     <ClCompile Include="RenderComponent.cpp" />

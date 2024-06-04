@@ -7,6 +7,9 @@
     <Filter Include="Source">
       <UniqueIdentifier>{155cce1c-8a49-4062-8ad1-71ce7f38a30f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Panel">
+      <UniqueIdentifier>{c809116b-46a6-4b3b-902f-33a373765205}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -24,6 +27,13 @@
     <ClInclude Include="pch.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="PanelLoader.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientTestUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="InnoOJTClient.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTClient.ico">
@@ -45,5 +55,12 @@
     <ClCompile Include="pch.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="PanelLoader.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientTestUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="InnoOJTClient.cpp" />
   </ItemGroup>
 </Project>

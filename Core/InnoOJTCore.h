@@ -21,6 +21,15 @@
 #include <commdlg.h>
 #include <d3d11.h>
 
+
+//OJT Server
+#include <thread>
+#include <vector>
+#include <mutex>
+#include <string>
+
+
+//#include <iostream>
 #include "BuildSetting.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
@@ -30,6 +39,8 @@
 #include "DXMath.h"
 #include "DirectXTex.h"
 
+//Inno
+#include "Protocal.h"
 
 using namespace engine::math;
 
@@ -127,8 +138,6 @@ namespace mem::del
 	}
 }
 
-
-#include "framework.h"
 #include "EnumFlag.h"
 
 #define ASSERT_MSG_SWITCH_DEFAULT "switch default"

@@ -18819,7 +18819,7 @@ void ImGui::BeginDockableDragDropSource(ImGuiWindow* window)
 }
 
 void ImGui::BeginDockableDragDropTarget(ImGuiWindow* window)
-{
+    {
     ImGuiContext& g = *GImGui;
 
     //IM_ASSERT(window->RootWindowDockTree == window); // May also be a DockSpace

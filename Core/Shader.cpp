@@ -29,6 +29,8 @@ Shader::Shader(const D3D11_PRIMITIVE_TOPOLOGY topology,
 
 	createVSShader(VSRelativePath, VSFunName, SMType);
 	createPSShader(PSRelativePath, PSFunName);
+
+
 }
 
 Shader::~Shader()
@@ -86,7 +88,7 @@ void Shader::createPSShader(const std::wstring& PSRelativePath, const std::wstri
 		OutputDebugStringA(reinterpret_cast<LPCSTR>((errBlob)->GetBufferPointer()));
 		Assert(false, ASSERT_MSG("failed to create pixel shader"));
 		return;
-	}
+	}	
 }
 
 void Shader::shaderCompile(const std::wstring& relativePath,

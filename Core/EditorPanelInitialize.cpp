@@ -11,14 +11,12 @@
 
 void EditorPanelInitialize()
 {		
-	AddPanel(new EditorSetting);
-	AddPanel(new TestUI2);	
-	AddPanel(new ESCUI);
-	AddPanel(new EditorViewUI);
-	AddPanel(new LogUI);
-	AddPanel(new FolderViewUI);
-
-
+	//AddPanel(new EditorSetting);
+	//AddPanel(new TestUI2);	
+	//AddPanel(new ESCUI);
+	//AddPanel(new EditorViewUI);
+	//AddPanel(new LogUI);
+	//AddPanel(new FolderViewUI);
 }
 
 void AddPanel(PanelUI* const panelUI)

@@ -7,6 +7,9 @@
     <Filter Include="windows">
       <UniqueIdentifier>{d939e8a6-4dff-462f-81e1-f3e889136efc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Panel">
+      <UniqueIdentifier>{8b7f322a-f841-4c48-ad5d-95d97ead1167}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -24,6 +27,31 @@
     <ClInclude Include="pch.h">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="PanelLoader.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainingUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="ChannelRoomMoveUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="ChannelUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="LogListUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="RoomUI.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="InnoOJTServer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTServer.ico">
@@ -40,6 +68,31 @@
     <ClCompile Include="pch.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="PanelLoader.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="ChannelRoomMoveUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="ChannelUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="LogListUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainingUI.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="InnoOJTServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OJTServer.rc">

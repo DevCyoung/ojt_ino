@@ -72,6 +72,7 @@ void Engine::initialize(const HWND hWnd, const UINT renderTargetWidth, const UIN
 
 	//FontManager::initialize();
 	EngineResourceLoader::loadResource();
+
 }
 
 void Engine::run()
@@ -112,7 +113,7 @@ void Engine::lateUpdate()
 
 void Engine::render()
 {	
-#ifndef EDITOR_MODE
+
 	SceneManager::GetInstance()->render(mRenderTargetWidth,
 				mRenderTargetHeight,
 				mGraphicDevice->GetRenderTargetViewAddressOf(),
@@ -121,7 +122,7 @@ void Engine::render()
 	//gGraphicDevice->ClearRenderTarget(
 	//	mGraphicDevice->GetRenderTargetViewAddressOf(),
 	//	mGraphicDevice->GetDepthStencilView(), backgroundColor);
-#endif
+
 }
 
 void Engine::eventUpdate()

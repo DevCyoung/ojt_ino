@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "framework.h"
 #include "OJTClient.h"
-
+#include "InnoOJTClient.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "\\InnoOJTCore\\Debug\\InooOJTCore.lib")
@@ -19,6 +19,7 @@
 #include <ResourceManager.h>
 #include <Texture.h>
 #include <Material.h>
+#include "PanelLoader.h"
 
 #define MAX_LOADSTRING 100
 
@@ -68,17 +69,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
     Editor::initialize();
-
+    InnoOJTClient::initialize();
+    PanelLoader::initialize();
     //Content::initialize();
     Scene* scene = new Scene();
-    Texture* tex = gResourceManager->FindAndLoadOrNull<Texture>(L"\\Texture\\ImGUI\\folder.png");
-
-    GameObject* car = CreateGameObject();
-    car->AddComponent<SpriteRenderer>();
-    car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
-
-    //car->AddComponent<
-    scene->AddGameObject(car, eLayerType::Default);
+    //Texture* tex = gResourceManager->FindAndLoadOrNull<Texture>(L"\\Texture\\ImGUI\\folder.png");
+    //
+    //GameObject* car = CreateGameObject();
+    //car->AddComponent<SpriteRenderer>();
+    //car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
+    //
+    ////car->AddComponent<
+    //scene->AddGameObject(car, eLayerType::Default);
     SceneManager::GetInstance()->LoadScene(scene);
 
     while (true)
@@ -100,6 +102,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             Engine::GetInstance()->run();
             Editor::GetInstance()->run();
 
+            InnoOJTClient::GetInstance()->run();
 
             Engine::GetInstance()->present();
         }
@@ -108,7 +111,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Editor::deleteInstance();
     Engine::deleteInstance();
-
+    InnoOJTClient::deleteInstance();
+    PanelLoader::deleteInstance();
     return (int)msg.wParam;
 }
 
