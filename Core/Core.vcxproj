@@ -229,6 +229,7 @@
     <ClInclude Include="Light2D.h" />
     <ClInclude Include="Light3D.h" />
     <ClInclude Include="LineCollider2D.h" />
+    <ClInclude Include="LogListUI.h" />
     <ClInclude Include="LogUI.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialUI.h" />
@@ -375,6 +376,7 @@
     <ClCompile Include="Light3DUI.cpp" />
     <ClCompile Include="LineCollider2D.cpp" />
     <ClCompile Include="LineCollider2DUI.cpp" />
+    <ClCompile Include="LogListUI.cpp" />
     <ClCompile Include="LogUI.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialUI.cpp" />

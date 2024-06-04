@@ -148,7 +148,6 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphUI.h" />
     <ClInclude Include="ListenUI.h" />
-    <ClInclude Include="LogListUI.h" />
     <ClInclude Include="OJTServer.h" />
     <ClInclude Include="PanelLoader.h" />
     <ClInclude Include="pch.h" />
@@ -172,10 +171,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ListenUI.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="LogListUI.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>

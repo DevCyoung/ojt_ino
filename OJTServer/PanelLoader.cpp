@@ -6,7 +6,7 @@
 #include "ChannelUI.h"
 #include "GraphUI.h"
 #include "ListenUI.h"
-#include "LogListUI.h"
+#include <LogListUI.h>
 #include "RoomUI.h"
 #include "TrainingUI.h"
 PanelLoader::PanelLoader()

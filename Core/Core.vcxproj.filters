@@ -436,6 +436,9 @@
       <Filter>Source\Component</Filter>
     </ClInclude>
     <ClInclude Include="Protocal.h" />
+    <ClInclude Include="LogListUI.h">
+      <Filter>Source\Heper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -814,6 +817,9 @@
       <Filter>Source\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="Protocal.cpp" />
+    <ClCompile Include="LogListUI.cpp">
+      <Filter>Source\Heper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">

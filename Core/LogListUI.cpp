@@ -15,7 +15,7 @@ LogListUI::~LogListUI()
 
 void LogListUI::drawForm()
 {
-	ImGui::Begin("LogListUI");
+	ImGui::Begin(GetTitle().c_str());
 	for (std::string& log: mLogs)
 	{
 		ImGui::Text(log.c_str());

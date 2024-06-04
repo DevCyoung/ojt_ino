@@ -12,7 +12,10 @@ TrainingUI::~TrainingUI()
 
 void TrainingUI::drawForm()
 {
-	ImGui::Begin("TrainingUI");
-	ImGui::Text("Hello TrainingUI");
+	ImGui::Begin("TrainingUI");	
+	ImGui::Button("Traing Start");
+	ImGui::SameLine();
+	ImGui::Button("Traing End");
 	ImGui::End();
 }
+	

@@ -5,19 +5,22 @@
 
 InnoOJTServer::InnoOJTServer()
 	: mPanelManager(nullptr)
-	, mChannel(nullptr)
+	, mChannelUI(nullptr)
 	, mLogListUI(nullptr)
 	, mListenUI(nullptr)
+	, mRoom{}
 {
 	mPanelManager = PanelUIManager::GetInstance();
-	mChannel = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
+	mChannelUI = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
 	mLogListUI = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
 	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
 
 	assert(mPanelManager);
-	assert(mChannel);
+	assert(mChannelUI);
 	assert(mLogListUI);
 	assert(mListenUI);
+
+	mRoom.bTraining = false;
 }
 
 InnoOJTServer::~InnoOJTServer()
@@ -51,27 +54,25 @@ std::string GetClientIP(SOCKET clientSocket) {
 
 	return std::string(ipStr);
 }
-
-
 //// 패킷 헤더 구조체
 //struct PacketHeader {
 //	int packetId;
 //};
 
 // 패킷 ID를 확인하는 함수
-int getPacketId(char (&buffer)[PACKET_SIZE], int recvSize) {
-	// 버퍼가 헤더 크기보다 작으면 유효한 패킷이 아님
-	if (recvSize < sizeof(int))
-	{
-		return -1; // 0은 유효하지 않은 ID로 가정합니다.
-	}
-
-	// 패킷 헤더에서 패킷 ID를 읽음
-	//PacketHeader header;
-	int header = 0;
-	std::memcpy(&header, buffer, sizeof(int));
-	return header;
-}
+//int getPacketId(char (&buffer)[PACKET_SIZE], int recvSize) {
+//	// 버퍼가 헤더 크기보다 작으면 유효한 패킷이 아님
+//	if (recvSize < sizeof(int))
+//	{
+//		return -1; // 0은 유효하지 않은 ID로 가정합니다.
+//	}
+//
+//	// 패킷 헤더에서 패킷 ID를 읽음
+//	//PacketHeader header;
+//	int header = 0;
+//	std::memcpy(&header, buffer, sizeof(int));
+//	return header;
+//}
 
 // 클라이언트 핸들링 함수
 static void handle_client(SOCKET client_socket) {
@@ -161,13 +162,7 @@ static void handle_accept()
 
 		{
 			std::lock_guard<std::mutex> guard(clients_mutex);
-			InnoOJTServer::GetInstance()->Accept(ClientSocket);
-
-			char buff[256] = { 0, };
-			sprintf_s(buff, "%s %s", GetClientIP(ClientSocket).c_str(), "Enter");
-			logList->WriteLine(buff);
-
-			InnoOJTServer::GetInstance()->AddClient(ClientSocket);
+			InnoOJTServer::GetInstance()->Accept(ClientSocket);			
 		}
 
 		// 새로운 클라이언트를 처리하는 쓰레드 시작
@@ -239,8 +234,60 @@ int InnoOJTServer::Listen(const int port)
 
 int InnoOJTServer::Accept(SOCKET ClientSocket)
 {
-	//GetClientIP(ClientSocket);
+	//accept	
+	AddClient(ClientSocket);
+
+
+	//자동으로 채널에 넣는다
+	mChannel.clients.push_back(GetInncoClient(ClientSocket));
+
+
+	//mChannel->AddItemUI
+
 	return 0;
+}
+
+void InnoOJTServer::EnterRoom(int id)
+{
+	std::lock_guard<std::mutex> guard(clients_mutex);
+
+	if (mRoom.clients.size() >= 2)
+	{
+		mLogListUI->WriteLine("Room Clientes 2");
+		return;
+	}
+
+	std::vector<tInnoClient>::iterator iter = mRoom.clients.begin();
+	for (; iter != mRoom.clients.end(); ++iter)
+	{
+		if (iter->id == id)
+		{
+			mLogListUI->WriteLine("He's Already Room");
+			return;
+		}
+	}
+
+	tInnoClient client = GetInncoClient(id);
+	mLogListUI->WriteLine("Enter Room");
+	mRoom.clients.push_back(client);
+}
+
+void InnoOJTServer::ExitRoom(int id)
+{
+	std::lock_guard<std::mutex> guard(clients_mutex);
+
+	std::vector<tInnoClient>::iterator iter = mRoom.clients.begin();
+	for (; iter != mRoom.clients.end(); ++iter)
+	{
+		if (iter->id == id)
+		{
+			mRoom.clients.erase(iter);
+			mLogListUI->WriteLine("Exit Room");
+			return;
+		}
+	}
+
+	mLogListUI->WriteLine("Not exist user");
 }
 
 void InnoOJTServer::SendLog(const tPacketLog& packet)
@@ -292,7 +339,6 @@ void InnoOJTServer::SendPosesse(const tPacketPoses& packet)
 void InnoOJTServer::ReciveLog(const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
-
 	logList->WriteLine(outPacket.Message);
 }
 

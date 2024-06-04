@@ -10,6 +10,8 @@
 //#include "RoomUI.h"
 //#include "TrainingUI.h"
 #include "ClientTestUI.h"
+#include <LogListUI.h>
+
 PanelLoader::PanelLoader()
 {
 	//PanelUIManager::GetInstance()->AddPanel(new ChannelRoomMoveUI);
@@ -19,6 +21,10 @@ PanelLoader::PanelLoader()
 	//PanelUIManager::GetInstance()->AddPanel(new LogListUI);
 	//PanelUIManager::GetInstance()->AddPanel(new RoomUI);
 	PanelUIManager::GetInstance()->AddPanel(new ClientTestUI);
+
+	LogListUI* logListUI = new LogListUI();
+	logListUI->SetTitle("LogListUIClient");
+	PanelUIManager::GetInstance()->AddPanel(new LogListUI);
 }
 
 PanelLoader::~PanelLoader()

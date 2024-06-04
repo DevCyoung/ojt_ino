@@ -55,3 +55,6 @@ void serializeData(const void* ori, size_t dataSize, void* packetBuffer);
 
 // 역직렬화 함수
 void deserializeData(const void* packetBuffer, size_t dataSize, void* ori);
+
+// 패킷 ID를 확인하는 함수
+int getPacketId(char(&buffer)[], int recvSize);

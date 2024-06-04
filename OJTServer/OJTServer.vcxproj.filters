@@ -45,9 +45,6 @@
     <ClInclude Include="ListenUI.h">
       <Filter>Panel</Filter>
     </ClInclude>
-    <ClInclude Include="LogListUI.h">
-      <Filter>Panel</Filter>
-    </ClInclude>
     <ClInclude Include="RoomUI.h">
       <Filter>Panel</Filter>
     </ClInclude>
@@ -81,9 +78,6 @@
       <Filter>Panel</Filter>
     </ClCompile>
     <ClCompile Include="ListenUI.cpp">
-      <Filter>Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="LogListUI.cpp">
       <Filter>Panel</Filter>
     </ClCompile>
     <ClCompile Include="RoomUI.cpp">
