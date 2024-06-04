@@ -24,7 +24,7 @@ PanelLoader::PanelLoader()
 
 	LogListUI* logListUI = new LogListUI();
 	logListUI->SetTitle("LogListUIClient");
-	PanelUIManager::GetInstance()->AddPanel(new LogListUI);
+	PanelUIManager::GetInstance()->AddPanel(logListUI);
 }
 
 PanelLoader::~PanelLoader()

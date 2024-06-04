@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "LogListUI.h"
 
-static std::mutex WriteMutex;
+std::mutex WriteMutex;
 
 LogListUI::LogListUI()
 {
@@ -17,6 +17,8 @@ LogListUI::~LogListUI()
 void LogListUI::drawForm()
 {
 	ImGui::Begin(GetTitle().c_str());
+	std::lock_guard guard(WriteMutex);
+
 	for (std::string& log: mLogs)
 	{
 		ImGui::Text(log.c_str());

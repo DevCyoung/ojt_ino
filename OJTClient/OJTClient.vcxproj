@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CarSimulation.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InnoOJTClient.h" />
     <ClInclude Include="OJTClient.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="ClientTestUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CarSimulation.cpp" />
     <ClCompile Include="InnoOJTClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PanelLoader.cpp" />

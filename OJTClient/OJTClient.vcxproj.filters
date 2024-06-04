@@ -34,6 +34,7 @@
       <Filter>Panel</Filter>
     </ClInclude>
     <ClInclude Include="InnoOJTClient.h" />
+    <ClInclude Include="CarSimulation.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTClient.ico">
@@ -62,5 +63,6 @@
       <Filter>Panel</Filter>
     </ClCompile>
     <ClCompile Include="InnoOJTClient.cpp" />
+    <ClCompile Include="CarSimulation.cpp" />
   </ItemGroup>
 </Project>

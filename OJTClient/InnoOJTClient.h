@@ -7,11 +7,10 @@ public:
 	void run();
 	int Connect(const std::string& ip, const int port);
 
-	void SendLog(const tPacketLog& packet);
-	void SendPos(const tPacketPos& packet);
-	
-	void SendPosesSize(const tPacketPosesSize& packet);
-	void SendPosesse(const tPacketPoses& packet);
+	void SendLog(int messageLen, const char* message);
+	void SendPos(float pos);
+	void SendPosesSize(int size);
+	void SendPoses(int size, const float* poses);
 
 	void ReciveLog(const tPacketLog& outPacket);
 	void RecivePos(const tPacketPos& outPacket);
@@ -20,5 +19,11 @@ public:
 
 	void ReciveStop(const tPacketStop& packet);
 	void ReciveStart(const tPacketStart& packet);
+
+
+	bool bServerTraining;
+
+	float direction;
+	float poses[2];
 };
 

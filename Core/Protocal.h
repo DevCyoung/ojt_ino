@@ -58,3 +58,15 @@ void deserializeData(const void* packetBuffer, size_t dataSize, void* ori);
 
 // 패킷 ID를 확인하는 함수
 int getPacketId(char(&buffer)[], int recvSize);
+
+typedef UINT_PTR SOCKET;
+void send_log(SOCKET socket, int messageLen, const char* message);
+void send_pos(SOCKET socket, float pos);
+void send_poses_size(SOCKET socket, int size);
+void send_poses(SOCKET socket, int size, const float* poses);
+void send_stop(SOCKET socket);
+void send_start(SOCKET socket);
+
+
+//void send_pos()
+//void send_

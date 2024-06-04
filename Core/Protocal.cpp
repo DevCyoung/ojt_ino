@@ -26,3 +26,80 @@ int getPacketId(char(&buffer)[], int recvSize) {
 	std::memcpy(&header, buffer, sizeof(int));
 	return header;
 }
+
+void send_log(SOCKET socket, int messageLen, const char* message)
+{
+	tPacketLog packet = {};
+
+	packet.PacketID = ePacketID::Log;
+	packet.MessageLen = messageLen;
+	memcpy(packet.Message, message, messageLen);
+
+	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
+	{
+		assert(false);
+	}
+}
+
+void send_pos(SOCKET socket, float pos)
+{
+	tPacketPos packet = {};
+
+	packet.PacketID = ePacketID::Pos;
+	packet.Position = pos;
+
+	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
+	{
+		assert(false);
+	}
+}
+
+void send_poses_size(SOCKET socket, int size)
+{
+	tPacketPosesSize packet = {};
+
+	packet.PacketID = ePacketID::PosesSize;
+	packet.Size = size;
+
+	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
+	{
+		assert(false);
+	}
+}
+
+void send_poses(SOCKET socket, int size, const float* poses)
+{
+	tPacketPoses packet = {};
+
+	packet.PacketID = ePacketID::Poses;
+	memcpy(packet.Poses, poses, sizeof(float) * size);
+
+	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
+	{
+		assert(false);
+	}
+}
+
+void send_stop(SOCKET socket)
+{
+	tPacketPoses packet = {};
+
+	packet.PacketID = ePacketID::Stop;
+
+	if (send(socket, (const char*)&packet, sizeof(tPacketLog), 0) == SOCKET_ERROR)
+	{
+		assert(false);
+	}
+}
+
+void send_start(SOCKET socket)
+{
+	tPacketPoses packet = {};
+
+	packet.PacketID = ePacketID::Start;
+
+	if (send(socket, (const char*)&packet, sizeof(tPacketLog), 0) == SOCKET_ERROR)
+	{
+		assert(false);
+	}
+}

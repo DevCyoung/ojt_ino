@@ -3,15 +3,18 @@
 #include <iostream>
 #include <LogListUI.h>
 #include <PanelUIManager.h>
-
+#include <TimeManager.h>
 #define DEFAULT_PORT 54000
 #define DEFAULT_BUFLEN 2048
 
 static SOCKET ConnectSocket = INVALID_SOCKET;
-
+std::mutex client_mutex;
 InnoOJTClient::InnoOJTClient()
+	: bServerTraining(false)
+	, poses{0, }
+	, direction(1.f)
 {
-
+	
 }
 
 InnoOJTClient::~InnoOJTClient()
@@ -47,7 +50,7 @@ static void receive_messages(SOCKET ConnectSocket) {
 
 		int bytesReceived = recv(ConnectSocket, recvbuf, recvbuflen, 0);
 		ePacketID id = (ePacketID)getPacketId(recvbuf, recvbuflen);
-		//std::lock_guard<std::mutex> guard(clients_mutex);
+		std::lock_guard<std::mutex> guard(client_mutex);
 
 		if (bytesReceived > 0) 
 		{
@@ -120,19 +123,31 @@ static void receive_messages(SOCKET ConnectSocket) {
 
 void InnoOJTClient::run()
 {
-	std::string sendbuf;
-	//while (true) 
-	//{
-	//	std::getline(std::cin, sendbuf);
-	//
-	//	auto start = std::chrono::high_resolution_clock::now();  // 시작 시간 기록
-	//	if (send(ConnectSocket, sendbuf.c_str(), sendbuf.length(), 0) == SOCKET_ERROR) {
-	//		std::cerr << "Send failed.\n";
-	//		break;
-	//	}
-	//	auto end = std::chrono::high_resolution_clock::now();  // 종료 시간 기록
-	//	std::chrono::duration<double> elapsed = end - start;
-	//}
+	if (ConnectSocket == INVALID_SOCKET)
+	{
+		return;
+	}
+
+	if (bServerTraining)
+	{
+		poses[0] += gDeltaTime * 15.f * direction;
+		SendPos(poses[0]);
+	}
+
+	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
+
+
+	static float time = 0.f;
+
+	time += gDeltaTime;
+
+	if (time >= 0.016f && bServerTraining)
+	{		
+		char buff[256] = { 0, };
+		//sprintf_s(buff, "pos1:%f , pos2:%f", poses[0], poses[1]);
+		//logList->WriteLine(buff);
+		time = 0.f;
+	}
 }
 
 int InnoOJTClient::Connect(const std::string& ip , const int port)
@@ -189,49 +204,39 @@ int InnoOJTClient::Connect(const std::string& ip , const int port)
 	return 0;
 }
 
-void InnoOJTClient::SendLog(const tPacketLog& packet)
+void InnoOJTClient::SendLog(int messageLen, const char* message)
 {
-	char buff[sizeof(tPacketLog)];
-
-	serializeData(&packet, sizeof(tPacketLog), buff);
-	if (send(ConnectSocket, buff, sizeof(tPacketLog), 0) == SOCKET_ERROR)
-	{
-		assert(false);
-	}
+	send_log(ConnectSocket, messageLen, message);
 }
 
-void InnoOJTClient::SendPos(const tPacketPos& packet)
+void InnoOJTClient::SendPos(float pos)
 {
-	char buff[sizeof(tPacketPos)];
-
-	serializeData(&packet, sizeof(tPacketPos), buff);
-	if (send(ConnectSocket, buff, sizeof(tPacketPos), 0) == SOCKET_ERROR)
-	{
-		assert(false);
-	}
+	send_pos(ConnectSocket, pos);
 }
 
-
-void InnoOJTClient::SendPosesSize(const tPacketPosesSize& packet)
+void InnoOJTClient::SendPosesSize(int size)
 {
+	send_poses_size(ConnectSocket, size);
 }
 
-void InnoOJTClient::SendPosesse(const tPacketPoses& packet)
+void InnoOJTClient::SendPoses(int size, const float* poses)
 {
+	send_poses(ConnectSocket, size, poses);
 }
-
-
 
 
 
 void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
+	assert(logList);
+
 	logList->WriteLine(outPacket.Message);
 }
 
 void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 {
+	poses[1] = outPacket.Position;
 }
 
 void InnoOJTClient::RecivePosesSize(const tPacketPosesSize& outPacket)
@@ -247,5 +252,6 @@ void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)
-{
+{	
+	bServerTraining = true;
 }

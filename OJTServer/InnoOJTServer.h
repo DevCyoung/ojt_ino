@@ -7,9 +7,9 @@
 
 struct tInnoClient
 {
-	int id;
-	std::string ip;
-	SOCKET socket;
+	int ClientID;
+	std::string IP;
+	SOCKET Socket;
 };
 
 struct tInnoChanel
@@ -20,6 +20,7 @@ struct tInnoChanel
 struct tInnoRoom
 {
 	bool bTraining;
+	float poses[8];	
 	std::vector<tInnoClient> clients;
 };
 
@@ -36,17 +37,17 @@ public:
 	void EnterRoom(int id);
 	void ExitRoom(int id);
 
-	void SendLog(const tPacketLog& packet);
-	void SendPos(const tPacketPos& packet);
-	void SendStop(const tPacketStop& packet);
-	void SendStart(const tPacketStart& packet);
-	void SendPosesSize(const tPacketPosesSize& packet);
-	void SendPosesse(const tPacketPoses& packet);
+	void SendLog(int clientID, int messageLen, const char* message);
+	void SendPos(int clientID, float pos);
+	void SendStop(int clientID);
+	void SendStart(int clientID);
+	void SendPosesSize(int clientID, int size);
+	void SendPoses(int clientID, int size, const float* poses);
 
-	void ReciveLog(const tPacketLog& outPacket);
-	void RecivePos(const tPacketPos& outPacket);
-	void RecivePosesSize(const tPacketPosesSize& outPacket);
-	void RecivePoses(const tPacketPoses& outPacket);
+	void ReciveLog(int clientID, const tPacketLog& outPacket);
+	void RecivePos(int clientID, const tPacketPos& outPacket);
+	void RecivePosesSize(int clientID, const tPacketPosesSize& outPacket);
+	void RecivePoses(int clientID, const tPacketPoses& outPacket);
 
 	static inline int serializeNumber = 0;
 
@@ -87,7 +88,7 @@ public:
 		std::vector<tInnoClient>::iterator iter = mClients.begin();
 		for (; iter != mClients.end(); ++iter)
 		{
-			if (iter->socket == socket)
+			if (iter->Socket == socket)
 			{
 				mClients.erase(iter);
 				break;
@@ -98,34 +99,8 @@ public:
 	}
 
 
-	tInnoClient GetInncoClient(SOCKET socket)
-	{
-		std::vector<tInnoClient>::iterator iter = mClients.begin();
-		for (; iter != mClients.end(); ++iter)
-		{
-			if (iter->socket == socket)
-			{
-				return *iter;
-			}
-		}
-
-		assert(false);
-	}
-
-	tInnoClient GetInncoClient(int id)
-	{
-		std::vector<tInnoClient>::iterator iter = mClients.begin();
-		for (; iter != mClients.end(); ++iter)
-		{
-			if (iter->id == id)
-			{
-				return *iter;
-			}
-
-		}
-
-		assert(false);
-	}
+	tInnoClient GetInncoClient(SOCKET socket);
+	tInnoClient GetInncoClient(int id);
 
 private:
 	

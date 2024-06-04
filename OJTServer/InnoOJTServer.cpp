@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "InnoOJTServer.h"
-
+#include <TimeManager.h>
 #define PACKET_SIZE 2048
 
 InnoOJTServer::InnoOJTServer()
@@ -100,6 +100,7 @@ static void handle_client(SOCKET client_socket) {
 		//	}
 		//}
 		int packetId = getPacketId(recvbuf, recvbuflen);
+		int clientID = server->GetInncoClient(client_socket).ClientID;
 		std::lock_guard<std::mutex> guard(clients_mutex);
 		switch (packetId)
 		{
@@ -107,28 +108,28 @@ static void handle_client(SOCKET client_socket) {
 		{
 			tPacketLog log;
 			deserializeData(recvbuf, sizeof(tPacketLog), &log);
-			server->ReciveLog(log);
+			server->ReciveLog(clientID, log);
 		}
 			break;
 		case Pos:
 		{
 			tPacketPos pos;
 			deserializeData(recvbuf, sizeof(tPacketPos), &pos);
-			server->RecivePos(pos);
+			server->RecivePos(clientID, pos);
 		}
 			break;		
 		case PosesSize:
 		{
 			tPacketPosesSize posesSize;
 			deserializeData(recvbuf, sizeof(tPacketPosesSize), &posesSize);
-			server->RecivePosesSize(posesSize);
+			server->RecivePosesSize(clientID, posesSize);
 		}
 			break;
 		case Poses:
 		{
 			tPacketPoses poses;
 			deserializeData(recvbuf, sizeof(tPacketPoses), &poses);
-			server->RecivePoses(poses);
+			server->RecivePoses(clientID, poses);
 		}
 			break;
 		default:			
@@ -172,7 +173,36 @@ static void handle_accept()
 
 void InnoOJTServer::run()
 {
+	if (ListenSocket == INVALID_SOCKET)
+	{
+		return;
+	}
 
+	static float trainingTime = 0.f;
+
+	trainingTime += gDeltaTime;
+
+	if (mRoom.bTraining && trainingTime >= (1.f / 120.f))
+	{
+		//position broadcast
+		for (int i = 0; i < mRoom.clients.size(); ++i)
+		{
+			//broad cast
+
+			for (int j = 0; j < mRoom.clients.size(); ++j)
+			{
+				if (i == j)
+				{
+					continue;
+				}
+
+				SendPos(mRoom.clients[i].ClientID, mRoom.poses[j]);
+			}
+		}
+
+
+		trainingTime = 0.f;
+	}
 }
 
 int InnoOJTServer::Listen(const int port)
@@ -260,7 +290,7 @@ void InnoOJTServer::EnterRoom(int id)
 	std::vector<tInnoClient>::iterator iter = mRoom.clients.begin();
 	for (; iter != mRoom.clients.end(); ++iter)
 	{
-		if (iter->id == id)
+		if (iter->ClientID == id)
 		{
 			mLogListUI->WriteLine("He's Already Room");
 			return;
@@ -279,7 +309,7 @@ void InnoOJTServer::ExitRoom(int id)
 	std::vector<tInnoClient>::iterator iter = mRoom.clients.begin();
 	for (; iter != mRoom.clients.end(); ++iter)
 	{
-		if (iter->id == id)
+		if (iter->ClientID == id)
 		{
 			mRoom.clients.erase(iter);
 			mLogListUI->WriteLine("Exit Room");
@@ -290,28 +320,52 @@ void InnoOJTServer::ExitRoom(int id)
 	mLogListUI->WriteLine("Not exist user");
 }
 
-void InnoOJTServer::SendLog(const tPacketLog& packet)
+void InnoOJTServer::SendLog(int clientID, int messageLen, const char* message)
 {
+	std::lock_guard<std::mutex> guard(clients_mutex);
+	tInnoClient client = GetInncoClient(clientID);
+
+	send_log(client.Socket, messageLen, message);
 }
 
-void InnoOJTServer::SendPos(const tPacketPos& packet)
+void InnoOJTServer::SendPos(int clientID, float pos)
 {
+	std::lock_guard<std::mutex> guard(clients_mutex);
+	tInnoClient client = GetInncoClient(clientID);
+
+	send_pos(client.Socket, pos);
 }
 
-void InnoOJTServer::SendStop(const tPacketStop& packet)
+void InnoOJTServer::SendStop(int clientID)
 {
+	std::lock_guard<std::mutex> guard(clients_mutex);
+	tInnoClient client = GetInncoClient(clientID);
+
+	send_stop(client.Socket);
 }
 
-void InnoOJTServer::SendStart(const tPacketStart& packet)
+void InnoOJTServer::SendStart(int clientID)
 {
+	std::lock_guard<std::mutex> guard(clients_mutex);
+	tInnoClient client = GetInncoClient(clientID);
+
+	send_start(client.Socket);
 }
 
-void InnoOJTServer::SendPosesSize(const tPacketPosesSize& packet)
+void InnoOJTServer::SendPosesSize(int clientID, int size)
 {
+	std::lock_guard<std::mutex> guard(clients_mutex);
+	tInnoClient client = GetInncoClient(clientID);
+
+	send_poses_size(client.Socket, size);
 }
 
-void InnoOJTServer::SendPosesse(const tPacketPoses& packet)
+void InnoOJTServer::SendPoses(int clientID, int size, const float* poses)
 {
+	std::lock_guard<std::mutex> guard(clients_mutex);
+	tInnoClient client = GetInncoClient(clientID);
+
+	send_poses(client.Socket, size, poses);
 }
 
 
@@ -336,24 +390,56 @@ void InnoOJTServer::SendPosesse(const tPacketPoses& packet)
 
 
 
-void InnoOJTServer::ReciveLog(const tPacketLog& outPacket)
+void InnoOJTServer::ReciveLog(int clientID, const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
 	logList->WriteLine(outPacket.Message);
 }
 
-void InnoOJTServer::RecivePos(const tPacketPos& outPacket)
+void InnoOJTServer::RecivePos(int clientID, const tPacketPos& outPacket)
 {
-	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
-	char buff[512] = { 0, };
-	sprintf_s(buff, "%f", outPacket.Position);
-	logList->WriteLine(buff);
+	for (int i = 0; i < mRoom.clients.size(); ++i)
+	{
+		if (clientID == mRoom.clients[i].ClientID)
+		{
+			mRoom.poses[i] = outPacket.Position;
+			break;
+		}
+	}	
 }
 
-void InnoOJTServer::RecivePosesSize(const tPacketPosesSize& outPacket)
+void InnoOJTServer::RecivePosesSize(int clientID, const tPacketPosesSize& outPacket)
 {
 }
 
-void InnoOJTServer::RecivePoses(const tPacketPoses& outPacket)
+void InnoOJTServer::RecivePoses(int clientID, const tPacketPoses& outPacket)
 {
+}
+
+tInnoClient InnoOJTServer::GetInncoClient(SOCKET socket)
+{
+	std::vector<tInnoClient>::iterator iter = mClients.begin();
+	for (; iter != mClients.end(); ++iter)
+	{
+		if (iter->Socket == socket)
+		{
+			return *iter;
+		}
+	}
+
+	assert(false);
+}
+
+tInnoClient InnoOJTServer::GetInncoClient(int id)
+{
+	std::vector<tInnoClient>::iterator iter = mClients.begin();
+	for (; iter != mClients.end(); ++iter)
+	{
+		if (iter->ClientID == id)
+		{
+			return *iter;
+		}
+
+	}
+	assert(false);
 }
