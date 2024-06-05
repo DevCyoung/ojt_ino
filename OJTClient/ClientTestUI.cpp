@@ -5,8 +5,8 @@
 #include <EngineFile.h>
 #include "CarSimulation.h"
 
-#define DEFAULT_PORT 54000
-#define DEFAULT_BUFLEN 512
+#define INNO_DEFAULT_PORT 54000
+#define INNO_MAX_PACKET_SIZE 512
 
 ClientTestUI::ClientTestUI()
 {
@@ -19,8 +19,8 @@ ClientTestUI::~ClientTestUI()
 
 // 서버로부터 메시지 수신하는 함수
 void receive_messages(SOCKET ConnectSocket) {
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
+	char recvbuf[INNO_MAX_PACKET_SIZE];
+	int recvbuflen = INNO_MAX_PACKET_SIZE;
 
 	while (true) {
 		auto start = std::chrono::high_resolution_clock::now();  // 시작 시간 기록

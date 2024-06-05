@@ -71,6 +71,7 @@ void send_poses(SOCKET socket, int size, const float* poses)
 {
 	tPacketPoses packet = {};
 
+	packet.Size = size;
 	packet.PacketID = ePacketID::Poses;
 	memcpy(packet.Poses, poses, sizeof(float) * size);
 
@@ -86,7 +87,7 @@ void send_stop(SOCKET socket)
 
 	packet.PacketID = ePacketID::Stop;
 
-	if (send(socket, (const char*)&packet, sizeof(tPacketLog), 0) == SOCKET_ERROR)
+	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
 	{
 		assert(false);
 	}
@@ -98,8 +99,21 @@ void send_start(SOCKET socket)
 
 	packet.PacketID = ePacketID::Start;
 
-	if (send(socket, (const char*)&packet, sizeof(tPacketLog), 0) == SOCKET_ERROR)
+	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
 	{
 		assert(false);
 	}
 }
+
+void send_finish(SOCKET socket)
+{
+	tPacketFinish packet = {};
+
+	packet.PacketID = ePacketID::Finish;
+
+	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
+	{
+		assert(false);
+	}
+}
+

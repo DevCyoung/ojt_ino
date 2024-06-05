@@ -4,227 +4,202 @@
 #include <LogListUI.h>
 #include <PanelUIManager.h>
 #include <TimeManager.h>
-#define DEFAULT_PORT 54000
-#define DEFAULT_BUFLEN 2048
 
-static SOCKET ConnectSocket = INVALID_SOCKET;
-std::mutex client_mutex;
+#define gLogListUI (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
+
+static SOCKET gConnectSocket = INVALID_SOCKET;
+static std::mutex gClientMutex;
+
 InnoOJTClient::InnoOJTClient()
 	: bServerTraining(false)
-	, poses{0, }
+	, bFinish(false)
 	, direction(1.f)
+	, poses{ 0, }
+	, mBSize(0)
+	, mBPosArray()
+	, mSimulation()
 {
-	
 }
 
 InnoOJTClient::~InnoOJTClient()
 {
-
 }
 
 // 서버로부터 메시지 수신하는 함수
-static void receive_messages(SOCKET ConnectSocket) {
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
+static void ClientRecive(SOCKET connectSocket)
+{
+	char recvbuf[INNO_MAX_PACKET_SIZE];
+	int recvbuflen = INNO_MAX_PACKET_SIZE;
 
 	InnoOJTClient* client = InnoOJTClient::GetInstance();
 
-	while (true) 
+	while (true)
 	{
+		int bytesReceived = recv(connectSocket, recvbuf, recvbuflen, 0);
+		std::lock_guard<std::mutex> guard(gClientMutex);
+		ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
 
-		//auto start = std::chrono::high_resolution_clock::now();  // 시작 시간 기록
-		//int bytesReceived = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-		//auto end = std::chrono::high_resolution_clock::now();  // 종료 시간 기록
-		//if (bytesReceived > 0) {
-		//	//std::cout << "Received: " << std::string(recvbuf, 0, bytesReceived) << "\n";
-		//	std::chrono::duration<double> elapsed = end - start;
-		//}
-		//else if (bytesReceived == 0) {
-		//	//std::cout << "Connection closed by server.\n";
-		//	break;
-		//}
-		//else {
-		//	//std::cerr << "recv failed.\n";
-		//	break;
-		//}
-
-		int bytesReceived = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-		ePacketID id = (ePacketID)getPacketId(recvbuf, recvbuflen);
-		std::lock_guard<std::mutex> guard(client_mutex);
-
-		if (bytesReceived > 0) 
+		if (bytesReceived > 0)
 		{
-			switch (id)
+			switch (packetID)
 			{
 			case Log:
-			{			
+			{
 				tPacketLog log;
-				deserializeData(recvbuf, sizeof(tPacketLog), &log);				
+				deserializeData(recvbuf, sizeof(tPacketLog), &log);
 				client->ReciveLog(log);
 			}
-				break;
+			break;
 			case Pos:
 			{
 				tPacketPos pos;
 				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
 				client->RecivePos(pos);
 			}
-				break;
+			break;
 			case Start:
 			{
 				tPacketStart start;
-				deserializeData(recvbuf, sizeof(tPacketPos), &start);
+				deserializeData(recvbuf, sizeof(tPacketStart), &start);
 				client->ReciveStart(start);
 			}
-				break;
+			break;
 			case Stop:
 			{
 				tPacketStop stop;
-				deserializeData(recvbuf, sizeof(tPacketPos), &stop);
+				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				client->ReciveStop(stop);
 			}
-				break;
+			break;
 			case PosesSize:
 			{
-				tPacketPosesSize posesSize;
-				deserializeData(recvbuf, sizeof(tPacketPosesSize), &posesSize);
-				client->RecivePosesSize(posesSize);
+				//tPacketPosesSize posesSize;
+				//deserializeData(recvbuf, sizeof(tPacketPosesSize), &posesSize);
+				//client->RecivePosesSize(posesSize);
+				gLogListUI->WriteError("PosesSize not invalied packet");
 			}
-				break;
+			break;
 			case Poses:
 			{
 				tPacketPoses poses;
 				deserializeData(recvbuf, sizeof(tPacketPoses), &poses);
 				client->RecivePoses(poses);
 			}
-				break;
+			break;
+			case Finish:
+			{
+				tPacketFinish finish;
+				deserializeData(recvbuf, sizeof(tPacketFinish), &finish);
+				client->ReciveFinish(finish);
+			}
+			break;
 			default:
 				break;
 			}
-			//	//std::cout << "Received: " << std::string(recvbuf, 0, bytesReceived) << "\n";
-			//	std::chrono::duration<double> elapsed = end - start;
 		}
 		else if (bytesReceived == 0)
-		{
-			//std::cout << "Connection closed by server.\n";
-		//	break;
+		{			
+			gLogListUI->WriteLine("Connection closed by server.");
+			break;
 		}
 		else
 		{
-
 		}
-
 	}
 
-	closesocket(ConnectSocket);
+	//DisConnect
+	closesocket(connectSocket);
 	WSACleanup();
 }
 
 
 void InnoOJTClient::run()
 {
-	if (ConnectSocket == INVALID_SOCKET)
+	if (gConnectSocket == INVALID_SOCKET)
 	{
 		return;
 	}
 
+	//동역학 갱신
 	if (bServerTraining)
 	{
 		poses[0] += gDeltaTime * 15.f * direction;
 		SendPos(poses[0]);
 	}
-
-	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
-
-
-	static float time = 0.f;
-
-	time += gDeltaTime;
-
-	if (time >= 0.016f && bServerTraining)
-	{		
-		char buff[256] = { 0, };
-		//sprintf_s(buff, "pos1:%f , pos2:%f", poses[0], poses[1]);
-		//logList->WriteLine(buff);
-		time = 0.f;
-	}
 }
 
-int InnoOJTClient::Connect(const std::string& ip , const int port)
+int InnoOJTClient::Connect(const std::string& ip, const int port)
 {
 	WSADATA wsaData;
-	
 	sockaddr_in clientService;
 
 	// Winsock 초기화
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-		//std::cerr << "WSAStartup failed.\n";
-		//return 1;
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		gLogListUI->WriteError("WSAStartup failed.");
+		return E_FAIL;
 	}
 
-	// 소켓 생성
-	ConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (ConnectSocket == INVALID_SOCKET) {
-		//std::cerr << "Socket creation failed.\n";
-		//WSACleanup();
-		//return 1;
+	//클라이언트소켓 생성
+	gConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (gConnectSocket == INVALID_SOCKET)
+	{
+		gLogListUI->WriteError("Socket creation failed.");
+		return E_FAIL;
 	}
 
 	// 서버 주소 설정
 	clientService.sin_family = AF_INET;
-	clientService.sin_port = htons(DEFAULT_PORT);
+	clientService.sin_port = htons(INNO_DEFAULT_PORT);
 
 	// 서버에 연결
-	if (inet_pton(AF_INET, ip.c_str(), &clientService.sin_addr) <= 0) {
-		//std::cerr << "Invalid address/ Address not supported \n";
-		closesocket(ConnectSocket);
+	if (inet_pton(AF_INET, ip.c_str(), &clientService.sin_addr) <= 0)
+	{
+		gLogListUI->WriteError("Invalid address Address not supported .");
+		closesocket(gConnectSocket);
 		WSACleanup();
-		//return 1;
+		return E_FAIL;
 	}
 
-	if (connect(ConnectSocket, (sockaddr*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
-		//std::cerr << "Connect failed.\n";
-		closesocket(ConnectSocket);
+	if (connect(gConnectSocket, (sockaddr*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
+		gLogListUI->WriteError("Connect failed");
+		closesocket(gConnectSocket);
 		WSACleanup();
-		//\return 1;
+		return E_FAIL;
 	}
 
-	//std::cout << "Connected to server.\n";
+	//서버와 연결됨
+	gLogListUI->WriteLine("Connected to server.");
 
 	// 서버로부터 메시지를 받는 쓰레드 시작
-	std::thread(receive_messages, ConnectSocket).detach();
-
-
-
-
-
-	//Disconnect
-	//closesocket(ConnectSocket);
-	//WSACleanup();
-	return 0;
+	std::thread(ClientRecive, gConnectSocket).detach();
+	return S_OK;
 }
 
 void InnoOJTClient::SendLog(int messageLen, const char* message)
 {
-	send_log(ConnectSocket, messageLen, message);
+	send_log(gConnectSocket, messageLen, message);
 }
 
 void InnoOJTClient::SendPos(float pos)
 {
-	send_pos(ConnectSocket, pos);
+	send_pos(gConnectSocket, pos);
 }
 
-void InnoOJTClient::SendPosesSize(int size)
+void InnoOJTClient::SendStop()
 {
-	send_poses_size(ConnectSocket, size);
+	send_stop(gConnectSocket);
 }
+
+//void InnoOJTClient::SendPosesSize(int size)
+//{
+//	send_poses_size(gConnectSocket, size);
+//}
 
 void InnoOJTClient::SendPoses(int size, const float* poses)
 {
-	send_poses(ConnectSocket, size, poses);
+	send_poses(gConnectSocket, size, poses);
 }
-
-
 
 void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 {
@@ -239,19 +214,72 @@ void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 	poses[1] = outPacket.Position;
 }
 
-void InnoOJTClient::RecivePosesSize(const tPacketPosesSize& outPacket)
-{
-}
+//void InnoOJTClient::RecivePosesSize(const tPacketPosesSize& outPacket)
+//{
+//	mBSize = outPacket.Size;
+//}
 
 void InnoOJTClient::RecivePoses(const tPacketPoses& outPacket)
 {
+	for (int i = 0; i < outPacket.Size; ++i)
+	{
+		mBPosArray.push_back(outPacket.Poses[i]);
+	}
+}
+
+void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
+{
+	bFinish = true;
+
+	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
+	logList->WriteError("Training Finish");
 }
 
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
+	bServerTraining = false;
+
+	for (int i = 0; i < 100000; ++i)
+	{
+		mSimulation.Update();
+	}
+
+	int sampleCount = mSimulation.GetSampleDataCount();
+	std::queue<float> vecPoses;
+
+	for (int i = 0; i < sampleCount; ++i)
+	{
+		vecPoses.push(mSimulation.GetSampleData(i).xPos);
+	}
+
+	//SendPosesSize(11);
+
+	while (!vecPoses.empty())
+	{
+		std::vector<float> tempPoses;
+		for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
+		{
+			if (vecPoses.empty())
+			{
+				break;
+			}
+
+			tempPoses.push_back(vecPoses.front());
+			vecPoses.pop();
+		}
+
+		if (vecPoses.empty())
+		{
+			break;
+		}
+
+		SendPoses(tempPoses.size(), tempPoses.data());
+	}
+
+	SendStop();
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)
-{	
+{
 	bServerTraining = true;
 }

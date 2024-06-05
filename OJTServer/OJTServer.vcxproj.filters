@@ -7,7 +7,7 @@
     <Filter Include="windows">
       <UniqueIdentifier>{d939e8a6-4dff-462f-81e1-f3e889136efc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Panel">
+    <Filter Include="Source\Panel">
       <UniqueIdentifier>{8b7f322a-f841-4c48-ad5d-95d97ead1167}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -28,27 +28,29 @@
       <Filter>windows</Filter>
     </ClInclude>
     <ClInclude Include="PanelLoader.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
     <ClInclude Include="GraphUI.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
     <ClInclude Include="TrainingUI.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
     <ClInclude Include="ChannelRoomMoveUI.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
     <ClInclude Include="ChannelUI.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
     <ClInclude Include="ListenUI.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
     <ClInclude Include="RoomUI.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="InnoOJTServer.h" />
+    <ClInclude Include="InnoOJTServer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTServer.ico">
@@ -66,27 +68,29 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="PanelLoader.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="GraphUI.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="ChannelRoomMoveUI.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="ChannelUI.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="ListenUI.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="RoomUI.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="TrainingUI.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="InnoOJTServer.cpp" />
+    <ClCompile Include="InnoOJTServer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OJTServer.rc">

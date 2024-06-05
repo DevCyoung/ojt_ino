@@ -58,6 +58,9 @@
     <Filter Include="Source\Load">
       <UniqueIdentifier>{b2131637-0c2a-4460-84bc-348828bddfdf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protocal">
+      <UniqueIdentifier>{fd9dd1d5-970b-4746-b636-480ea9f6e76f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InnoOJTCore.h">
@@ -435,9 +438,11 @@
     <ClInclude Include="EngineComponentTrait.h">
       <Filter>Source\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Protocal.h" />
     <ClInclude Include="LogListUI.h">
       <Filter>Source\Heper</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocal.h">
+      <Filter>Protocal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -816,9 +821,11 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>Source\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="Protocal.cpp" />
     <ClCompile Include="LogListUI.cpp">
       <Filter>Source\Heper</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocal.cpp">
+      <Filter>Protocal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

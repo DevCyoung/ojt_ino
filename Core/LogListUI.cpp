@@ -19,16 +19,51 @@ void LogListUI::drawForm()
 	ImGui::Begin(GetTitle().c_str());
 	std::lock_guard guard(WriteMutex);
 
-	for (std::string& log: mLogs)
+	for (auto& log: mLogs)
 	{
-		ImGui::Text(log.c_str());
-	}	
-	//sImGui::Scroll();
+		if (log.Type == eInnoMessageType::Default)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 255, 255));			
+			
+		}		
+		else if (log.Type == eInnoMessageType::Error)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 50, 50, 255));			
+		}
+		else if (log.Type == eInnoMessageType::Warning)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 50, 255));			
+		}
+		else
+		{
+			assert(false);
+		}
+		ImGui::Text(log.Message.c_str());
+		ImGui::PopStyleColor();
+	}		
 	ImGui::End();
 }
 
 void LogListUI::WriteLine(const std::string& message)
 {
 	std::lock_guard guard(WriteMutex);
-	mLogs.push_back(message);
+	mLogs.push_back({eInnoMessageType::Default, message });
+}
+
+void LogListUI::WriteError(const std::string& message)
+{
+	std::string errorMessage = "Error: ";
+	errorMessage += message;
+
+	std::lock_guard guard(WriteMutex);	
+	mLogs.push_back({ eInnoMessageType::Error,errorMessage });
+}
+
+void LogListUI::WriteWarning(const std::string& message)
+{
+	std::string warningMessage = "Warning: ";
+	warningMessage += message;
+
+	std::lock_guard guard(WriteMutex);
+	mLogs.push_back({ eInnoMessageType::Warning,warningMessage });
 }

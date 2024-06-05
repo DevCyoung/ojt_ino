@@ -1,4 +1,5 @@
 #pragma once
+
 class Protocal
 {
 };
@@ -11,7 +12,14 @@ enum ePacketID
 	Stop,
 	PosesSize,
 	Poses,
+	Finish,
 };
+
+#define INNO_MAX_POS_SIZE 256
+#define INNO_MAX_PACKET_SIZE 2048
+#define INNO_DEFAULT_PORT 54000
+
+typedef UINT_PTR SOCKET;
 
 struct tPacketLog
 {
@@ -46,7 +54,12 @@ struct tPacketPoses
 {
 	ePacketID PacketID;
 	int Size;
-	float Poses[256];
+	float Poses[INNO_MAX_POS_SIZE];
+};
+
+struct tPacketFinish
+{
+	ePacketID PacketID;
 };
 
 // 직렬화 함수
@@ -56,17 +69,14 @@ void serializeData(const void* ori, size_t dataSize, void* packetBuffer);
 // 역직렬화 함수
 void deserializeData(const void* packetBuffer, size_t dataSize, void* ori);
 
-// 패킷 ID를 확인하는 함수
+//패킷버퍼에서 패킷ID를 확인하는 함수
 int getPacketId(char(&buffer)[], int recvSize);
 
-typedef UINT_PTR SOCKET;
+
 void send_log(SOCKET socket, int messageLen, const char* message);
 void send_pos(SOCKET socket, float pos);
 void send_poses_size(SOCKET socket, int size);
 void send_poses(SOCKET socket, int size, const float* poses);
 void send_stop(SOCKET socket);
 void send_start(SOCKET socket);
-
-
-//void send_pos()
-//void send_
+void send_finish(SOCKET socket);

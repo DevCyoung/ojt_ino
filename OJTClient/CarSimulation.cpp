@@ -52,6 +52,10 @@ void CarSimulation::Update()
 	x[2] = x[2] + mSamplingTime * xdot[2];
 	x[3] = x[3] + mSamplingTime * xdot[3];
 
+	static float testPos = 0.f;
+
+	testPos += 5.f;
+
 	tSampleData sampleData = {};
 
 	sampleData.SimTime = mSimTime;
@@ -62,7 +66,7 @@ void CarSimulation::Update()
 	sampleData.ZuSpeed = x[3];
 	sampleData.ZuAcc = xdot[3];
 	sampleData.Zr = zr;
-	sampleData.xPos = 0.f;
+	sampleData.xPos += testPos;
 	sampleData.xSpeed = mSpeed;
 
 	mSampleDatas.push_back(sampleData);

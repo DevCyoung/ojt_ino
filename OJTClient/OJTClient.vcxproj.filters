@@ -7,8 +7,11 @@
     <Filter Include="Source">
       <UniqueIdentifier>{155cce1c-8a49-4062-8ad1-71ce7f38a30f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Panel">
+    <Filter Include="Source\Panel">
       <UniqueIdentifier>{c809116b-46a6-4b3b-902f-33a373765205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\CarSimulation">
+      <UniqueIdentifier>{19161a58-cbcf-466f-a783-309ac0aadcff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -28,13 +31,17 @@
       <Filter>windows</Filter>
     </ClInclude>
     <ClInclude Include="PanelLoader.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
     <ClInclude Include="ClientTestUI.h">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="InnoOJTClient.h" />
-    <ClInclude Include="CarSimulation.h" />
+    <ClInclude Include="InnoOJTClient.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="CarSimulation.h">
+      <Filter>Source\CarSimulation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTClient.ico">
@@ -57,12 +64,16 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="PanelLoader.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="ClientTestUI.cpp">
-      <Filter>Panel</Filter>
+      <Filter>Source\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="InnoOJTClient.cpp" />
-    <ClCompile Include="CarSimulation.cpp" />
+    <ClCompile Include="InnoOJTClient.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CarSimulation.cpp">
+      <Filter>Source\CarSimulation</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
