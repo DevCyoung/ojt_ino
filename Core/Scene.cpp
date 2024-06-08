@@ -69,7 +69,7 @@ void Scene::lateUpdate()
 	{
 		constexpr UINT WSTR_LEN = 256;
 		wchar_t buff[WSTR_LEN] = { 0, };
-		swprintf_s(buff, WSTR_LEN, L"<GameObject Count : %zu>", gameObjectCount);
+		//swprintf_s(buff, WSTR_LEN, L"<GameObject Count : %zu>", gameObjectCount);
 		MessageManager::GetInstance()->AddTitleMessage(buff);
 	}
 

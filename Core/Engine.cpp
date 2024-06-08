@@ -12,7 +12,7 @@
 #include "EngineResourceLoader.h"
 //#include "Fmod.h"
 //#include "FontManager.h"
-#include "BuildSetting.h"
+//#include "BuildSetting.h"
 #include "FBXLoadManager.h"
 Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderTargetHeight)
 	: mHwnd(hWnd)

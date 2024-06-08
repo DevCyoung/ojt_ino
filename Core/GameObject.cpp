@@ -4,7 +4,7 @@
 #include "ScriptComponent.h"
 #include "EnumLayer.h"
 #include "SceneManager.h"
-#include "BuildSetting.h"
+//#include "BuildSetting.h"
 //#include <Helper\FileHelper.h>
 
 const wchar_t* GetScriptComponentName(const eScriptComponentType type);

@@ -10,7 +10,10 @@
 //#include "RoomUI.h"
 //#include "TrainingUI.h"
 #include "ClientTestUI.h"
+#include "InnoInputUI.h"
+
 #include <LogListUI.h>
+#include <imgui_theme.h>
 
 PanelLoader::PanelLoader()
 {
@@ -25,6 +28,12 @@ PanelLoader::PanelLoader()
 	LogListUI* logListUI = new LogListUI();
 	logListUI->SetTitle("LogListUIClient");
 	PanelUIManager::GetInstance()->AddPanel(logListUI);
+	PanelUIManager::GetInstance()->AddPanel(new InnoInputUI);
+
+	
+
+	
+	
 }
 
 PanelLoader::~PanelLoader()

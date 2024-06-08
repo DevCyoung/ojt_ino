@@ -444,6 +444,7 @@
     <ClInclude Include="Protocal.h">
       <Filter>Protocal</Filter>
     </ClInclude>
+    <ClInclude Include="imgui_theme.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -827,6 +828,7 @@
     <ClCompile Include="Protocal.cpp">
       <Filter>Protocal</Filter>
     </ClCompile>
+    <ClCompile Include="imgui_theme.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">

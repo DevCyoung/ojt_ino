@@ -8,7 +8,7 @@
 #include "ComputeShader.h"
 #include "StructVertex.h"
 #include "EngineMath.h"
-#include "BuildSetting.h"
+//#include "BuildSetting.h"
 
 #define USE2D 0
 
