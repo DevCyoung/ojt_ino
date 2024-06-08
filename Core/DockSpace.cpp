@@ -22,6 +22,9 @@ void ShowExampleAppDockSpace(bool* p_open)
     static bool opt_padding = false;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
+    //setting
+    dockspace_flags = ImGuiDockNodeFlags_NoResize;
+
     // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
     // because it would be confusing to have two docking targets within each others.
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
@@ -74,7 +77,7 @@ void ShowExampleAppDockSpace(bool* p_open)
 
     if (ImGui::BeginMenuBar())
     {
-        if (ImGui::BeginMenu("Options"))
+        if (ImGui::BeginMenu("File"))
         {
             // Disabling fullscreen would allow the window to be moved to the front of other windows,
             // which we can't undo at the moment without finer window depth/z control.

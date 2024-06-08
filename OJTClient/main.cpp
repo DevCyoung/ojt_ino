@@ -73,14 +73,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     PanelLoader::initialize();
     //Content::initialize();
     Scene* scene = new Scene();
-    //Texture* tex = gResourceManager->FindAndLoadOrNull<Texture>(L"\\Texture\\ImGUI\\folder.png");
+    Texture* tex = gResourceManager->FindAndLoad<Texture>(L"\\Texture\\Preview.jpg");
     //
-    //GameObject* car = CreateGameObject();
-    //car->AddComponent<SpriteRenderer>();
-    //car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
+    GameObject* car = CreateGameObject();
+    car->AddComponent<SpriteRenderer>();
+    car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
     //
     ////car->AddComponent<
-    //scene->AddGameObject(car, eLayerType::Default);
+    scene->AddGameObject(car, eLayerType::Default);
     SceneManager::GetInstance()->LoadScene(scene);
 
     while (true)
@@ -139,7 +139,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_OJTCLIENT));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_OJTCLIENT);
+    //wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_OJTCLIENT);
+    wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 

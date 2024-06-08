@@ -1,13 +1,27 @@
 #include "pch.h"
 #include "InnoInputUI.h"
-#include <imgui_theme.h>
-#include <Texture.h>
-#include <ResourceManager.h>
-#include <Engine.h>
-#include <GraphicDeviceDx11.h>
+#include <RenderTargetRenderer.h>
+#include <GameSystem.h>
+#include <SceneManager.h>
+#include <AlphaHelper.h>
 
 InnoInputUI::InnoInputUI()
+	: mEditorCamera(nullptr)
 {
+	//Editor Camera
+	{
+		const Vector2 screenSize = Vector2(1280, 720);
+		GameObject* const mainCamera = CreateGameObject();
+		mainCamera->AddComponent<Camera>();
+		mainCamera->AddComponent<CameraInputMoveMent>();
+
+		mainCamera->GetComponent<Transform>()->SetPosition(0.f, 0.f, -2.5f);
+		mainCamera->GetComponent<Camera>()->SetRenderTargetSize(screenSize);
+		mainCamera->GetComponent<Camera>()->SetPriorityType(eCameraPriorityType::Editor);
+		mainCamera->GetComponent<Camera>()->SetProjectionType(eCameraProjectionType::Orthographic);
+		mainCamera->GetComponent<Camera>()->TurnOnAllLayer();
+		mEditorCamera = mainCamera;
+	}
 }
 
 InnoInputUI::~InnoInputUI()
@@ -25,20 +39,59 @@ void InnoInputUI::drawForm()
 
 #pragma region InputScreen
 
+	//EditorView 전용텍스처에 그린다.
+	Camera* editorCamera = mEditorCamera->GetComponent<Camera>();
+	RenderTargetRenderer* renderer = gCurrentSceneRenderer;
+	Texture* renderTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRenderTexture");
+	Texture* depThTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewDepthTexture");
+	Scene* currentScene = gCurrentScene;
+	FLOAT backgroundColor[4] = {0.5f, 0.5f, 0.5f, 1.f };
+	UINT cameraMask = renderer->GetCameraLayerMask();
+	
+	renderer->RegisterRenderCamera(editorCamera);
+	renderer->TurnOffAllCamera();
+	renderer->TurnOnCamera(eCameraPriorityType::Editor);
+	mEditorCamera->GetComponent<Transform>()->CalculateTransform();
+	editorCamera->CalculateCamera();
+	
+	gGraphicDevice->ClearRenderTarget(
+		renderTex->GetAddressOf(),
+		depThTex->GetDSV(), backgroundColor);
+	currentScene->Render(
+		static_cast<UINT>(renderTex->GetWidth()),
+		static_cast<UINT>(renderTex->GetHeight()),
+		renderTex->GetAddressOf(),
+		depThTex->GetDSV());
+	
+	renderer->SetCameraLayerMask(cameraMask);
+	renderer->PopUpCamera(eCameraPriorityType::Editor);	
+	renderer->TurnOffCamera(eCameraPriorityType::Editor);
+	
+	//둘다 UAV여야함	ImGUI 용도로 사용하기위해 Alpha값 1로 덮어쓴다.
+	Texture* rwTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRWTexture");
+	Texture* rwTex2 = gResourceManager->Find<Texture>(L"/Editor/EditorViewCopyRWTexture");
+	gGraphicDevice->CopyResource(rwTex2->GetID3D11Texture2D(), renderTex->GetID3D11Texture2D());
+	TextureAlphaTo(rwTex, rwTex2);
+	gGraphicDevice->CopyResource(renderTex->GetID3D11Texture2D(), rwTex->GetID3D11Texture2D());
+	Engine::GetInstance()->OmSet();
+
 	ImGui::Begin("ScreenUI");
 
 #pragma region Screen
-	Texture* rwTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRenderTexture");
+	//Texture* rwTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRenderTexture");
 	ImVec2 renderTargetSize = ImVec2(rwTex->GetWidth(), rwTex->GetHeight());
-	Texture* depThTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewDepthTexture");
-	FLOAT backgroundColor[4] = {1.f, 0.0f, 1.f, 1.f };
+	//Texture* depThTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewDepthTexture");
+	//FLOAT backgroundColor[4] = {1.f, 0.0f, 1.f, 1.f };
 
-	gGraphicDevice->ClearRenderTarget(
-		rwTex->GetAddressOf(),
-	depThTex->GetDSV(), backgroundColor);
+	//gGraphicDevice->ClearRenderTarget(
+	//	rwTex->GetAddressOf(),
+	//depThTex->GetDSV(), backgroundColor);
 
-
-	ImGui::Image((void*)rwTex->GetSRV(), renderTargetSize);
+	if (ImGui::IsWindowFocused())
+	{
+		mEditorCamera->GetComponent<CameraInputMoveMent>()->MoveCamera();
+	}
+	ImGui::Image((void*)renderTex->GetSRV(), renderTargetSize);
 #pragma endregion
 
 	static float testFloat = 0.f;
