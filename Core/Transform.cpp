@@ -41,8 +41,8 @@ void Transform::initialize()
 
 void Transform::update()
 {
-	gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(Vector3::Zero, Vector2(100,100), 0.f, 
-		Vector4(1.f, 0.f, 1.f, 0.1f));
+	//gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(Vector3::Zero, Vector2(100,100), 0.f, 
+	//	Vector4(1.f, 0.f, 1.f, 0.1f));
 }
 
 void Transform::lateUpdate()

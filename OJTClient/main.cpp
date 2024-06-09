@@ -20,6 +20,7 @@
 #include <Texture.h>
 #include <Material.h>
 #include "PanelLoader.h"
+#include <Transform.h>
 
 #define MAX_LOADSTRING 100
 
@@ -73,11 +74,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     PanelLoader::initialize();
     //Content::initialize();
     Scene* scene = new Scene();
-    Texture* tex = gResourceManager->FindAndLoad<Texture>(L"\\Texture\\Preview.jpg");
+    Texture* tex = gResourceManager->FindAndLoad<Texture>(L"\\Texture\\Preview2.png");
     //
     GameObject* car = CreateGameObject();
     car->AddComponent<SpriteRenderer>();
     car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
+
+    car->GetComponent<Transform>()->SetScale(0.4f, 0.4f, 0.4f);
     //
     ////car->AddComponent<
     scene->AddGameObject(car, eLayerType::Default);

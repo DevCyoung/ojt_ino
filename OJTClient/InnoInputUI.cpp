@@ -4,13 +4,14 @@
 #include <GameSystem.h>
 #include <SceneManager.h>
 #include <AlphaHelper.h>
+#include <BuildSetting.h>
 
 InnoInputUI::InnoInputUI()
 	: mEditorCamera(nullptr)
 {
 	//Editor Camera
 	{
-		const Vector2 screenSize = Vector2(1280, 720);
+		const Vector2 screenSize = Vector2(GAME_RENDER_TARGET_WIDTH, GAME_RENDER_TARGET_HEIGHT);
 		GameObject* const mainCamera = CreateGameObject();
 		mainCamera->AddComponent<Camera>();
 		mainCamera->AddComponent<CameraInputMoveMent>();
@@ -20,6 +21,7 @@ InnoInputUI::InnoInputUI()
 		mainCamera->GetComponent<Camera>()->SetPriorityType(eCameraPriorityType::Editor);
 		mainCamera->GetComponent<Camera>()->SetProjectionType(eCameraProjectionType::Orthographic);
 		mainCamera->GetComponent<Camera>()->TurnOnAllLayer();
+		mainCamera->GetComponent<Camera>()->Set2DSize(1.f);
 		mEditorCamera = mainCamera;
 	}
 }
