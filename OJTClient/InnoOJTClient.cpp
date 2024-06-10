@@ -69,15 +69,7 @@ static void ClientRecive(SOCKET connectSocket)
 				tPacketStop stop;
 				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				client->ReciveStop(stop);
-			}
-			break;
-			case PosesSize:
-			{
-				//tPacketPosesSize posesSize;
-				//deserializeData(recvbuf, sizeof(tPacketPosesSize), &posesSize);
-				//client->RecivePosesSize(posesSize);
-				gLogListUI->WriteError("PosesSize not invalied packet");
-			}
+			}			
 			break;
 			case Poses:
 			{
@@ -191,11 +183,6 @@ void InnoOJTClient::SendStop()
 	send_stop(gConnectSocket);
 }
 
-//void InnoOJTClient::SendPosesSize(int size)
-//{
-//	send_poses_size(gConnectSocket, size);
-//}
-
 void InnoOJTClient::SendPoses(int size, const float* poses)
 {
 	send_poses(gConnectSocket, size, poses);
@@ -213,11 +200,6 @@ void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 {
 	poses[1] = outPacket.Position;
 }
-
-//void InnoOJTClient::RecivePosesSize(const tPacketPosesSize& outPacket)
-//{	
-//	mBSize = outPacket.Size;
-//}			
 
 void InnoOJTClient::RecivePoses(const tPacketPoses& outPacket)
 {

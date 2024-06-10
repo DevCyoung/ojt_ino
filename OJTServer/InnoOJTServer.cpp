@@ -70,14 +70,7 @@ static void handleClient(SOCKET clientSocket)
 				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
 				server->RecivePos(clientID, pos);
 			}
-			break;
-			case PosesSize:
-			{
-				tPacketPosesSize posesSize;
-				deserializeData(recvbuf, sizeof(tPacketPosesSize), &posesSize);
-				server->RecivePosesSize(clientID, posesSize);
-			}
-			break;
+			break;			
 			case Poses:
 			{
 				tPacketPoses poses;
@@ -314,14 +307,6 @@ void InnoOJTServer::SendStart(int clientID)
 	send_start(client.Socket);
 }
 
-void InnoOJTServer::SendPosesSize(int clientID, int size)
-{
-	std::lock_guard<std::mutex> guard(gClientsMutex);
-	tInnoClient client = GetInncoClient(clientID);
-
-	send_poses_size(client.Socket, size);
-}
-
 void InnoOJTServer::SendPoses(int clientID, int size, const float* poses)
 {
 	std::lock_guard<std::mutex> guard(gClientsMutex);
@@ -384,8 +369,7 @@ void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 			}
 
 			//i번째 클라이언트의 데이터를 j종류만큼 브로드캐스트한다.
-			tInnoClient client = GetInncoClient(mRoom.clients[i].ClientID);
-			send_poses_size(client.Socket, 11);
+			tInnoClient client = GetInncoClient(mRoom.clients[i].ClientID);			
 
 			int count = mRoom.posesArray[i].size();
 			std::queue<float> vecPoses;
@@ -428,18 +412,6 @@ void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 	}
 
 	gLogListUI->WriteLine("Training Finish");
-}
-
-void InnoOJTServer::RecivePosesSize(int clientID, const tPacketPosesSize& outPacket)
-{
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		if (clientID == mRoom.clients[i].ClientID)
-		{
-			mRoom.posSize[i] = outPacket.Size;
-			break;
-		}
-	}
 }
 
 void InnoOJTServer::RecivePoses(int clientID, const tPacketPoses& outPacket)

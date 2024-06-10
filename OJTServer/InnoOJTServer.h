@@ -47,27 +47,20 @@ public:
 	void SendLog(int clientID, int messageLen, const char* message);
 	void SendPos(int clientID, float pos);
 	void SendStop(int clientID);
-	void SendStart(int clientID);
-	void SendPosesSize(int clientID, int size);
+	void SendStart(int clientID);	
 	void SendPoses(int clientID, int size, const float* poses);
 
 	void ReciveLog(int clientID, const tPacketLog& outPacket);
 	void RecivePos(int clientID, const tPacketPos& outPacket);
 	void ReciveStop(int clientID, const tPacketStop& outPacket);	
-	void RecivePosesSize(int clientID, const tPacketPosesSize& outPacket);
 	void RecivePoses(int clientID, const tPacketPoses& outPacket);
-
-	static inline int serializeNumber = 0;
-
-	std::string GetClientIP(SOCKET clientSocket);
-
 	void AddClient(SOCKET socket);
 	void Disconnect(SOCKET socket);	
-
-
+	static inline int serializeNumber = 0;
 	tInnoClient GetInncoClient(SOCKET socket);
 	tInnoClient GetInncoClient(int clientID);
 
+	std::string GetClientIP(SOCKET clientSocket);
 private:
 	
 
