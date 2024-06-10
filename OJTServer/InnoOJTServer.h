@@ -66,8 +66,7 @@ private:
 
 public:
 	PanelUIManager* mPanelManager;
-	ChannelUI* mChannelUI;
-	LogListUI* mLogListUI;
+	ChannelUI* mChannelUI;	
 	ListenUI* mListenUI;
 
 	tInnoChanel mChannel;

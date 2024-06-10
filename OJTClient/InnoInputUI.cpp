@@ -31,6 +31,7 @@ InnoInputUI::InnoInputUI()
 
 InnoInputUI::~InnoInputUI()	
 {
+	DELETE_POINTER(mEditorCamera);
 }
 
 

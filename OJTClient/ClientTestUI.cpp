@@ -54,12 +54,12 @@ void ClientTestUI::drawForm()
 
 	if (ImGui::InputFloat("star pos", &startPos))
 	{
-		InnoOJTClient::GetInstance()->poses[0] = startPos;
+		InnoOJTClient::GetInstance()->mCurPos[0] = startPos;
 	}
 
 	if (ImGui::InputFloat("directtion", &direction))
 	{
-		InnoOJTClient::GetInstance()->direction = direction;
+		InnoOJTClient::GetInstance()->mCarDirection = direction;
 	}
 
 	//startPos
@@ -269,10 +269,10 @@ void ClientTestUI::drawForm()
             for (int n = 0; n < points.Size; n += 2)
                 draw_list->AddLine(ImVec2(origin.x + points[n].x, origin.y + points[n].y), ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y), IM_COL32(255, 255, 0, 255), 2.0f);
 
-            if (InnoOJTClient::GetInstance()->bServerTraining)
+            if (InnoOJTClient::GetInstance()->mbServerTraining)
             {
-                float pos1 = InnoOJTClient::GetInstance()->poses[0];
-                float pos2 = InnoOJTClient::GetInstance()->poses[1];
+                float pos1 = InnoOJTClient::GetInstance()->mCurPos[0];
+                float pos2 = InnoOJTClient::GetInstance()->mCurPos[1];
 
                 draw_list->AddLine(
                     ImVec2(origin.x + pos1,         origin.y + 20.f),

@@ -2,34 +2,31 @@
 #include "InnoOJTServer.h"
 #include <TimeManager.h>
 
-#define gLogListUI (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI")))
+#define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI")))
 
 static std::mutex gClientsMutex;
 static SOCKET gListenSocket = INVALID_SOCKET;
 
 InnoOJTServer::InnoOJTServer()
 	: mPanelManager(nullptr)
-	, mChannelUI(nullptr)
-	, mLogListUI(nullptr)
+	, mChannelUI(nullptr)	
 	, mListenUI(nullptr)
 	, mRoom{}
 {
-	mPanelManager = PanelUIManager::GetInstance();
-	mChannelUI = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
-	mLogListUI = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
-	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
-
-	assert(mPanelManager);
-	assert(mChannelUI);
-	assert(mLogListUI);
-	assert(mListenUI);
-
 	mRoom.bTraining = false;
 
 	for (int i = 0; i < INNO_MAX_ROOM_USER; ++i)
 	{
 		mRoom.posesArray[i].reserve(1000000);
 	}
+
+	mPanelManager = PanelUIManager::GetInstance();
+	mChannelUI = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));	
+	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
+
+	Assert(mPanelManager, ASSERT_MSG_NULL);
+	Assert(mChannelUI, ASSERT_MSG_NULL);	
+	Assert(mListenUI, ASSERT_MSG_NULL);
 }
 
 InnoOJTServer::~InnoOJTServer()
@@ -42,8 +39,7 @@ static void handleClient(SOCKET clientSocket)
 	char recvbuf[INNO_MAX_PACKET_SIZE];
 	int recvbuflen = INNO_MAX_PACKET_SIZE;
 
-	InnoOJTServer* server = InnoOJTServer::GetInstance();
-	LogListUI* logList = server->mLogListUI;
+	InnoOJTServer* server = InnoOJTServer::GetInstance();	
 
 	while (true)
 	{
@@ -86,7 +82,7 @@ static void handleClient(SOCKET clientSocket)
 			}
 			break;
 			default:
-				logList->WriteError("Invalied packet");
+				gLogListUIClient->WriteError("Invalied packet");
 				break;
 			}
 		}
@@ -94,20 +90,17 @@ static void handleClient(SOCKET clientSocket)
 		{
 			// 클라이언트 소켓을 리스트에서 제거			
 			server->Disconnect(clientSocket);
-			logList->WriteLine("Disconnect Client");
+			gLogListUIClient->WriteLine("Disconnect Client");
 		}
 		else
 		{
-			logList->WriteError("Invalied Socket");
+			gLogListUIClient->WriteError("Invalied Socket");
 		}
-
 	}	
 }
 
 static void handleAccept()
 {
-	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
-
 	// 클라이언트 연결 및 처리
 	while (gListenSocket != INVALID_SOCKET)
 	{
@@ -115,7 +108,7 @@ static void handleAccept()
 
 		if (ClientSocket == INVALID_SOCKET)
 		{
-			logList->WriteError("Accept failed.");
+			gLogListUIClient->WriteError("Accept failed.");
 			closesocket(gListenSocket);
 			WSACleanup();
 		}
@@ -168,14 +161,14 @@ int InnoOJTServer::Listen(const int port)
 	//이미 Listen 중이라면
 	if (gListenSocket != INVALID_SOCKET)
 	{
-		gLogListUI->WriteWarning("Already Listening.");
+		gLogListUIClient->WriteWarning("Already Listening.");
 		return E_FAIL;
 	}
 
 	// Winsock 초기화
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
-		gLogListUI->WriteError("WSAStartup failed.");
+		gLogListUIClient->WriteError("WSAStartup failed.");
 		return E_FAIL;
 	}
 
@@ -183,7 +176,7 @@ int InnoOJTServer::Listen(const int port)
 	gListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (gListenSocket == INVALID_SOCKET)
 	{
-		gLogListUI->WriteError("Socket creation failed.");
+		gLogListUIClient->WriteError("Socket creation failed.");
 		WSACleanup();
 		return E_FAIL;
 	}
@@ -196,7 +189,7 @@ int InnoOJTServer::Listen(const int port)
 	// 소켓을 서버 주소와 바인딩
 	if (bind(gListenSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
 	{
-		gLogListUI->WriteError("Bind failed.");
+		gLogListUIClient->WriteError("Bind failed.");
 		closesocket(gListenSocket);
 		WSACleanup();
 
@@ -206,7 +199,7 @@ int InnoOJTServer::Listen(const int port)
 	// ListenSocket을 listen 상태로만듬
 	if (listen(gListenSocket, SOMAXCONN) == SOCKET_ERROR)
 	{
-		gLogListUI->WriteError("Listen failed");
+		gLogListUIClient->WriteError("Listen failed");
 		closesocket(gListenSocket);
 		WSACleanup();
 		return E_FAIL;
@@ -214,7 +207,7 @@ int InnoOJTServer::Listen(const int port)
 
 	char buf[256] = { 0, };
 	sprintf_s(buf, "Server is listening on port %d", port);
-	gLogListUI->WriteLine(buf);
+	gLogListUIClient->WriteLine(buf);
 
 	std::thread accept(handleAccept);
 	accept.detach();
@@ -238,7 +231,7 @@ void InnoOJTServer::EnterRoom(int clientID)
 
 	if (mRoom.clients.size() >= 2)
 	{
-		mLogListUI->WriteWarning("Room Clientes 2");
+		gLogListUIClient->WriteWarning("Room Clientes 2");
 		return;
 	}
 
@@ -247,13 +240,13 @@ void InnoOJTServer::EnterRoom(int clientID)
 	{
 		if (iter->ClientID == clientID)
 		{
-			mLogListUI->WriteWarning("He's Already Room");
+			gLogListUIClient->WriteWarning("He's Already Room");
 			return;
 		}
 	}
 
 	tInnoClient client = GetInncoClient(clientID);
-	mLogListUI->WriteLine("Enter Room");
+	gLogListUIClient->WriteLine("Enter Room");
 	mRoom.clients.push_back(client);
 }
 
@@ -267,12 +260,12 @@ void InnoOJTServer::ExitRoom(int clientID)
 		if (iter->ClientID == clientID)
 		{
 			mRoom.clients.erase(iter);
-			mLogListUI->WriteLine("Exit Room");
+			gLogListUIClient->WriteLine("Exit Room");
 			return;
 		}
 	}
 
-	mLogListUI->WriteLine("Not exist user");
+	gLogListUIClient->WriteLine("Not exist user");
 }
 
 void InnoOJTServer::SendLog(int clientID, int messageLen, const char* message)
@@ -411,7 +404,7 @@ void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 		send_finish(mRoom.clients[i].Socket);
 	}
 
-	gLogListUI->WriteLine("Training Finish");
+	gLogListUIClient->WriteLine("Training Finish");
 }
 
 void InnoOJTServer::RecivePoses(int clientID, const tPacketPoses& outPacket)
@@ -455,7 +448,7 @@ void InnoOJTServer::AddClient(SOCKET socket)
 {
 	char buff[256] = { 0, };
 	sprintf_s(buff, "%s %s", GetClientIP(socket).c_str(), "Enter");
-	mLogListUI->WriteLine(buff);
+	gLogListUIClient->WriteLine(buff);
 
 	std::string ip(buff);
 	mClients.push_back({ InnoOJTServer::serializeNumber++, ip, socket });
