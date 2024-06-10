@@ -66,12 +66,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
 
-    Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
-
+    Engine::initialize(gHwnd, 800, 400);
     Editor::initialize();
-
     PanelLoader::initialize();
-
     InnoOJTServer::initialize();
 
 
@@ -114,10 +111,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 
-    Editor::deleteInstance();
-    Engine::deleteInstance();
     InnoOJTServer::deleteInstance();
     PanelLoader::deleteInstance();
+    Editor::deleteInstance();
+    Engine::deleteInstance();
 
     return (int)msg.wParam;
 }

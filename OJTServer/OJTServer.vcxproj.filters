@@ -51,7 +51,6 @@
     <ClInclude Include="InnoOJTServer.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="BuildSetting.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTServer.ico">

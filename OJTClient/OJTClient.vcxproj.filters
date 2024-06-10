@@ -42,7 +42,6 @@
     <ClInclude Include="CarSimulation.h">
       <Filter>Source\CarSimulation</Filter>
     </ClInclude>
-    <ClInclude Include="BuildSetting.h" />
     <ClInclude Include="InnoInputUI.h">
       <Filter>Source\Panel</Filter>
     </ClInclude>

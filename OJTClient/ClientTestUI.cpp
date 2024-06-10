@@ -5,9 +5,6 @@
 #include <EngineFile.h>
 #include "CarSimulation.h"
 
-#define INNO_DEFAULT_PORT 54000
-#define INNO_MAX_PACKET_SIZE 512
-
 ClientTestUI::ClientTestUI()
 {
 	SetTitle("ClientTestUI");

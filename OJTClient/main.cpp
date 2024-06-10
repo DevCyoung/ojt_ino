@@ -68,10 +68,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
 
-    Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
+    Engine::initialize(gHwnd, 1280, 720);
     Editor::initialize();
-    InnoOJTClient::initialize();
     PanelLoader::initialize();
+    InnoOJTClient::initialize();
+
     //Content::initialize();
     Scene* scene = new Scene();
     Texture* tex = gResourceManager->FindAndLoad<Texture>(L"\\Texture\\Preview2.png");
@@ -112,10 +113,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 
-    Editor::deleteInstance();
-    Engine::deleteInstance();
     InnoOJTClient::deleteInstance();
     PanelLoader::deleteInstance();
+    Editor::deleteInstance();
+    Engine::deleteInstance();
     return (int)msg.wParam;
 }
 

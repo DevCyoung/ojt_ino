@@ -215,9 +215,9 @@ void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 }
 
 //void InnoOJTClient::RecivePosesSize(const tPacketPosesSize& outPacket)
-//{
+//{	
 //	mBSize = outPacket.Size;
-//}
+//}			
 
 void InnoOJTClient::RecivePoses(const tPacketPoses& outPacket)
 {

@@ -177,9 +177,6 @@
     <ClInclude Include="CameraInputMoveMent.h">
       <Filter>Source\Component</Filter>
     </ClInclude>
-    <ClInclude Include="BuildSetting.h">
-      <Filter>Source\Build</Filter>
-    </ClInclude>
     <ClInclude Include="FolderUI.h">
       <Filter>Source\Render</Filter>
     </ClInclude>

@@ -12,18 +12,14 @@
 
 #define USE2D 0
 
-void EngineResourceLoader::loadResource()
+void EngineResourceLoader::loadResource(int renderTargetWIdth, int renderTargetHeight, int shadowMapWIdth, int shadowMapHeight)
 {
 	loadMesh();
 	loadShader();
 
 	loadComputeShader();
-	loadTexture();
+	loadTexture(renderTargetWIdth, renderTargetHeight, shadowMapWIdth, shadowMapHeight);
 	loadMaterial();
-
-
-
-
 }
 
 void EngineResourceLoader::loadMaterial()
@@ -481,7 +477,7 @@ void EngineResourceLoader::loadMesh()
 #pragma endregion
 }
 
-void EngineResourceLoader::loadTexture()
+void EngineResourceLoader::loadTexture(int renderTargetWIdth, int renderTargetHeight, int shadowMapWIdth, int shadwMapHeight)
 {
 	{
 		Texture* const defaultTexture = new Texture(1024, 1024,
@@ -497,8 +493,8 @@ void EngineResourceLoader::loadTexture()
 						 static_cast<UINT>(gEngine->GetRenderTargetSize().y)};*/
 						 //FIXME 다시 고칠것 하드코딩으로 해결
 
-		XMUINT2 size = { static_cast<UINT>(GAME_RENDER_TARGET_WIDTH),
-						 static_cast<UINT>(GAME_RENDER_TARGET_HEIGHT) };
+		XMUINT2 size = { static_cast<UINT>(renderTargetWIdth),
+						 static_cast<UINT>(renderTargetHeight) };
 
 		Texture* const copyRenderTargetTexture = new Texture(size.x, size.y,
 			DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -526,8 +522,8 @@ void EngineResourceLoader::loadTexture()
 
 #pragma region Deferred MRT
 	{
-		XMUINT2 size = { static_cast<UINT>(GAME_RENDER_TARGET_WIDTH),
-						 static_cast<UINT>(GAME_RENDER_TARGET_HEIGHT) };
+		XMUINT2 size = { static_cast<UINT>(renderTargetWIdth),
+						 static_cast<UINT>(renderTargetHeight) };
 
 		Texture* const ColorTargetTexture = new Texture(size.x, size.y,
 			DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -538,8 +534,8 @@ void EngineResourceLoader::loadTexture()
 	}
 
 	{
-		XMUINT2 size = { static_cast<UINT>(GAME_RENDER_TARGET_WIDTH),
-						 static_cast<UINT>(GAME_RENDER_TARGET_HEIGHT) };
+		XMUINT2 size = { static_cast<UINT>(renderTargetWIdth),
+						 static_cast<UINT>(renderTargetHeight) };
 
 		Texture* const NormalTargetTexture = new Texture(size.x, size.y,
 			DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -549,8 +545,8 @@ void EngineResourceLoader::loadTexture()
 	}
 
 	{
-		XMUINT2 size = { static_cast<UINT>(GAME_RENDER_TARGET_WIDTH),
-						 static_cast<UINT>(GAME_RENDER_TARGET_HEIGHT) };
+		XMUINT2 size = { static_cast<UINT>(renderTargetWIdth),
+						 static_cast<UINT>(renderTargetHeight) };
 
 		Texture* const PisitionTargetTexture = new Texture(size.x, size.y,
 			DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -561,8 +557,8 @@ void EngineResourceLoader::loadTexture()
 	}
 
 	{
-		XMUINT2 size = { static_cast<UINT>(GAME_RENDER_TARGET_WIDTH),
-						 static_cast<UINT>(GAME_RENDER_TARGET_HEIGHT) };
+		XMUINT2 size = { static_cast<UINT>(renderTargetWIdth),
+						 static_cast<UINT>(renderTargetHeight) };
 
 		Texture* const EmissiveTargetTexture = new Texture(size.x, size.y,
 			DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -573,8 +569,8 @@ void EngineResourceLoader::loadTexture()
 	}
 
 	{
-		XMUINT2 size = { static_cast<UINT>(GAME_RENDER_TARGET_WIDTH),
-						 static_cast<UINT>(GAME_RENDER_TARGET_HEIGHT) };
+		XMUINT2 size = { static_cast<UINT>(renderTargetWIdth),
+						 static_cast<UINT>(renderTargetHeight) };
 
 		Texture* const DataTargetTexture = new Texture(size.x, size.y,
 			DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -586,8 +582,8 @@ void EngineResourceLoader::loadTexture()
 
 
 	{
-		XMUINT2 size = { static_cast<UINT>(SHADOW_MAP_0_WIDTH),
-						 static_cast<UINT>(SHADOW_MAP_0_HEIGHT)};
+		XMUINT2 size = { static_cast<UINT>(shadowMapWIdth),
+						 static_cast<UINT>(shadwMapHeight)};
 
 		Texture* const directionalLightTexture = new Texture(size.x, size.y,
 			DXGI_FORMAT::DXGI_FORMAT_R24G8_TYPELESS,
