@@ -6,7 +6,7 @@
 #include "PanelUIManager.h"
 
 #define INNO_MAX_ROOM_USER 8
-
+#define INNO_MAX_THREAD_SIZE 2048
 struct tInnoClient
 {
 	int ClientID;
@@ -77,6 +77,6 @@ public:
 	tInnoRoom mRoom;
 
 	std::vector<tInnoClient> mClients;
-	std::thread mClientThreads[1024];
+	std::thread mClientThreads[INNO_MAX_THREAD_SIZE];
 };
 

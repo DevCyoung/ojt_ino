@@ -52,7 +52,7 @@ InnoOJTServer::~InnoOJTServer()
 		closesocket(clientSockets[i]);
 	}
 
-	for (int i = 0; i < 1024; ++i)
+	for (int i = 0; i < INNO_MAX_THREAD_SIZE; ++i)
 	{
 		if (mClientThreads[i].joinable())
 		{
@@ -126,7 +126,7 @@ static void handleClient(SOCKET clientSocket)
 		}
 		else
 		{
-			gLogListUI->WriteError("Disconnect Client");
+			gLogListUI->WriteWarning("Disconnect Client");
 			innoServer->RemoveClient(clientSocket);
 			break;
 		}
@@ -290,9 +290,16 @@ void InnoOJTServer::EnterRoom(int clientID)
 		}
 	}
 
-	tInnoClient client = GetInncoClient(clientID);
-	gLogListUI->WriteLine("Enter Room");
-	mRoom.clients.push_back(client);
+	tInnoClient client = {};
+	if (TryGetInncoClient(clientID, &client))
+	{
+		gLogListUI->WriteLine("Enter room");
+		mRoom.clients.push_back(client);
+	}	
+	else
+	{
+		gLogListUI->WriteWarning("Invalid client");
+	}
 }
 
 void InnoOJTServer::ExitRoom(int clientID)
