@@ -57,11 +57,12 @@ static void ClientRecive(SOCKET serverSocket)
 	while (true)
 	{
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
-		std::lock_guard<std::mutex> guard(gClientMutex);
-		ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
+		std::lock_guard<std::mutex> guard(gClientMutex);		
 
 		if (bytesReceived > 0)
 		{
+			ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
+
 			switch (packetID)
 			{
 			case Log:
@@ -113,6 +114,7 @@ static void ClientRecive(SOCKET serverSocket)
 		else if (bytesReceived == 0)
 		{			
 			gLogListUIClient->WriteLine("Connection closed by server.");
+			
 			break;
 		}
 		else

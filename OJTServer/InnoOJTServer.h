@@ -54,11 +54,15 @@ public:
 	void RecivePos(int clientID, const tPacketPos& outPacket);
 	void ReciveStop(int clientID, const tPacketStop& outPacket);	
 	void RecivePoses(int clientID, const tPacketPoses& outPacket);
-	void AddClient(SOCKET socket);
-	void Disconnect(SOCKET socket);	
+	
+
+	void RemoveClient(const SOCKET clientSocket);	
+
 	static inline int serializeNumber = 0;
 	tInnoClient GetInncoClient(SOCKET socket);
 	tInnoClient GetInncoClient(int clientID);
+	bool TryGetInncoClient(SOCKET socket, tInnoClient* outInnoClient);
+	bool TryGetInncoClient(int clientID, tInnoClient* outInnoClient);
 
 	std::string GetClientIP(SOCKET clientSocket);
 private:
@@ -73,5 +77,6 @@ public:
 	tInnoRoom mRoom;
 
 	std::vector<tInnoClient> mClients;
+	std::thread mClientThreads[1024];
 };
 
