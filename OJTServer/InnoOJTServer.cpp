@@ -198,7 +198,7 @@ int InnoOJTServer::Listen(const int port)
 	// 서버 주소 및 포트 설정
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = INADDR_ANY;
-	serverAddr.sin_port = htons(INNO_DEFAULT_PORT);
+	serverAddr.sin_port = htons(port);
 
 	// 소켓을 서버 주소와 바인딩
 	if (bind(gListenSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
