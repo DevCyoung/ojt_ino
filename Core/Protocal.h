@@ -1,31 +1,25 @@
 #pragma once
-
-class Protocal
-{
-};
-
-enum ePacketID
-{
-	Log,
-	Pos,
-	Start,
-	Stop,
-	PosesSize,
-	Poses,
-	Finish,
-};
-
 #define INNO_MAX_POS_SIZE 256
 #define INNO_MAX_PACKET_SIZE 2048
 #define INNO_DEFAULT_PORT 5400
 
 typedef UINT_PTR SOCKET;
 
+enum ePacketID
+{
+	Log,
+	Pos,
+	Start,
+	Stop,	
+	Poses,
+	Finish,
+};
+
 struct tPacketLog
 {
 	ePacketID PacketID;
 	int MessageLen;
-	char Message[256];
+	char Message[INNO_MAX_POS_SIZE];
 };
 
 struct tPacketPos
@@ -42,12 +36,6 @@ struct tPacketStart
 struct tPacketStop
 {
 	ePacketID PacketID;
-};
-
-struct tPacketPosesSize
-{
-	ePacketID PacketID;
-	int Size;
 };
 
 struct tPacketPoses
@@ -75,7 +63,6 @@ int getPacketId(char(&buffer)[], int recvSize);
 
 void send_log(SOCKET socket, int messageLen, const char* message);
 void send_pos(SOCKET socket, float pos);
-void send_poses_size(SOCKET socket, int size);
 void send_poses(SOCKET socket, int size, const float* poses);
 void send_stop(SOCKET socket);
 void send_start(SOCKET socket);

@@ -143,7 +143,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BuildSetting.h" />
     <ClInclude Include="CarSimulation.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InnoInputUI.h" />

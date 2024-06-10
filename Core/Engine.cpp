@@ -71,7 +71,7 @@ void Engine::initialize(const HWND hWnd, const UINT renderTargetWidth, const UIN
 	sInstance = new Engine(hWnd, renderTargetWidth, renderTargetHeight);
 
 	//FontManager::initialize();
-	EngineResourceLoader::loadResource();
+	EngineResourceLoader::loadResource(renderTargetWidth, renderTargetHeight, 5000, 5000);
 
 }
 

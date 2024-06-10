@@ -4,10 +4,18 @@
 #include "LogListUI.h"
 #include "PanelUIManager.h"
 #include "InnoOJTServer.h"
+#include <imgui_theme.h>
 
 ListenUI::ListenUI()
 {
 	SetTitle("ListenUI");
+
+	{
+		ImGuiStyle newStyle = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_(7));
+		ImGuiStyle& style = ImGui::GetStyle();
+		style = newStyle;
+	}
+
 }
 
 ListenUI::~ListenUI()

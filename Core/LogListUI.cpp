@@ -23,7 +23,7 @@ void LogListUI::drawForm()
 	{
 		if (log.Type == eInnoMessageType::Default)
 		{
-			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 255, 255));			
+			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 0, 0, 255));			
 			
 		}		
 		else if (log.Type == eInnoMessageType::Error)
@@ -32,7 +32,7 @@ void LogListUI::drawForm()
 		}
 		else if (log.Type == eInnoMessageType::Warning)
 		{
-			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 50, 255));			
+			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 100, 50, 255));			
 		}
 		else
 		{

@@ -54,19 +54,6 @@ void send_pos(SOCKET socket, float pos)
 	}
 }
 
-void send_poses_size(SOCKET socket, int size)
-{
-	tPacketPosesSize packet = {};
-
-	packet.PacketID = ePacketID::PosesSize;
-	packet.Size = size;
-
-	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
-	{
-		assert(false);
-	}
-}
-
 void send_poses(SOCKET socket, int size, const float* poses)
 {
 	tPacketPoses packet = {};

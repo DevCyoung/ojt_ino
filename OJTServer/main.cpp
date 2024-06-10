@@ -12,13 +12,6 @@
 #include <Engine.h>
 #include <Editor.h>
 #include <SceneManager.h>
-//#include <Builder.h>
-//#include <GameObject.h>
-//#include <SpriteRenderer.h>
-//#include <ResourceManager.h>
-//#include <Texture.h>
-//#include <Material.h>
-
 #include "PanelLoader.h"
 #include "InnoOJTServer.h"
 #define MAX_LOADSTRING 100
@@ -64,29 +57,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_OJTSERVER));
 
     MSG msg;
-
-
-    Engine::initialize(gHwnd, WINDOW_SCREEN_WIDTH, WINDOW_SCREEN_HEIGHT);
-
+    Engine::initialize(gHwnd, 800, 400);
     Editor::initialize();
-
     PanelLoader::initialize();
-
     InnoOJTServer::initialize();
-
-
-    //Content::initialize();
     Scene* scene = new Scene();
-    //Texture* tex = gResourceManager->FindAndLoadOrNull<Texture>(L"\\Texture\\ImGUI\\folder.png");
-    //
-    //GameObject* car = CreateGameObject();
-    //car->AddComponent<SpriteRenderer>();
-    //car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
-
-    //car->AddComponent<
-    //scene->AddGameObject(car, eLayerType::Default);
     SceneManager::GetInstance()->LoadScene(scene);
-
 
     while (true)
     {
@@ -114,10 +90,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
 
-    Editor::deleteInstance();
-    Engine::deleteInstance();
     InnoOJTServer::deleteInstance();
     PanelLoader::deleteInstance();
+    Editor::deleteInstance();
+    Engine::deleteInstance();
 
     return (int)msg.wParam;
 }
@@ -145,7 +121,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDC_OJTSERVER));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_OJTSERVER);
+    //wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_OJTSERVER);
+    wcex.lpszMenuName = NULL;
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 

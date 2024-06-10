@@ -143,7 +143,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BuildSetting.h" />
     <ClInclude Include="ChannelRoomMoveUI.h" />
     <ClInclude Include="ChannelUI.h" />
     <ClInclude Include="framework.h" />

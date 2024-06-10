@@ -6,7 +6,7 @@
 #include "PanelUIManager.h"
 
 #define INNO_MAX_ROOM_USER 8
-
+#define INNO_MAX_THREAD_SIZE 2048
 struct tInnoClient
 {
 	int ClientID;
@@ -47,39 +47,36 @@ public:
 	void SendLog(int clientID, int messageLen, const char* message);
 	void SendPos(int clientID, float pos);
 	void SendStop(int clientID);
-	void SendStart(int clientID);
-	void SendPosesSize(int clientID, int size);
+	void SendStart(int clientID);	
 	void SendPoses(int clientID, int size, const float* poses);
 
 	void ReciveLog(int clientID, const tPacketLog& outPacket);
 	void RecivePos(int clientID, const tPacketPos& outPacket);
 	void ReciveStop(int clientID, const tPacketStop& outPacket);	
-	void RecivePosesSize(int clientID, const tPacketPosesSize& outPacket);
 	void RecivePoses(int clientID, const tPacketPoses& outPacket);
+	
+
+	void RemoveClient(const SOCKET clientSocket);	
 
 	static inline int serializeNumber = 0;
-
-	std::string GetClientIP(SOCKET clientSocket);
-
-	void AddClient(SOCKET socket);
-	void Disconnect(SOCKET socket);	
-
-
 	tInnoClient GetInncoClient(SOCKET socket);
 	tInnoClient GetInncoClient(int clientID);
+	bool TryGetInncoClient(SOCKET socket, tInnoClient* outInnoClient);
+	bool TryGetInncoClient(int clientID, tInnoClient* outInnoClient);
 
+	std::string GetClientIP(SOCKET clientSocket);
 private:
 	
 
 public:
 	PanelUIManager* mPanelManager;
-	ChannelUI* mChannelUI;
-	LogListUI* mLogListUI;
+	ChannelUI* mChannelUI;	
 	ListenUI* mListenUI;
 
 	tInnoChanel mChannel;
 	tInnoRoom mRoom;
 
 	std::vector<tInnoClient> mClients;
+	std::thread mClientThreads[INNO_MAX_THREAD_SIZE];
 };
 

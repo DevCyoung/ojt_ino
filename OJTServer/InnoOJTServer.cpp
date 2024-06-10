@@ -10,130 +10,151 @@ static SOCKET gListenSocket = INVALID_SOCKET;
 InnoOJTServer::InnoOJTServer()
 	: mPanelManager(nullptr)
 	, mChannelUI(nullptr)
-	, mLogListUI(nullptr)
 	, mListenUI(nullptr)
 	, mRoom{}
+	, mClientThreads{}
 {
-	mPanelManager = PanelUIManager::GetInstance();
-	mChannelUI = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
-	mLogListUI = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
-	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
-
-	assert(mPanelManager);
-	assert(mChannelUI);
-	assert(mLogListUI);
-	assert(mListenUI);
-
 	mRoom.bTraining = false;
 
 	for (int i = 0; i < INNO_MAX_ROOM_USER; ++i)
 	{
 		mRoom.posesArray[i].reserve(1000000);
 	}
+
+	mPanelManager = PanelUIManager::GetInstance();
+	mChannelUI = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
+	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
+
+	Assert(mPanelManager, ASSERT_MSG_NULL);
+	Assert(mChannelUI, ASSERT_MSG_NULL);
+	Assert(mListenUI, ASSERT_MSG_NULL);
 }
 
 InnoOJTServer::~InnoOJTServer()
-{
+{	
+
+	std::vector<SOCKET> clientSockets;
+
+	gClientsMutex.lock();
+
+	for (int i = 0; i < mClients.size(); i++)
+	{
+		clientSockets.push_back(mClients[i].Socket);
+	}
+	mRoom.clients.clear();
+	mChannel.clients.clear();
+	mClients.clear();
+
+	gClientsMutex.unlock();
+
+	for (int i = 0; i < clientSockets.size(); ++i)
+	{
+		closesocket(clientSockets[i]);
+	}
+
+	for (int i = 0; i < INNO_MAX_THREAD_SIZE; ++i)
+	{
+		if (mClientThreads[i].joinable())
+		{
+			mClientThreads[i].join();
+		}
+	}
+
+	closesocket(gListenSocket);
 }
 
 // 클라이언트 핸들링 함수
-static void handleClient(SOCKET clientSocket) 
+static void handleClient(SOCKET clientSocket)
 {
 	char recvbuf[INNO_MAX_PACKET_SIZE];
 	int recvbuflen = INNO_MAX_PACKET_SIZE;
 
-	InnoOJTServer* server = InnoOJTServer::GetInstance();
-	LogListUI* logList = server->mLogListUI;
+	InnoOJTServer* innoServer = InnoOJTServer::GetInstance();
 
 	while (true)
 	{
 		int bytesReceived = recv(clientSocket, recvbuf, recvbuflen, 0);
 		std::lock_guard<std::mutex> guard(gClientsMutex);
 
-		int packetId = getPacketId(recvbuf, recvbuflen);
-		int clientID = server->GetInncoClient(clientSocket).ClientID;
-
 		if (bytesReceived > 0)
 		{
-			switch (packetId)
+			ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
+			int clientID = innoServer->GetInncoClient(clientSocket).ClientID;
+
+			switch (packetID)
 			{
 			case Log:
 			{
 				tPacketLog log;
 				deserializeData(recvbuf, sizeof(tPacketLog), &log);
-				server->ReciveLog(clientID, log);
+				innoServer->ReciveLog(clientID, log);
 			}
 			break;
 			case Pos:
 			{
 				tPacketPos pos;
 				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
-				server->RecivePos(clientID, pos);
-			}
-			break;
-			case PosesSize:
-			{
-				tPacketPosesSize posesSize;
-				deserializeData(recvbuf, sizeof(tPacketPosesSize), &posesSize);
-				server->RecivePosesSize(clientID, posesSize);
+				innoServer->RecivePos(clientID, pos);
 			}
 			break;
 			case Poses:
 			{
 				tPacketPoses poses;
 				deserializeData(recvbuf, sizeof(tPacketPoses), &poses);
-				server->RecivePoses(clientID, poses);
+				innoServer->RecivePoses(clientID, poses);
 			}
 			break;
 			case Stop:
 			{
 				tPacketStop stop;
 				deserializeData(recvbuf, sizeof(stop), &stop);
-				server->ReciveStop(clientID, stop);
+				innoServer->ReciveStop(clientID, stop);
 			}
 			break;
 			default:
-				logList->WriteError("Invalied packet");
-				break;
+			{
+				gLogListUI->WriteError("Invalied packet");
+			}
+			break;
 			}
 		}
 		else if (bytesReceived == 0)
-		{
-			// 클라이언트 소켓을 리스트에서 제거			
-			server->Disconnect(clientSocket);
-			logList->WriteLine("Disconnect Client");
+		{			
+			gLogListUI->WriteLine("Disconnect Client");
+			innoServer->RemoveClient(clientSocket);
+			break;
 		}
 		else
 		{
-			logList->WriteError("Invalied Socket");
+			gLogListUI->WriteWarning("Disconnect Client");
+			innoServer->RemoveClient(clientSocket);
+			break;
 		}
+	}
 
-	}	
+	closesocket(clientSocket);
 }
 
 static void handleAccept()
 {
-	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
-
 	// 클라이언트 연결 및 처리
-	while (gListenSocket != INVALID_SOCKET)
+	while (INVALID_SOCKET != gListenSocket)
 	{
-		SOCKET ClientSocket = accept(gListenSocket, NULL, NULL);
+		SOCKET clientSocket = accept(gListenSocket, NULL, NULL);
 
-		if (ClientSocket == INVALID_SOCKET)
+		if (clientSocket == INVALID_SOCKET)
 		{
-			logList->WriteError("Accept failed.");
+			gLogListUI->WriteError("Accept failed.");
 			closesocket(gListenSocket);
-			WSACleanup();
+			gListenSocket = INVALID_SOCKET;
+			continue;
 		}
 
 		{
 			std::lock_guard<std::mutex> guard(gClientsMutex);
-			InnoOJTServer::GetInstance()->Accept(ClientSocket);
+			InnoOJTServer::GetInstance()->Accept(clientSocket);
 		}
 
-		// 새로운 클라이언트를 처리하는 쓰레드 시작
-		std::thread(handleClient, ClientSocket).detach();
 	}
 }
 
@@ -229,14 +250,24 @@ int InnoOJTServer::Listen(const int port)
 	return S_OK;
 }
 
-int InnoOJTServer::Accept(SOCKET ClientSocket)
-{
-	//accept	
-	AddClient(ClientSocket);
+int InnoOJTServer::Accept(SOCKET clientSocket)
+{	
+	char buff[256] = { 0, };
+	sprintf_s(buff, "%s %s", GetClientIP(clientSocket).c_str(), "Enter");
+	gLogListUI->WriteLine(buff);
+	std::string ip(buff);
 
-	//자동으로 채널에 넣는다
-	mChannel.clients.push_back(GetInncoClient(ClientSocket));	
-	return 0;
+	tInnoClient innoClient = {};
+	innoClient.ClientID = InnoOJTServer::serializeNumber++;
+	innoClient.IP = ip;
+	innoClient.Socket = clientSocket;
+
+	mClients.push_back(innoClient);	
+	mChannel.clients.push_back(innoClient);
+
+	// 새로운 클라이언트를 처리하는 쓰레드 시작	
+	mClientThreads[innoClient.ClientID] = std::thread(handleClient, clientSocket);
+	return S_OK;
 }
 
 void InnoOJTServer::EnterRoom(int clientID)
@@ -245,7 +276,7 @@ void InnoOJTServer::EnterRoom(int clientID)
 
 	if (mRoom.clients.size() >= 2)
 	{
-		mLogListUI->WriteWarning("Room Clientes 2");
+		gLogListUI->WriteWarning("Room Clientes 2");
 		return;
 	}
 
@@ -254,14 +285,21 @@ void InnoOJTServer::EnterRoom(int clientID)
 	{
 		if (iter->ClientID == clientID)
 		{
-			mLogListUI->WriteWarning("He's Already Room");
+			gLogListUI->WriteWarning("He's Already Room");
 			return;
 		}
 	}
 
-	tInnoClient client = GetInncoClient(clientID);
-	mLogListUI->WriteLine("Enter Room");
-	mRoom.clients.push_back(client);
+	tInnoClient client = {};
+	if (TryGetInncoClient(clientID, &client))
+	{
+		gLogListUI->WriteLine("Enter room");
+		mRoom.clients.push_back(client);
+	}	
+	else
+	{
+		gLogListUI->WriteWarning("Invalid client");
+	}
 }
 
 void InnoOJTServer::ExitRoom(int clientID)
@@ -274,12 +312,12 @@ void InnoOJTServer::ExitRoom(int clientID)
 		if (iter->ClientID == clientID)
 		{
 			mRoom.clients.erase(iter);
-			mLogListUI->WriteLine("Exit Room");
+			gLogListUI->WriteLine("Exit Room");
 			return;
 		}
 	}
 
-	mLogListUI->WriteLine("Not exist user");
+	gLogListUI->WriteLine("Not exist user");
 }
 
 void InnoOJTServer::SendLog(int clientID, int messageLen, const char* message)
@@ -312,14 +350,6 @@ void InnoOJTServer::SendStart(int clientID)
 	tInnoClient client = GetInncoClient(clientID);
 
 	send_start(client.Socket);
-}
-
-void InnoOJTServer::SendPosesSize(int clientID, int size)
-{
-	std::lock_guard<std::mutex> guard(gClientsMutex);
-	tInnoClient client = GetInncoClient(clientID);
-
-	send_poses_size(client.Socket, size);
 }
 
 void InnoOJTServer::SendPoses(int clientID, int size, const float* poses)
@@ -385,7 +415,6 @@ void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 
 			//i번째 클라이언트의 데이터를 j종류만큼 브로드캐스트한다.
 			tInnoClient client = GetInncoClient(mRoom.clients[i].ClientID);
-			send_poses_size(client.Socket, 11);
 
 			int count = mRoom.posesArray[i].size();
 			std::queue<float> vecPoses;
@@ -430,18 +459,6 @@ void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 	gLogListUI->WriteLine("Training Finish");
 }
 
-void InnoOJTServer::RecivePosesSize(int clientID, const tPacketPosesSize& outPacket)
-{
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		if (clientID == mRoom.clients[i].ClientID)
-		{
-			mRoom.posSize[i] = outPacket.Size;
-			break;
-		}
-	}
-}
-
 void InnoOJTServer::RecivePoses(int clientID, const tPacketPoses& outPacket)
 {
 	for (int i = 0; i < mRoom.clients.size(); ++i)
@@ -479,54 +496,91 @@ std::string InnoOJTServer::GetClientIP(SOCKET clientSocket)
 	return std::string(ipStr);
 }
 
-void InnoOJTServer::AddClient(SOCKET socket)
+static void removeClient(std::vector<tInnoClient>& clients, SOCKET socket)
 {
-	char buff[256] = { 0, };
-	sprintf_s(buff, "%s %s", GetClientIP(socket).c_str(), "Enter");
-	mLogListUI->WriteLine(buff);
+	std::vector<tInnoClient>::iterator iter;
 
-	std::string ip(buff);
-	mClients.push_back({ InnoOJTServer::serializeNumber++, ip, socket });
-
-}
-
-void InnoOJTServer::Disconnect(SOCKET socket)
-{
-	std::vector<tInnoClient>::iterator iter = mClients.begin();
-	for (; iter != mClients.end(); ++iter)
+	iter = clients.begin();
+	for (; iter != clients.end(); ++iter)
 	{
 		if (iter->Socket == socket)
 		{
-			mClients.erase(iter);
+			clients.erase(iter);
 			break;
 		}
 	}
-	closesocket(socket);
 }
 
-tInnoClient InnoOJTServer::GetInncoClient(SOCKET socket)
+void InnoOJTServer::RemoveClient(SOCKET socket)
 {
-	std::vector<tInnoClient>::iterator iter = mClients.begin();
-	for (; iter != mClients.end(); ++iter)
+	if (INVALID_SOCKET == socket)
 	{
-		if (iter->Socket == socket)
-		{
-			return *iter;
-		}
+		return;
 	}
-	assert(false);
+
+	removeClient(mRoom.clients, socket);
+	removeClient(mChannel.clients, socket);
+	removeClient(mClients, socket);	
+}
+
+tInnoClient InnoOJTServer::GetInncoClient(SOCKET clientSocket)
+{
+	tInnoClient innoClient = {};
+
+	if (false == TryGetInncoClient(clientSocket, &innoClient))
+	{
+		Assert(false, ASSERT_MSG_INVALID);
+	}
+
+	return innoClient;
 }
 
 tInnoClient InnoOJTServer::GetInncoClient(int clientID)
 {
+	tInnoClient innoClient = {};
+
+	if (false == TryGetInncoClient(clientID, &innoClient))
+	{
+		Assert(false, ASSERT_MSG_INVALID);
+	}
+
+	return innoClient;
+}
+
+bool InnoOJTServer::TryGetInncoClient(SOCKET clientSocekt, tInnoClient* outInnoClient)
+{
 	std::vector<tInnoClient>::iterator iter = mClients.begin();
+
+	bool bflag = false;
+
+	for (; iter != mClients.end(); ++iter)
+	{
+		if (iter->Socket == clientSocekt)
+		{
+			bflag = true;
+			*outInnoClient = *iter;
+			break;
+		}
+	}
+
+	return bflag;
+}
+
+bool InnoOJTServer::TryGetInncoClient(int clientID, tInnoClient* outInnoClient)
+{
+	std::vector<tInnoClient>::iterator iter = mClients.begin();
+
+	bool bflag = false;
+
 	for (; iter != mClients.end(); ++iter)
 	{
 		if (iter->ClientID == clientID)
 		{
-			return *iter;
+			bflag = true;
+			*outInnoClient = *iter;
+			break;
 		}
 	}
 
-	assert(false);
+	return bflag;
 }

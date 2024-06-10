@@ -161,7 +161,6 @@
     <ClInclude Include="BoneMap.h" />
     <ClInclude Include="BSCollection.h" />
     <ClInclude Include="Builder.h" />
-    <ClInclude Include="BuildSetting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraInputMoveMent.h" />
     <ClInclude Include="CarSimulation.h" />
