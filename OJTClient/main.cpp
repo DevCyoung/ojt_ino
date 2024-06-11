@@ -105,7 +105,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             Engine::GetInstance()->run();
             Editor::GetInstance()->run();
-
             InnoOJTClient::GetInstance()->run();
 
             Engine::GetInstance()->present();

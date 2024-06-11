@@ -1,6 +1,6 @@
 #pragma once
-#include "CarSimulation.h"
 
+#include "InnoSimulator.h"
 class InnoOJTClient
 {
 	PUBLIC_SINGLETON_DECLARE(InnoOJTClient);
@@ -26,7 +26,8 @@ public:
 	float mCarDirection;
 	float mCurPos[2];	
 	std::vector<float> mBPosArray;
-	CarSimulation mSimulation;
+	//InnoCarSimulation mSimulation;
+	//InnoSimulator* mSimulator;
 	SOCKET mServerSocket;
 	std::thread mRecive;
 };

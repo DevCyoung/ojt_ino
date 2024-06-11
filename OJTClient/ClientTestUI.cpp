@@ -3,7 +3,6 @@
 #include <iostream>
 #include "InnoOJTClient.h"
 #include <EngineFile.h>
-#include "CarSimulation.h"
 #include "InnoDataManager.h"
 ClientTestUI::ClientTestUI()
 {
@@ -93,15 +92,15 @@ void ClientTestUI::drawForm()
 
     struct Funcs
     {
-        static float ZsPos(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsPos; }
-        static float ZsSpeed(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsSpeed;}
-        static float ZsAcc(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsAcc; }
-        static float ZuPos(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuPos; }
-        static float ZuSpeed(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuSpeed; }
-        static float ZuAcc(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuAcc; }
-        static float Zr(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].Zr; }
-        static float XPos(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xPos; }
-        static float XSpeed(const std::vector<tSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xSpeed; }
+        static float ZsPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsPos; }
+        static float ZsSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsSpeed;}
+        static float ZsAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsAcc; }
+        static float ZuPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuPos; }
+        static float ZuSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuSpeed; }
+        static float ZuAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuAcc; }
+        static float Zr(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].Zr; }
+        static float XPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xPos; }
+        static float XSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xSpeed; }
         //static float Saw(void*, int i) { return (i & 1) ? 1.0f : -1.0f; }
     };
 
@@ -126,7 +125,7 @@ void ClientTestUI::drawForm()
 
     if (InnoDataManager::GetInstance()->GetPlayerASampleDatas().size() >= 70)
     {
-        std::vector<tSampleData>& playerASampleDatas = (std::vector<tSampleData>&)InnoDataManager::GetInstance()->GetPlayerASampleDatas();
+        std::vector<tInnoSampleData>& playerASampleDatas = (std::vector<tInnoSampleData>&)InnoDataManager::GetInstance()->GetPlayerASampleDatas();
 
         ImGui::PlotLines("ZsPos", funcZsPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
         ImGui::PlotLines("ZsSpeed", funcZsSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
@@ -150,7 +149,7 @@ void ClientTestUI::drawForm()
     if (ImGui::Button("test dialog"))
     {
         helper::DialogPath dialogpath = helper::SaveDialog();
-        mCarSumulation.SaveData(dialogpath.path.c_str());
+        //mCarSumulation.SaveData(dialogpath.path.c_str());
 
     }
 
@@ -158,10 +157,10 @@ void ClientTestUI::drawForm()
     {
         for (int i = 0; i < 10000; ++i)
         {
-            mCarSumulation.Update();
+            //mCarSumulation.Update();
         }
 
-        mCarSumulation.GetCS();
+        //mCarSumulation.GetCS();
     }
 	//ImGui::drawpoint
 

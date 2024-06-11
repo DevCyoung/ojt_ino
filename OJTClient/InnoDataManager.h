@@ -1,5 +1,5 @@
 #pragma once
-#include "CarSimulation.h"
+#include "InnoSimulator.h"
 
 class InnoDataManager
 {
@@ -13,20 +13,20 @@ public:
 	float GetPlayerPosB() { return mPlayerBPos; }
 
 	//단위시간마다 SampleDadta를 할당
-	void PushPlayerASampleData(const tSampleData& sampleData) { mPlayerASampleDatas.push_back(sampleData); }
+	void PushPlayerASampleData(const tInnoSampleData& sampleData) { mPlayerASampleDatas.push_back(sampleData); }
 
 	//마지막에 데이터교환할때 할당
 	void PushPlayerBSampleDataPosition(const float sampleDataPosition) { mPlayerBSamplePostions.push_back(sampleDataPosition); }
 
 	//시뮬레이션 종료후에 필요한 데이터들
-	const std::vector<tSampleData>& GetPlayerASampleDatas() { return mPlayerASampleDatas; }
+	const std::vector<tInnoSampleData>& GetPlayerASampleDatas() { return mPlayerASampleDatas; }
 	const std::vector<float>&		GetPlayerBSamplePositions() { return mPlayerBSamplePostions; }
 
 private:
 	float mPlayerAPos;
 	float mPlayerBPos;
 
-	std::vector<tSampleData> mPlayerASampleDatas;
+	std::vector<tInnoSampleData> mPlayerASampleDatas;
 	std::vector<float> mPlayerBSamplePostions;
 };
 

@@ -143,11 +143,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CarSimulation.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InnoDataManager.h" />
     <ClInclude Include="InnoInputUI.h" />
     <ClInclude Include="InnoOJTClient.h" />
+    <ClInclude Include="InnoSimulator.h" />
     <ClInclude Include="OJTClient.h" />
     <ClInclude Include="PanelLoader.h" />
     <ClInclude Include="pch.h" />
@@ -156,10 +156,10 @@
     <ClInclude Include="ClientTestUI.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CarSimulation.cpp" />
     <ClCompile Include="InnoDataManager.cpp" />
     <ClCompile Include="InnoInputUI.cpp" />
     <ClCompile Include="InnoOJTClient.cpp" />
+    <ClCompile Include="InnoSimulator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PanelLoader.cpp" />
     <ClCompile Include="pch.cpp">

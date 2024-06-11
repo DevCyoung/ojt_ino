@@ -5,6 +5,7 @@
 #include <SceneManager.h>
 #include <AlphaHelper.h>
 #include <Texture.h>
+#include "InnoSimulator.h"
 
 InnoInputUI::InnoInputUI()
 	: mSceneRenderHelperA(nullptr)
@@ -25,6 +26,7 @@ InnoInputUI::~InnoInputUI()
 
 void InnoInputUI::drawForm()
 {
+	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
 #pragma region InputScreen
 	ImGui::Begin("ScreenUI");
 	mSceneRenderHelperA->Draw(gCurrentScene);
@@ -53,7 +55,19 @@ void InnoInputUI::drawForm()
 	ImGui::PopItemWidth();
 	ImGui::Separator();
 
-	ImGui::Button("Play");
+	eInnoSimulatorState simulatorState = innoSimulator->GetSimulatorState();
+
+	std::string button1Name = "Play";
+
+	if (simulatorState == eInnoSimulatorState::Playing)
+	{
+		button1Name = "Playing";
+	}
+
+	if (ImGui::Button(button1Name.c_str()) && simulatorState == eInnoSimulatorState::None)
+	{
+		innoSimulator->Play();
+	}
 
 	ImGui::SameLine();
 
@@ -74,39 +88,44 @@ void InnoInputUI::drawForm()
 #pragma endregion InputScreen
 
 #pragma region InputUI1
-	ImGui::Begin("InputUI1");
+
+	float MS			= innoSimulator->GetMS();
+	float MU			= innoSimulator->GetMU();
+	float KS			= innoSimulator->GetKS();
+	float CS			= innoSimulator->GetCS();
+	float KT			= innoSimulator->GetKT();
+	float Speed			= innoSimulator->GetSpeed();
+	float BumpStart		= innoSimulator->GetBumpStart();
+	float BumpEnd		= innoSimulator->GetBumpEnd();
+	float BumpAmp		= innoSimulator->GetBumpAmp();
+	float SamplingTime	= innoSimulator->GetSamplintTIme();	
+
 	static char buff[256] = {};
+
+	ImGui::Begin("InputUI1");
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
 
 	ImGui::Text("MS");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);	
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##MS", buff, 16);
+	ImGui::InputFloat("##MS", &MS, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 	
-	ImGui::Text("KS");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##KS", buff, 16);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("ZU");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##ZU", buff, 16);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
 	ImGui::Text("MU");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##MU", buff, 16);
+	ImGui::InputFloat("##MU", &MU, 0.f, 0.f);
+	ImGui::PopItemWidth();
+	ImGui::Spacing();
+
+	ImGui::Text("KS");
+	ImGui::SameLine(100.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::PushItemWidth(100.0f);
+	ImGui::InputFloat("##KS", &KS, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
@@ -114,18 +133,17 @@ void InnoInputUI::drawForm()
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##CS", buff, 16);
+	ImGui::InputFloat("##CS", &CS, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
-	ImGui::Text("ZS");
+	ImGui::Text("KT");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##ZS", buff, 16);
+	ImGui::InputFloat("##KT", &KT, 0.f, 0.f);
 	ImGui::PopItemWidth();
-	ImGui::Spacing();
-	
+	ImGui::Spacing();	
 
 	ImGui::End();
 #pragma endregion InputUI1
@@ -133,11 +151,11 @@ void InnoInputUI::drawForm()
 #pragma region InputUI2
 	ImGui::Begin("InputUI2");
 
-	ImGui::Text("Speed");
+	ImGui::Text("Speed23");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##Speed", buff, 16);
+	ImGui::InputFloat("##Speed:InputUI2", &Speed, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
@@ -145,7 +163,7 @@ void InnoInputUI::drawForm()
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##BumpStart", buff, 16);
+	ImGui::InputFloat("##BumpStart:InputUI2", &BumpStart, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
@@ -153,7 +171,7 @@ void InnoInputUI::drawForm()
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##BumpEnd", buff, 16);
+	ImGui::InputFloat("##BumpEnd:InputUI2", &BumpEnd, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
@@ -161,7 +179,7 @@ void InnoInputUI::drawForm()
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##BumpAmp", buff, 16);
+	ImGui::InputFloat("##BumpAmp:InputUI2", &BumpAmp, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
@@ -169,7 +187,7 @@ void InnoInputUI::drawForm()
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##SamplingTime", buff, 16);
+	ImGui::InputFloat("##SamplingTime", &SamplingTime, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
@@ -242,6 +260,19 @@ void InnoInputUI::drawForm()
 	}
 
 	ImGui::End();
+
+
+	innoSimulator->SetMS(MS);
+	innoSimulator->SetMU(MU);
+	innoSimulator->SetKS(KS);
+	innoSimulator->SetCS(CS);
+	innoSimulator->SetKT(KT);
+	innoSimulator->SetSpeed(Speed);	
+	innoSimulator->SetBumpStart(BumpStart);
+	innoSimulator->SetBumpEnd(BumpEnd);
+	innoSimulator->SetBumpAmp(BumpAmp);
+	innoSimulator->SetSamplintTIme(SamplingTime);
+
 #pragma endregion GraphUI1
 
 }

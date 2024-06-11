@@ -30,12 +30,12 @@ InnoOJTClient::InnoOJTClient()
 	, mbServerTrainingFinish(false)
 	, mCarDirection(1.f)
 	, mCurPos{ 0, }
-	, mBPosArray()
-	, mSimulation()
+	, mBPosArray()		
 	, mServerSocket(INVALID_SOCKET)
 	, mRecive()
 {
 	InnoDataManager::initialize();
+	InnoSimulator::initialize();
 }
 
 InnoOJTClient::~InnoOJTClient()
@@ -47,6 +47,7 @@ InnoOJTClient::~InnoOJTClient()
 		mRecive.join();
 	}	
 
+	InnoDataManager::deleteInstance();
 	InnoDataManager::deleteInstance();
 }
 
@@ -134,6 +135,8 @@ static void ClientRecive(SOCKET serverSocket)
 
 void InnoOJTClient::run()
 {
+	InnoSimulator::GetInstance()->Update();
+
 	if (mServerSocket == INVALID_SOCKET)
 	{
 		return;
@@ -145,6 +148,9 @@ void InnoOJTClient::run()
 		mCurPos[0] += gDeltaTime * 15.f * mCarDirection;
 		SendPos(mCurPos[0]);
 	}
+
+	//mSimulator->Play();
+	//mSimulator->Finish();
 }
 
 int InnoOJTClient::Connect(const std::string& ip, const int port)
