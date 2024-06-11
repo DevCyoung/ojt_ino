@@ -4,6 +4,7 @@
 #include <LogListUI.h>
 #include <PanelUIManager.h>
 #include <TimeManager.h>
+#include "InnoDataManager.h"
 
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
@@ -34,6 +35,7 @@ InnoOJTClient::InnoOJTClient()
 	, mServerSocket(INVALID_SOCKET)
 	, mRecive()
 {
+	InnoDataManager::initialize();
 }
 
 InnoOJTClient::~InnoOJTClient()
@@ -44,6 +46,8 @@ InnoOJTClient::~InnoOJTClient()
 	{
 		mRecive.join();
 	}	
+
+	InnoDataManager::deleteInstance();
 }
 
 // 서버로부터 메시지 수신하는 함수
