@@ -47,8 +47,8 @@ InnoOJTClient::~InnoOJTClient()
 		mRecive.join();
 	}	
 
-	InnoDataManager::deleteInstance();
-	InnoDataManager::deleteInstance();
+	InnoSimulator::deleteInstance();
+	InnoDataManager::deleteInstance();	
 }
 
 // 서버로부터 메시지 수신하는 함수

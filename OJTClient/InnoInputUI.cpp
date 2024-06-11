@@ -24,6 +24,8 @@ InnoInputUI::~InnoInputUI()
 {
 	DELETE_POINTER(mSceneRenderHelperA);
 	DELETE_POINTER(mSceneRenderHelperB);
+
+	ImPlot::DestroyContext();
 }
 
 
@@ -31,7 +33,7 @@ InnoInputUI::~InnoInputUI()
 
 void InnoInputUI::drawForm()
 {
-	//ImPlot::ShowDemoWindow();	
+	ImPlot::ShowDemoWindow();	
 
 	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
 
@@ -265,9 +267,11 @@ void InnoInputUI::drawForm()
 	//마지막 90개만 그리면된다.
 	const std::vector<tInnoSampleData>& playerASampleDatas = InnoDataManager::GetInstance()->GetPlayerASampleDatas();
 
-	const int maxValueSize = 90;
+	const int maxValueSize = 800;
 	static float frameTime = 0.f;
+
 	static std::vector<float> ZSPoses(maxValueSize, 0.f); //120 프레임에 하나씩등록
+	static std::vector<float> times(maxValueSize, 0.f);
 
 	frameTime += gDeltaTime;
 
@@ -278,11 +282,13 @@ void InnoInputUI::drawForm()
 		if (ZSPoses.size() >= maxValueSize)
 		{
 			ZSPoses.erase(ZSPoses.begin());
+			times.erase(times.begin());
 		}
 
 		if (!playerASampleDatas.empty())
 		{
-			ZSPoses.push_back(playerASampleDatas.back().Zr);
+			ZSPoses.push_back(playerASampleDatas.back().ZuPos);
+			times.push_back(playerASampleDatas.back().Time);
 		}		
 	}
 
@@ -294,7 +300,57 @@ void InnoInputUI::drawForm()
 
 	ImGui::Begin("GraphUI1");
 	{
-		
+		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
+
+		if (ImPlot::BeginPlot("##Scrolling", ImVec2(-1, 300))) {
+			//ImPlot::SetupAxes(nullptr, nullptr, flags, flags);
+
+			//배경움직이기
+			ImPlot::SetupAxisLimits(ImAxis_X1, times.back() - 10.f, times.back(), ImGuiCond_Always);
+
+			//ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 1);			
+
+			//ImPlot::SetupAxisLinks(ImAxis_X1, linkx ? &lims.X.Min : nullptr, linkx ? &lims.X.Max : nullptr);
+
+			double max = 0.0001;
+			double min = -0.0001;
+
+			bool bFlag = false;
+
+			for (int i = 0; i < ZSPoses.size(); ++i)
+			{
+				if (ZSPoses[i] > max)
+				{
+					max = ZSPoses[i];
+					bFlag = true;
+				}
+
+				if (ZSPoses[i] < min)
+				{
+					min = ZSPoses[i];
+					bFlag = true;
+				}
+			}
+
+			//^if (false == bFlag)
+			//^{
+			//^	max = 0.001;
+			//^	min = -0.001;
+			//^}
+
+			// 0으로 돌아가려는 성질이있음			
+
+
+			ImPlot::SetupAxisLinks(ImAxis_Y1, &min, &max);
+
+			ImPlot::PlotLine("Mouse X", times.data(), ZSPoses.data(), ZSPoses.size(), ImPlotFlags_NoFrame);
+			
+			ImPlot::EndPlot();
+		}
+
+
+
+
 	}
 
 	ImGui::PlotLines("Lines", ZSPoses.data(), maxValueSize, 0, nullptr, -0.1f, 0.1f, ImVec2(0, 150.0f));

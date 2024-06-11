@@ -16,6 +16,8 @@ InnoSimulator::InnoSimulator()
 	, mBumpAmp(0.05f)
 	, mSamplingTime(0.001f)
 	, mPrevPos(0.f)
+	, mX{0.f}
+	, mXDot{ 0.f }
 {
 }
 
@@ -93,34 +95,31 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime)
 	float t1 = mBumpStart / mSpeed;
 	float t2 = mBumpEnd / mSpeed;
 
-	float x[4] = { 0, };
-	float xdot[4] = { 0, };
-
 	if (t1 <= sampleTime && sampleTime < t2)
 	{
 		zr = -mBumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
 	}
 
-	xdot[0] = x[1];
-	xdot[1] = (-mKS * (x[0] - x[2]) - mCS * (x[1] - x[3])) / mMS;
-	xdot[2] = x[3];
-	xdot[3] = (mKS * (x[0] - x[2]) + mCS * (x[1] - x[3]) - mKT * (x[2] - zr)) / mMU;
+	mXDot[0] = mX[1];
+	mXDot[1] = (-mKS * (mX[0] - mX[2]) - mCS * (mX[1] - mX[3])) / mMS;
+	mXDot[2] = mX[3];
+	mXDot[3] = (mKS * (mX[0] - mX[2]) + mCS * (mX[1] - mX[3]) - mKT * (mX[2] - zr)) / mMU;
 
 	//РћКа
-	x[0] = x[0] + gDeltaTime * xdot[0];
-	x[1] = x[1] + gDeltaTime * xdot[1];
-	x[2] = x[2] + gDeltaTime * xdot[2];
-	x[3] = x[3] + gDeltaTime * xdot[3];
+	mX[0] = mX[0] + gDeltaTime * mXDot[0];
+	mX[1] = mX[1] + gDeltaTime * mXDot[1];
+	mX[2] = mX[2] + gDeltaTime * mXDot[2];
+	mX[3] = mX[3] + gDeltaTime * mXDot[3];
 
 	tInnoSampleData sampleData = {};	
 
 	sampleData.Time		= sampleTime;
-	sampleData.ZsPos	= x[0];
-	sampleData.ZsSpeed	= x[1];
-	sampleData.ZsAcc	= xdot[1];
-	sampleData.ZuPos	= x[2];
-	sampleData.ZuSpeed	= x[3];
-	sampleData.ZuAcc	= xdot[3];
+	sampleData.ZsPos	= mX[0];
+	sampleData.ZsSpeed	= mX[1];
+	sampleData.ZsAcc	= mXDot[1];
+	sampleData.ZuPos	= mX[2];
+	sampleData.ZuSpeed	= mX[3];
+	sampleData.ZuAcc	= mXDot[3];
 	sampleData.Zr		= zr;
 	sampleData.xPos		= mPrevPos + mSpeed * gDeltaTime;
 	sampleData.xSpeed	= mSpeed;

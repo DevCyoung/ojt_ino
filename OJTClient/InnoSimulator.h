@@ -82,6 +82,9 @@ private:
 	float mSamplingTime;
 
 	float mPrevPos;
+
+	float mX[4] = { 0, };
+	float mXDot[4] = { 0, };
 };
 
 
