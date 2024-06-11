@@ -241,45 +241,45 @@ void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
 	mbServerTraining = false;
-
-	for (int i = 0; i < 100000; ++i)
-	{
-		mSimulation.Update();
-	}
-
-	int sampleCount = mSimulation.GetSampleDataCount();
-	std::queue<float> vecPoses;
-
-	for (int i = 0; i < sampleCount; ++i)
-	{
-		vecPoses.push(mSimulation.GetSampleData(i).xPos);
-	}
+	//TODO
+	//for (int i = 0; i < 100000; ++i)
+	//{
+	//	mSimulation.Update();
+	//}
+	//
+	//int sampleCount = mSimulation.GetSampleDataCount();
+	//std::queue<float> vecPoses;
+	//
+	//for (int i = 0; i < sampleCount; ++i)
+	//{
+	//	vecPoses.push(mSimulation.GetSampleData(i).xPos);
+	//}
 
 	//SendPosesSize(11);
-
-	while (!vecPoses.empty())
-	{
-		std::vector<float> tempPoses;
-		for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
-		{
-			if (vecPoses.empty())
-			{
-				break;
-			}
-
-			tempPoses.push_back(vecPoses.front());
-			vecPoses.pop();
-		}
-
-		if (vecPoses.empty())
-		{
-			break;
-		}
-
-		SendPoses(tempPoses.size(), tempPoses.data());
-	}
-
-	SendStop();
+	//TODO
+	//while (!vecPoses.empty())
+	//{
+	//	std::vector<float> tempPoses;
+	//	for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
+	//	{
+	//		if (vecPoses.empty())
+	//		{
+	//			break;
+	//		}
+	//
+	//		tempPoses.push_back(vecPoses.front());
+	//		vecPoses.pop();
+	//	}
+	//
+	//	if (vecPoses.empty())
+	//	{
+	//		break;
+	//	}
+	//
+	//	SendPoses(tempPoses.size(), tempPoses.data());
+	//}
+	//
+	//SendStop();
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)

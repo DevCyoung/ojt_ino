@@ -163,7 +163,6 @@
     <ClInclude Include="Builder.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraInputMoveMent.h" />
-    <ClInclude Include="CarSimulation.h" />
     <ClInclude Include="Casting.h" />
     <ClInclude Include="CBCollection.h" />
     <ClInclude Include="CircleCollider2D.h" />
@@ -298,7 +297,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraInputMoveMent.cpp" />
     <ClCompile Include="CameraUI.cpp" />
-    <ClCompile Include="CarSimulation.cpp" />
     <ClCompile Include="CBCollection.cpp" />
     <ClCompile Include="CircleCollider2D.cpp" />
     <ClCompile Include="CircleCollider2DUI.cpp" />
