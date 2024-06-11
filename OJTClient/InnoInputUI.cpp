@@ -9,18 +9,19 @@
 #include "InnoDataManager.h"
 #include <TimeManager.h>
 #include <implot.h>
+#include <InputManager.h>
 
 InnoInputUI::InnoInputUI()
 	: mSceneRenderHelperA(nullptr)
 	, mSceneRenderHelperB(nullptr)
 {
-	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", 800, 200);
-	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", 800, 200);
+	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", 800, 190);
+	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", 800, 190);
 
 	ImPlot::CreateContext();
 }
 
-InnoInputUI::~InnoInputUI()	
+InnoInputUI::~InnoInputUI()
 {
 	DELETE_POINTER(mSceneRenderHelperA);
 	DELETE_POINTER(mSceneRenderHelperB);
@@ -31,9 +32,76 @@ InnoInputUI::~InnoInputUI()
 
 #define offset 16.f
 
+static void ShowGraph(const char* label, const std::vector<float>& values, const std::vector<float>& times, int axxSize = 150)
+{
+	Assert(times.size() == values.size(), ASSERT_MSG_INVALID);
+
+	std::string key = "##";
+
+	key += label;
+
+	if (ImPlot::BeginPlot(key.c_str(), ImVec2(-1, axxSize)))
+	{
+		const float history = 10.f;
+		double max = 0.0001f;
+		double min = -0.0001f;
+
+		for (int i = 0; i < values.size(); ++i)
+		{
+			if (times[i] < times.back() - history || times[i] > times.back())
+			{
+				continue;
+			}
+
+			if (max < values[i])
+			{
+				max = values[i];
+			}
+
+			if (min > values[i])
+			{
+				min = values[i];
+			}
+		}
+
+		double size = abs(max) - abs(min);
+		size = abs(size);
+
+		max += size * 0.15;
+		min -= size * 0.15;
+
+		//invert
+		//ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_Invert, 0);
+
+		ImPlot::SetupAxisLinks(ImAxis_Y1, &min, &max);
+		ImPlot::SetupAxisLimits(ImAxis_X1, times.back() - history, times.back(), ImGuiCond_Always);
+		ImPlot::PlotLine(label, times.data(), values.data(), values.size(), ImPlotFlags_NoFrame);
+
+		ImPlot::EndPlot();
+	}
+}
+
 void InnoInputUI::drawForm()
 {
-	ImPlot::ShowDemoWindow();	
+
+	static int current_item = 7;
+	//for (int i = ImGuiTheme::ImGuiTheme_ImGuiColorsClassic; i < ImGuiTheme::ImGuiTheme_Count; ++i)
+	//{
+	//	vecZsAcc.push_back(ImGuiTheme::ImGuiTheme_Name((ImGuiTheme::ImGuiTheme_)i));
+	//}
+	//
+	//if (ImGui::Combo("combo", &current_item, vecZsAcc))
+	//{
+	//
+	//}
+
+	{
+		ImGuiStyle newStyle = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_(current_item));
+		ImGuiStyle& style = ImGui::GetStyle();
+		style = newStyle;
+	}
+
+	ImPlot::ShowDemoWindow();
 
 	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
 
@@ -59,7 +127,7 @@ void InnoInputUI::drawForm()
 
 #pragma endregion
 	static float testFloat = 0.f;
-	ImGui::Separator();	
+	ImGui::Separator();
 	ImGui::PushItemWidth(800.f);
 	ImGui::SliderFloat("##testFloat", &testFloat, 0.f, 100000.f);
 	ImGui::PopItemWidth();
@@ -87,7 +155,7 @@ void InnoInputUI::drawForm()
 
 	ImGui::Button("<<");
 
-	ImGui::SameLine( 600.f );
+	ImGui::SameLine(600.f);
 
 	ImGui::Text("Play Time : 00.00 / 00.00 ");
 
@@ -99,16 +167,16 @@ void InnoInputUI::drawForm()
 
 #pragma region InputUI1
 
-	float MS			= innoSimulator->GetMS();
-	float MU			= innoSimulator->GetMU();
-	float KS			= innoSimulator->GetKS();
-	float CS			= innoSimulator->GetCS();
-	float KT			= innoSimulator->GetKT();
-	float Speed			= innoSimulator->GetSpeed();
-	float BumpStart		= innoSimulator->GetBumpStart();
-	float BumpEnd		= innoSimulator->GetBumpEnd();
-	float BumpAmp		= innoSimulator->GetBumpAmp();
-	float SamplingTime	= innoSimulator->GetSamplintTIme();	
+	float MS = innoSimulator->GetMS();
+	float MU = innoSimulator->GetMU();
+	float KS = innoSimulator->GetKS();
+	float CS = innoSimulator->GetCS();
+	float KT = innoSimulator->GetKT();
+	float Speed = innoSimulator->GetSpeed();
+	float BumpStart = innoSimulator->GetBumpStart();
+	float BumpEnd = innoSimulator->GetBumpEnd();
+	float BumpAmp = innoSimulator->GetBumpAmp();
+	float SamplingTime = innoSimulator->GetSamplintTIme();
 
 	static char buff[256] = {};
 
@@ -117,12 +185,12 @@ void InnoInputUI::drawForm()
 
 	ImGui::Text("MS");
 	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);	
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
 	ImGui::InputFloat("##MS", &MS, 0.f, 0.f);
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
-	
+
 	ImGui::Text("MU");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
@@ -153,7 +221,7 @@ void InnoInputUI::drawForm()
 	ImGui::PushItemWidth(100.0f);
 	ImGui::InputFloat("##KT", &KT, 0.f, 0.f);
 	ImGui::PopItemWidth();
-	ImGui::Spacing();	
+	ImGui::Spacing();
 
 	ImGui::End();
 #pragma endregion InputUI1
@@ -264,133 +332,98 @@ void InnoInputUI::drawForm()
 	const float GRAPH_MAX = 0.05f;
 	const float GRAPH_HEIGHT = 100.f;
 
-	//마지막 90개만 그리면된다.
-	const std::vector<tInnoSampleData>& playerASampleDatas = InnoDataManager::GetInstance()->GetPlayerASampleDatas();
 
 	const int maxValueSize = 800;
+	//마지막 maxValueSize개만 그리면된다.
+	const std::vector<tInnoSampleData>& playerASampleDatas = InnoDataManager::GetInstance()->GetPlayerASampleDatas();
+
+
 	static float frameTime = 0.f;
 
-	static std::vector<float> ZSPoses(maxValueSize, 0.f); //120 프레임에 하나씩등록
-	static std::vector<float> times(maxValueSize, 0.f);
+	static std::vector<float> vecZsPos(maxValueSize, 0.f);
+	static std::vector<float> vecZsSpeed(maxValueSize, 0.f);
+	static std::vector<float> vecZsAcc(maxValueSize, 0.f);
+	static std::vector<float> vecZuPos(maxValueSize, 0.f);
+	static std::vector<float> vecZuSpeed(maxValueSize, 0.f);
+	static std::vector<float> vecZuAcc(maxValueSize, 0.f);
+	static std::vector<float> vecZr(maxValueSize, 0.f);
+	static std::vector<float> vecxPos(maxValueSize, 0.f);
+	static std::vector<float> vecXSpeed(maxValueSize, 0.f);
+
+	static std::vector<float> vecTimes(maxValueSize, 0.f);
 
 	frameTime += gDeltaTime;
 
-	if (frameTime >= (1.f / 60.f))
-	{		
-		frameTime = 0.f;
+	static bool checker = true;
 
-		if (ZSPoses.size() >= maxValueSize)
+	if (gInput->GetKeyDown(eKeyCode::SPACE))
+	{
+		checker = !checker;
+	}
+
+	if (checker && frameTime >= (1.f / 60.f))
+	{
+		frameTime = 0.f;		
+
+		if (vecZsPos.size() >= maxValueSize)
 		{
-			ZSPoses.erase(ZSPoses.begin());
-			times.erase(times.begin());
+			vecZsPos.erase(vecZsPos.begin());
+			vecZsSpeed.erase(vecZsSpeed.begin());
+			vecZsAcc.erase(vecZsAcc.begin());
+			vecZuPos.erase(vecZuPos.begin());
+			vecZuSpeed.erase(vecZuSpeed.begin());
+			vecZuAcc.erase(vecZuAcc.begin());
+			vecZr.erase(vecZr.begin());
+			vecxPos.erase(vecxPos.begin());
+			vecXSpeed.erase(vecXSpeed.begin());
+
+			vecTimes.erase(vecTimes.begin()	);
 		}
 
 		if (!playerASampleDatas.empty())
 		{
-			ZSPoses.push_back(playerASampleDatas.back().ZuPos);
-			times.push_back(playerASampleDatas.back().Time);
-		}		
+			vecZsPos.push_back(playerASampleDatas.back().ZsPos);
+			vecZsSpeed.push_back(playerASampleDatas.back().ZsSpeed);
+			vecZsAcc.push_back(playerASampleDatas.back().ZsAcc);
+			vecZuPos.push_back(playerASampleDatas.back().ZuPos);
+			vecZuSpeed.push_back(playerASampleDatas.back().ZuSpeed);
+			vecZuAcc.push_back(playerASampleDatas.back().ZuAcc);
+			vecZr.push_back(playerASampleDatas.back().Zr);
+			vecxPos.push_back(playerASampleDatas.back().xPos);
+			vecXSpeed.push_back(playerASampleDatas.back().xSpeed);
+
+			vecTimes.push_back(playerASampleDatas.back().Time);
+		}
 	}
-
-	//std::reverse(ZSPoses.begin(), ZSPoses.end());
-
-	//ZSPoses[0] = 0.1f;
-	//ZSPoses[1] = -0.1f;
-	
 
 	ImGui::Begin("GraphUI1");
 	{
+		static int axxSize = 150;
+		ImGui::SliderInt("##AXXSize", &axxSize, 50, 600);
+
+
 		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
-
-		if (ImPlot::BeginPlot("##Scrolling", ImVec2(-1, 300))) {
-			//ImPlot::SetupAxes(nullptr, nullptr, flags, flags);
-
-			//배경움직이기
-			ImPlot::SetupAxisLimits(ImAxis_X1, times.back() - 10.f, times.back(), ImGuiCond_Always);
-
-			//ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 1);			
-
-			//ImPlot::SetupAxisLinks(ImAxis_X1, linkx ? &lims.X.Min : nullptr, linkx ? &lims.X.Max : nullptr);
-
-			double max = 0.0001;
-			double min = -0.0001;
-
-			bool bFlag = false;
-
-			for (int i = 0; i < ZSPoses.size(); ++i)
-			{
-				if (ZSPoses[i] > max)
-				{
-					max = ZSPoses[i];
-					bFlag = true;
-				}
-
-				if (ZSPoses[i] < min)
-				{
-					min = ZSPoses[i];
-					bFlag = true;
-				}
-			}
-
-			//^if (false == bFlag)
-			//^{
-			//^	max = 0.001;
-			//^	min = -0.001;
-			//^}
-
-			// 0으로 돌아가려는 성질이있음			
-
-
-			ImPlot::SetupAxisLinks(ImAxis_Y1, &min, &max);
-
-			ImPlot::PlotLine("Mouse X", times.data(), ZSPoses.data(), ZSPoses.size(), ImPlotFlags_NoFrame);
-			
-			ImPlot::EndPlot();
-		}
-
-
-
-
+		ShowGraph("ZsPos", vecZsPos, vecTimes  , axxSize);
+		ShowGraph("ZsSpeed", vecZsSpeed, vecTimes, axxSize);
+		ShowGraph("ZsAcc", vecZsAcc, vecTimes, axxSize);
+		ShowGraph("ZuPos", vecZsPos, vecTimes, axxSize);
+		ShowGraph("ZuSpeed", vecZuSpeed, vecTimes, axxSize);
+		ShowGraph("ZuAcc", vecZuAcc, vecTimes, axxSize);
+		ShowGraph("Zr", vecZr, vecTimes, axxSize);
+		ShowGraph("xPos", vecxPos, vecTimes, axxSize);
+		ShowGraph("XSpeed", vecXSpeed, vecTimes, axxSize);
 	}
-
-	ImGui::PlotLines("Lines", ZSPoses.data(), maxValueSize, 0, nullptr, -0.1f, 0.1f, ImVec2(0, 150.0f));
-
-	//ImGui::PlotLines("ZsPos", funcZsPos, &playerASampleDatas, maxValueSize, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-
-	std::vector<std::string> vec;
-
-
-	static int current_item = 7;
-	for (int i = ImGuiTheme::ImGuiTheme_ImGuiColorsClassic; i < ImGuiTheme::ImGuiTheme_Count; ++i)
-	{
-		vec.push_back(ImGuiTheme::ImGuiTheme_Name((ImGuiTheme::ImGuiTheme_)i));
-	}
-
-	if (ImGui::Combo("combo", &current_item, vec))
-	{
-		
-	}
-
-	{
-		ImGuiStyle newStyle = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_(current_item));
-		ImGuiStyle& style = ImGui::GetStyle();
-		style = newStyle;
-	}
-
 	ImGui::End();
-
+#pragma endregion GraphUI1
 
 	innoSimulator->SetMS(MS);
 	innoSimulator->SetMU(MU);
 	innoSimulator->SetKS(KS);
 	innoSimulator->SetCS(CS);
 	innoSimulator->SetKT(KT);
-	innoSimulator->SetSpeed(Speed);	
+	innoSimulator->SetSpeed(Speed);
 	innoSimulator->SetBumpStart(BumpStart);
 	innoSimulator->SetBumpEnd(BumpEnd);
 	innoSimulator->SetBumpAmp(BumpAmp);
 	innoSimulator->SetSamplintTIme(SamplingTime);
-
-#pragma endregion GraphUI1
-
 }
