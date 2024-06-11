@@ -38,11 +38,11 @@ static void loadRenderTexture(const UINT width, const UINT height, const std::ws
 
 void EditorResourceLoader()
 {
-	loadRenderTexture(800, 400,  L"/Editor/EditorView");
-	loadRenderTexture(800, 400, L"/Editor/EditorViewCopy");
-
-	loadRenderTexture(1280, 720, L"/Editor/GameView");
-	loadRenderTexture(1280, 720, L"/Editor/GameViewCopy");
+	//loadRenderTexture(800, 400,  L"/Editor/EditorView");
+	//loadRenderTexture(800, 400, L"/Editor/EditorViewCopy");
+	//
+	//loadRenderTexture(1280, 720, L"/Editor/GameView");
+	//loadRenderTexture(1280, 720, L"/Editor/GameViewCopy");
 	
 	//loadRenderTexture(1280, 720,  L"/Editor/EditorView");
 	//loadRenderTexture(1280, 720, L"/Editor/EditorViewCopy");

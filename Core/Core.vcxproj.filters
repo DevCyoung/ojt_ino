@@ -72,9 +72,6 @@
     <ClInclude Include="framework.h">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="CarSimulation.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="imgui.h">
       <Filter>Source\ImGUI</Filter>
     </ClInclude>
@@ -442,13 +439,13 @@
       <Filter>Protocal</Filter>
     </ClInclude>
     <ClInclude Include="imgui_theme.h" />
+    <ClInclude Include="SceneRenderHelper.h">
+      <Filter>Source\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>windows</Filter>
-    </ClCompile>
-    <ClCompile Include="CarSimulation.cpp">
-      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="AlphaHelper.cpp">
       <Filter>Source\Render</Filter>
@@ -826,6 +823,9 @@
       <Filter>Protocal</Filter>
     </ClCompile>
     <ClCompile Include="imgui_theme.cpp" />
+    <ClCompile Include="SceneRenderHelper.cpp">
+      <Filter>Source\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">

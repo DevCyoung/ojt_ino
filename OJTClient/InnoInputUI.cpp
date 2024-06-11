@@ -4,34 +4,20 @@
 #include <GameSystem.h>
 #include <SceneManager.h>
 #include <AlphaHelper.h>
+#include <Texture.h>
 
 InnoInputUI::InnoInputUI()
-	: mEditorCamera(nullptr)
+	: mSceneRenderHelperA(nullptr)
+	, mSceneRenderHelperB(nullptr)
 {
-
-	const int width = 800;
-	const int height = 400;
-
-	//Editor Camera
-	{
-		const Vector2 screenSize = Vector2(width, height);
-		GameObject* const mainCamera = CreateGameObject();
-		mainCamera->AddComponent<Camera>();
-		mainCamera->AddComponent<CameraInputMoveMent>();
-
-		mainCamera->GetComponent<Transform>()->SetPosition(0.f, 0.f, -2.5f);
-		mainCamera->GetComponent<Camera>()->SetRenderTargetSize(screenSize);
-		mainCamera->GetComponent<Camera>()->SetPriorityType(eCameraPriorityType::Editor);
-		mainCamera->GetComponent<Camera>()->SetProjectionType(eCameraProjectionType::Orthographic);
-		mainCamera->GetComponent<Camera>()->TurnOnAllLayer();
-		mainCamera->GetComponent<Camera>()->Set2DSize(1.f);
-		mEditorCamera = mainCamera;
-	}
+	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", 800, 200);
+	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", 800, 200);
 }
 
 InnoInputUI::~InnoInputUI()	
 {
-	DELETE_POINTER(mEditorCamera);
+	DELETE_POINTER(mSceneRenderHelperA);
+	DELETE_POINTER(mSceneRenderHelperB);
 }
 
 
@@ -39,70 +25,28 @@ InnoInputUI::~InnoInputUI()
 
 void InnoInputUI::drawForm()
 {
-
-
-
-
 #pragma region InputScreen
-
-	//EditorView 전용텍스처에 그린다.
-	Camera* editorCamera = mEditorCamera->GetComponent<Camera>();
-	RenderTargetRenderer* renderer = gCurrentSceneRenderer;
-	Texture* renderTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRenderTexture");
-	Texture* depThTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewDepthTexture");
-	Scene* currentScene = gCurrentScene;
-	FLOAT backgroundColor[4] = {0.5f, 0.5f, 0.5f, 1.f };
-	UINT cameraMask = renderer->GetCameraLayerMask();
-	
-	renderer->RegisterRenderCamera(editorCamera);
-	renderer->TurnOffAllCamera();
-	renderer->TurnOnCamera(eCameraPriorityType::Editor);
-	mEditorCamera->GetComponent<Transform>()->CalculateTransform();
-	editorCamera->CalculateCamera();
-	
-	gGraphicDevice->ClearRenderTarget(
-		renderTex->GetAddressOf(),
-		depThTex->GetDSV(), backgroundColor);
-	currentScene->Render(
-		static_cast<UINT>(renderTex->GetWidth()),
-		static_cast<UINT>(renderTex->GetHeight()),
-		renderTex->GetAddressOf(),
-		depThTex->GetDSV());
-	
-	renderer->SetCameraLayerMask(cameraMask);
-	renderer->PopUpCamera(eCameraPriorityType::Editor);	
-	renderer->TurnOffCamera(eCameraPriorityType::Editor);
-	
-	//둘다 UAV여야함	ImGUI 용도로 사용하기위해 Alpha값 1로 덮어쓴다.
-	Texture* rwTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRWTexture");
-	Texture* rwTex2 = gResourceManager->Find<Texture>(L"/Editor/EditorViewCopyRWTexture");
-	gGraphicDevice->CopyResource(rwTex2->GetID3D11Texture2D(), renderTex->GetID3D11Texture2D());
-	TextureAlphaTo(rwTex, rwTex2);
-	gGraphicDevice->CopyResource(renderTex->GetID3D11Texture2D(), rwTex->GetID3D11Texture2D());
-	Engine::GetInstance()->OmSet();
-
 	ImGui::Begin("ScreenUI");
+	mSceneRenderHelperA->Draw(gCurrentScene);
+	mSceneRenderHelperB->Draw(gCurrentScene);
 
-#pragma region Screen
-	//Texture* rwTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewRenderTexture");
-	ImVec2 renderTargetSize = ImVec2(rwTex->GetWidth(), rwTex->GetHeight());
-	//Texture* depThTex = gResourceManager->Find<Texture>(L"/Editor/EditorViewDepthTexture");
-	//FLOAT backgroundColor[4] = {1.f, 0.0f, 1.f, 1.f };
+	Texture* renderTexA = mSceneRenderHelperA->GetRenderTexture();
+	Texture* renderTexB = mSceneRenderHelperB->GetRenderTexture();
 
-	//gGraphicDevice->ClearRenderTarget(
-	//	rwTex->GetAddressOf(),
-	//depThTex->GetDSV(), backgroundColor);
+	ImVec2 renderTargetSizeA = ImVec2(renderTexA->GetWidth(), renderTexA->GetHeight());
+	ImVec2 renderTargetSizeB = ImVec2(renderTexB->GetWidth(), renderTexB->GetHeight());
 
+#pragma region Screen	
 	if (ImGui::IsWindowFocused())
 	{
-		mEditorCamera->GetComponent<CameraInputMoveMent>()->MoveCamera();
+		mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
 	}
-	ImGui::Image((void*)renderTex->GetSRV(), renderTargetSize);
+
+	ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
+	ImGui::Image((void*)renderTexB->GetSRV(), renderTargetSizeB);
+
 #pragma endregion
-
 	static float testFloat = 0.f;
-
-
 	ImGui::Separator();	
 	ImGui::PushItemWidth(800.f);
 	ImGui::SliderFloat("##testFloat", &testFloat, 0.f, 100000.f);

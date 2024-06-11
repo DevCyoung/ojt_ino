@@ -11,6 +11,7 @@
 #include <Camera.h>
 #include <CameraInputMoveMent.h>
 #include <Transform.h>
+#include <SceneRenderHelper.h>
 
 class InnoInputUI : public PanelUI
 {
@@ -20,6 +21,7 @@ public:
 	// PanelUI을(를) 통해 상속됨
 	void drawForm() override;
 
-	GameObject* mEditorCamera;
+	SceneRenderHelper* mSceneRenderHelperA;
+	SceneRenderHelper* mSceneRenderHelperB;
 };
 

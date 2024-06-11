@@ -10,7 +10,7 @@
     <Filter Include="Source\Panel">
       <UniqueIdentifier>{c809116b-46a6-4b3b-902f-33a373765205}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\CarSimulation">
+    <Filter Include="CarSimulation">
       <UniqueIdentifier>{19161a58-cbcf-466f-a783-309ac0aadcff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -40,11 +40,12 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="CarSimulation.h">
-      <Filter>Source\CarSimulation</Filter>
+      <Filter>CarSimulation</Filter>
     </ClInclude>
     <ClInclude Include="InnoInputUI.h">
       <Filter>Source\Panel</Filter>
     </ClInclude>
+    <ClInclude Include="InnoDataManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTClient.ico">
@@ -76,10 +77,11 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="CarSimulation.cpp">
-      <Filter>Source\CarSimulation</Filter>
+      <Filter>CarSimulation</Filter>
     </ClCompile>
     <ClCompile Include="InnoInputUI.cpp">
       <Filter>Source\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="InnoDataManager.cpp" />
   </ItemGroup>
 </Project>

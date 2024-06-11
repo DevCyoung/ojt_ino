@@ -30,19 +30,23 @@ public:
 	void SetKS(const float ks) { mKS = ks; }
 	void SetCS(const float cs) { mCS = cs; }
 	void SetKT(const float kt) { mKT = kt; }
+	void SetSpeed(const float Speed) { mSpeed = Speed; }
 
 	float GetSamplingTime() const { return mSamplingTime;  }
 	float GetMS() const { return mMS; }
 	float GetKS() const { return mKS; }
 	float GetCS() const { return mCS; }
 	float GetKT() const { return mKT; }
+	float GetSpeed() const { return mSpeed; }
+
+	tSampleData CreateSampleData(float sampleTime);
 
 	void Update();
 
 	void SaveData(const wchar_t* const filePath);
 
-	const tSampleData& GetSampleData(const int idx) const { return mSampleDatas[idx]; }
-	size_t GetSampleDataCount() { return mSampleDatas.size(); }
+	//const tSampleData& GetSampleData(const int idx) const { return mSampleDatas[idx]; }
+	//size_t GetSampleDataCount() { return mSampleDatas.size(); }
 
 private:
 	float mSamplingTime;
@@ -58,22 +62,19 @@ private:
 	float mBumpAmp;
 
 	//
-	float mSimTime;
+	float time;
 
 	//
 	//x[0] = Zs(위치)
 	//x[1] = Zs(속도)
 	//x[2] = Zu(위치)
 	//x[3] = Zu(속도)	
-	float x[4];
+	//float x[4];
 
 	//xdot[0] = Zs(속도)
 	//xdot[1] = Zs(가속도)
 	//xdot[2] = Zu(속도)
 	//xdot[3] = Zu(가속도)
-	float xdot[4];
-
-	//
-	std::vector<tSampleData> mSampleDatas;
+	//float xdot[4];
 };
 
