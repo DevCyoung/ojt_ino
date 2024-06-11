@@ -442,6 +442,9 @@
       <Filter>Protocal</Filter>
     </ClInclude>
     <ClInclude Include="imgui_theme.h" />
+    <ClInclude Include="SceneRenderHelper.h">
+      <Filter>Source\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -826,6 +829,9 @@
       <Filter>Protocal</Filter>
     </ClCompile>
     <ClCompile Include="imgui_theme.cpp" />
+    <ClCompile Include="SceneRenderHelper.cpp">
+      <Filter>Source\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">

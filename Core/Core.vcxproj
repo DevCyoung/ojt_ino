@@ -259,6 +259,7 @@
     <ClInclude Include="SBCollection.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneRenderHelper.h" />
     <ClInclude Include="ScriptComponent.h" />
     <ClInclude Include="ScriptComponentTrait.h" />
     <ClInclude Include="ScriptType.h" />
@@ -416,6 +417,7 @@
     <ClCompile Include="SBCollection.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SceneRenderHelper.cpp" />
     <ClCompile Include="ScriptComponent.cpp" />
     <ClCompile Include="ScriptComponentUI.cpp" />
     <ClCompile Include="ScriptComponentUIRender.cpp" />
