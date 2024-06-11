@@ -61,6 +61,9 @@
     <Filter Include="Protocal">
       <UniqueIdentifier>{fd9dd1d5-970b-4746-b636-480ea9f6e76f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ImGUI\implot">
+      <UniqueIdentifier>{6bb9b655-e4a7-4199-8c3c-3356f1fd804a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InnoOJTCore.h">
@@ -441,6 +444,12 @@
     <ClInclude Include="imgui_theme.h" />
     <ClInclude Include="SceneRenderHelper.h">
       <Filter>Source\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="implot.h">
+      <Filter>Source\ImGUI\implot</Filter>
+    </ClInclude>
+    <ClInclude Include="implot_internal.h">
+      <Filter>Source\ImGUI\implot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -825,6 +834,15 @@
     <ClCompile Include="imgui_theme.cpp" />
     <ClCompile Include="SceneRenderHelper.cpp">
       <Filter>Source\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="implot.cpp">
+      <Filter>Source\ImGUI\implot</Filter>
+    </ClCompile>
+    <ClCompile Include="implot_demo.cpp">
+      <Filter>Source\ImGUI\implot</Filter>
+    </ClCompile>
+    <ClCompile Include="implot_items.cpp">
+      <Filter>Source\ImGUI\implot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

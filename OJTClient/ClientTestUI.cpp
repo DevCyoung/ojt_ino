@@ -92,55 +92,61 @@ void ClientTestUI::drawForm()
 
     struct Funcs
     {
-        static float ZsPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsPos; }
-        static float ZsSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsSpeed;}
-        static float ZsAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsAcc; }
-        static float ZuPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuPos; }
-        static float ZuSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuSpeed; }
-        static float ZuAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuAcc; }
-        static float Zr(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].Zr; }
-        static float XPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xPos; }
-        static float XSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xSpeed; }
+        static float ZsPos(const std::vector<tInnoSampleData>*      playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsPos; }
+        static float ZsSpeed(const std::vector<tInnoSampleData>*    playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsSpeed;}
+        static float ZsAcc(const std::vector<tInnoSampleData>*      playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsAcc; }
+        static float ZuPos(const std::vector<tInnoSampleData>*      playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuPos; }
+        static float ZuSpeed(const std::vector<tInnoSampleData>*    playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuSpeed; }
+        static float ZuAcc(const std::vector<tInnoSampleData>*      playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuAcc; }
+        static float Zr(const std::vector<tInnoSampleData>*         playerASampleDatas, int i) { return (*playerASampleDatas)[i].Zr; }
+        static float XPos(const std::vector<tInnoSampleData>*       playerASampleDatas, int i) { return (*playerASampleDatas)[i].xPos; }
+        static float XSpeed(const std::vector<tInnoSampleData>*     playerASampleDatas, int i) { return (*playerASampleDatas)[i].xSpeed; }
         //static float Saw(void*, int i) { return (i & 1) ? 1.0f : -1.0f; }
     };
 
-    float (*funcZsPos)(void*, int) = (float (*)(void*, int))Funcs::ZsPos;
-    float (*funcZsSpeed)(void*, int) = (float (*)(void*, int))Funcs::ZsSpeed;
-    float (*funcZsAcc)(void*, int) = (float (*)(void*, int))Funcs::ZsAcc;
-    float (*funcZuPos)(void*, int) = (float (*)(void*, int))Funcs::ZuPos;
-    float (*funcZuSpeed)(void*, int) = (float (*)(void*, int))Funcs::ZuSpeed;
-    float (*funcZuAcc)(void*, int) = (float (*)(void*, int))Funcs::ZuAcc;
-    float (*funcZr)(void*, int) = (float (*)(void*, int))Funcs::Zr;
+    float (*funcZsPos)      (void*, int) = (float (*)(void*, int))Funcs::ZsPos;
+    float (*funcZsSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZsSpeed;
+    float (*funcZsAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZsAcc;
+    float (*funcZuPos)      (void*, int) = (float (*)(void*, int))Funcs::ZuPos;
+    float (*funcZuSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZuSpeed;
+    float (*funcZuAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZuAcc;
+    float (*funcZr)         (void*, int) = (float (*)(void*, int))Funcs::Zr;
 
     //float (*funcXPos)(void*, int) = (float (*)(void*, int))Funcs::XPos;
     //float (*funcXSpeed)(void*, int) = (float (*)(void*, int))Funcs::XSpeed;
-
-
-
     //if (CarSimulation.)
 
-    const float GRAPH_MIN = -0.05f;
-    const float GRAPH_MAX = 0.05f;
-    const float GRAPH_HEIGHT = 100.f;
+    const float GRAPH_MIN       = -0.05f;
+    const float GRAPH_MAX       = 0.05f;
+    const float GRAPH_HEIGHT    = 100.f;
+
+    //90개를그린다.
+    
+    float values[90] = { 0.f, };
+
+    //마지막 90개만 그리면된다.
+
+
 
     if (InnoDataManager::GetInstance()->GetPlayerASampleDatas().size() >= 70)
     {
         std::vector<tInnoSampleData>& playerASampleDatas = (std::vector<tInnoSampleData>&)InnoDataManager::GetInstance()->GetPlayerASampleDatas();
 
         ImGui::PlotLines("ZsPos", funcZsPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotLines("ZsSpeed", funcZsSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotLines("ZsAcc", funcZsAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotLines("ZuPos", funcZuPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotLines("ZuSpeed", funcZuSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotLines("ZuAcc", funcZuAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotLines("Zr", funcZr, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotHistogram("ZsPos", funcZsPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotHistogram("ZsSpeed", funcZsSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotHistogram("ZsAcc", funcZsAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotHistogram("ZuPos", funcZuPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotHistogram("ZuSpeed", funcZuSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotHistogram("ZuAcc", funcZuAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
-        ImGui::PlotHistogram("Zr", funcZr, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotLines("ZsSpeed", funcZsSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotLines("ZsAcc", funcZsAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotLines("ZuPos", funcZuPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotLines("ZuSpeed", funcZuSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotLines("ZuAcc", funcZuAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotLines("Zr", funcZr, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+
+        //ImGui::PlotHistogram("ZsPos", funcZsPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotHistogram("ZsSpeed", funcZsSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotHistogram("ZsAcc", funcZsAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotHistogram("ZuPos", funcZuPos, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotHistogram("ZuSpeed", funcZuSpeed, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotHistogram("ZuAcc", funcZuAcc, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
+        //ImGui::PlotHistogram("Zr", funcZr, &playerASampleDatas, display_count, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
 
         //ImGui::PlotLines("XPos", func, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));
         //ImGui::PlotLines("XSpeed", func, &mCarSumulation, display_count, 0, NULL, -0.05f, 0.05f, ImVec2(0, 100));		

@@ -6,6 +6,9 @@
 #include <AlphaHelper.h>
 #include <Texture.h>
 #include "InnoSimulator.h"
+#include "InnoDataManager.h"
+#include <TimeManager.h>
+#include <implot.h>
 
 InnoInputUI::InnoInputUI()
 	: mSceneRenderHelperA(nullptr)
@@ -13,6 +16,8 @@ InnoInputUI::InnoInputUI()
 {
 	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", 800, 200);
 	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", 800, 200);
+
+	ImPlot::CreateContext();
 }
 
 InnoInputUI::~InnoInputUI()	
@@ -26,7 +31,10 @@ InnoInputUI::~InnoInputUI()
 
 void InnoInputUI::drawForm()
 {
+	//ImPlot::ShowDemoWindow();	
+
 	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
+
 #pragma region InputScreen
 	ImGui::Begin("ScreenUI");
 	mSceneRenderHelperA->Draw(gCurrentScene);
@@ -228,16 +236,70 @@ void InnoInputUI::drawForm()
 
 #pragma region GraphUI1
 
+	struct Funcs
+	{
+		static float ZsPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsPos; }
+		static float ZsSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsSpeed; }
+		static float ZsAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsAcc; }
+		static float ZuPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuPos; }
+		static float ZuSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuSpeed; }
+		static float ZuAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuAcc; }
+		static float Zr(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].Zr; }
+		static float XPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xPos; }
+		static float XSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xSpeed; }
+		//static float Saw(void*, int i) { return (i & 1) ? 1.0f : -1.0f; }
+	};
+
+	float (*funcZsPos)      (void*, int) = (float (*)(void*, int))Funcs::ZsPos;
+	float (*funcZsSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZsSpeed;
+	float (*funcZsAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZsAcc;
+	float (*funcZuPos)      (void*, int) = (float (*)(void*, int))Funcs::ZuPos;
+	float (*funcZuSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZuSpeed;
+	float (*funcZuAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZuAcc;
+	float (*funcZr)         (void*, int) = (float (*)(void*, int))Funcs::Zr;
+
+	const float GRAPH_MIN = -0.05f;
+	const float GRAPH_MAX = 0.05f;
+	const float GRAPH_HEIGHT = 100.f;
+
+	//마지막 90개만 그리면된다.
+	const std::vector<tInnoSampleData>& playerASampleDatas = InnoDataManager::GetInstance()->GetPlayerASampleDatas();
+
+	const int maxValueSize = 90;
+	static float frameTime = 0.f;
+	static std::vector<float> ZSPoses(maxValueSize, 0.f); //120 프레임에 하나씩등록
+
+	frameTime += gDeltaTime;
+
+	if (frameTime >= (1.f / 60.f))
+	{		
+		frameTime = 0.f;
+
+		if (ZSPoses.size() >= maxValueSize)
+		{
+			ZSPoses.erase(ZSPoses.begin());
+		}
+
+		if (!playerASampleDatas.empty())
+		{
+			ZSPoses.push_back(playerASampleDatas.back().Zr);
+		}		
+	}
+
+	//std::reverse(ZSPoses.begin(), ZSPoses.end());
+
+	//ZSPoses[0] = 0.1f;
+	//ZSPoses[1] = -0.1f;
+	
 
 	ImGui::Begin("GraphUI1");
+	{
+		
+	}
 
-	//ImGuiStyle style = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_MaterialFlat);
-	//ImGuiStyle& ori = ImGui::GetStyle();
-	//ori = style;
+	ImGui::PlotLines("Lines", ZSPoses.data(), maxValueSize, 0, nullptr, -0.1f, 0.1f, ImVec2(0, 150.0f));
 
-	//ThemeInfo gThemeInfos[] = {
-	//ImGuiTheme::gThemeInfos[0];
-	//ImGui::select
+	//ImGui::PlotLines("ZsPos", funcZsPos, &playerASampleDatas, maxValueSize, 0, NULL, GRAPH_MIN, GRAPH_MAX, ImVec2(0, GRAPH_HEIGHT));
 
 	std::vector<std::string> vec;
 

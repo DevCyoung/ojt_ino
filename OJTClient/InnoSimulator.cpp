@@ -15,6 +15,7 @@ InnoSimulator::InnoSimulator()
 	, mBumpEnd(3.0f)
 	, mBumpAmp(0.05f)
 	, mSamplingTime(0.001f)
+	, mPrevPos(0.f)
 {
 }
 
@@ -36,6 +37,9 @@ void InnoSimulator::finish()
 
 void InnoSimulator::Play()
 {
+	Assert(mState == eInnoSimulatorState::None, ASSERT_MSG_INVALID);
+
+
 	if (mState == eInnoSimulatorState::None)
 	{
 		mState = eInnoSimulatorState::Start;
@@ -52,8 +56,6 @@ void InnoSimulator::Finish()
 
 void InnoSimulator::Update()
 {
-	mCurTime += gDeltaTime;
-
 	if (mState == eInnoSimulatorState::None)
 	{
 		return;
@@ -66,22 +68,26 @@ void InnoSimulator::Update()
 	else if (mState == eInnoSimulatorState::Start)
 	{
 		start();
+		//clear
+		mCurTime = 0.f;
+		mPrevPos = 0.f;		
 		mState = eInnoSimulatorState::Playing;
 	}
 	else if (mState == eInnoSimulatorState::Playing)
 	{
+		mCurTime += gDeltaTime;
+
 		InnoDataManager* dataManager = InnoDataManager::GetInstance();
 		tInnoSampleData sampleData = CreateSampleData(mCurTime);
 		dataManager->PushPlayerASampleData(sampleData);
 	}
-
 }
 
 tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime)
 {
 	//mSamplingTime 이전프레임과 지금프레임의 거리
-	//도로의 높이
 
+	//도로의 높이
 	float zr = 0.f;
 
 	float t1 = mBumpStart / mSpeed;
@@ -106,22 +112,20 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime)
 	x[2] = x[2] + gDeltaTime * xdot[2];
 	x[3] = x[3] + gDeltaTime * xdot[3];
 
-	static float testPos = 0.f;
+	tInnoSampleData sampleData = {};	
 
-	testPos += 5.f;
+	sampleData.Time		= sampleTime;
+	sampleData.ZsPos	= x[0];
+	sampleData.ZsSpeed	= x[1];
+	sampleData.ZsAcc	= xdot[1];
+	sampleData.ZuPos	= x[2];
+	sampleData.ZuSpeed	= x[3];
+	sampleData.ZuAcc	= xdot[3];
+	sampleData.Zr		= zr;
+	sampleData.xPos		= mPrevPos + mSpeed * gDeltaTime;
+	sampleData.xSpeed	= mSpeed;
 
-	tInnoSampleData sampleData = {};
 
-	sampleData.Time = sampleTime;
-	sampleData.ZsPos = x[0];
-	sampleData.ZsSpeed = x[1];
-	sampleData.ZsAcc = xdot[1];
-	sampleData.ZuPos = x[2];
-	sampleData.ZuSpeed = x[3];
-	sampleData.ZuAcc = xdot[3];
-	sampleData.Zr = zr;
-	sampleData.xPos += testPos;
-	sampleData.xSpeed = mSpeed;
-
+	mPrevPos = sampleData.xPos;
 	return sampleData;
 }

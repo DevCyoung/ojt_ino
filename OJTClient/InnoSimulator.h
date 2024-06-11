@@ -80,6 +80,8 @@ private:
 	float mBumpEnd;
 	float mBumpAmp;
 	float mSamplingTime;
+
+	float mPrevPos;
 };
 
 
