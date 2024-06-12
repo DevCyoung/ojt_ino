@@ -626,6 +626,7 @@ void InnoOJTServer::DisConnect()
 	for (int i = 0; i < clientSockets.size(); ++i)
 	{
 		closesocket(clientSockets[i]);
+		clientSockets[i] = INVALID_SOCKET;
 	}
 
 	for (int i = 0; i < INNO_MAX_THREAD_SIZE; ++i)
@@ -637,6 +638,7 @@ void InnoOJTServer::DisConnect()
 	}
 
 	closesocket(gListenSocket);
-
+	gListenSocket = INVALID_SOCKET;
 	mServerState = eServerState::None;
+	serializeNumber = 0;
 }

@@ -268,7 +268,7 @@ void InnoInputUI::drawForm()
 #pragma region InputUI2
 	ImGui::Begin("InputUI2");
 
-	ImGui::Text("Speed23");
+	ImGui::Text("Speed");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
@@ -276,7 +276,7 @@ void InnoInputUI::drawForm()
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
-	ImGui::Text("BumpStart");
+	ImGui::Text("Bump Start");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
@@ -284,7 +284,7 @@ void InnoInputUI::drawForm()
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
-	ImGui::Text("BumpEnd");
+	ImGui::Text("Bump End");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
@@ -292,7 +292,7 @@ void InnoInputUI::drawForm()
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
-	ImGui::Text("BumpAmp");
+	ImGui::Text("Bump Amp");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
@@ -300,7 +300,7 @@ void InnoInputUI::drawForm()
 	ImGui::PopItemWidth();
 	ImGui::Spacing();
 
-	ImGui::Text("SamplingTime");
+	ImGui::Text("Sampling Time");
 	ImGui::SameLine(100.0f);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 	ImGui::PushItemWidth(100.0f);
@@ -314,14 +314,6 @@ void InnoInputUI::drawForm()
 
 #pragma region InputUI3	
 	ImGui::Begin("InputUI3");
-
-	//ImGui::Text("SamplingTime");
-	//ImGui::SameLine(45.0f);
-	//ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	//ImGui::PushItemWidth(100.0f);
-	//ImGui::InputText("##MU", buff, 16);
-	//ImGui::PopItemWidth();
-	//ImGui::Spacing();
 
 	bool bConnecting = InnoOJTClient::GetInstance()->IsConnecting();
 	bool bConnected = InnoOJTClient::GetInstance()->IsConnected();

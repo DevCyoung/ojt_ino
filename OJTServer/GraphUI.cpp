@@ -13,9 +13,9 @@ GraphUI::~GraphUI()
 
 void GraphUI::drawForm()
 {
-	ImGui::Begin("GraphUI");
-	ImGui::Text("Hello GraphUI");
-	ImGui::End();
-
-	ImGui::ShowDemoWindow();
+	//ImGui::Begin("GraphUI");
+	//ImGui::Text("Hello GraphUI");
+	//ImGui::End();
+	//
+	//ImGui::ShowDemoWindow();
 }
