@@ -10,6 +10,9 @@
     <Filter Include="Source\Panel">
       <UniqueIdentifier>{78e8c6ad-753c-478a-8583-2b7de4206b55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Component">
+      <UniqueIdentifier>{18ec318d-3b55-4d63-94a7-10bb14271530}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -44,6 +47,9 @@
     </ClInclude>
     <ClInclude Include="InnoSimulator.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="CarController.h">
+      <Filter>Source\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="InnoSimulator.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CarController.cpp">
+      <Filter>Source\Component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

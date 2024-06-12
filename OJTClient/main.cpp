@@ -21,8 +21,19 @@
 #include <Material.h>
 #include "PanelLoader.h"
 #include <Transform.h>
-
+#include "CarController.h"
 #define MAX_LOADSTRING 100
+
+static GameObject* CreateSpriteGameObject(const wchar_t* path)
+{        
+    Texture* tex = gResourceManager->FindAndLoad<Texture>(path);
+
+    GameObject* obj = CreateGameObject();
+    obj->AddComponent<SpriteRenderer>();
+    obj->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);    
+
+    return obj;
+}
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -75,16 +86,59 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     //Content::initialize();
     Scene* scene = new Scene();
-    Texture* tex = gResourceManager->FindAndLoad<Texture>(L"\\Texture\\Preview2.png");
-    //
-    GameObject* car = CreateGameObject();
-    car->AddComponent<SpriteRenderer>();
-    car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
 
-    car->GetComponent<Transform>()->SetScale(0.4f, 0.4f, 0.4f);
-    //
-    ////car->AddComponent<
-    scene->AddGameObject(car, eLayerType::Default);
+    
+    {
+        GameObject* car = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\SperCar\\Cars\\car_1.png");
+        car->AddComponent<CarController>();
+        {
+            GameObject* wheel1 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\SperCar\\Cars\\tyre.png");
+            wheel1->SetParent(car);
+            wheel1->GetComponent<Transform>()->SetPosition(Vector3(-314.f, -88.f, 0.f));
+
+            GameObject* wheel2 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\SperCar\\Cars\\tyre.png");
+            wheel2->SetParent(car);
+            wheel2->GetComponent<Transform>()->SetPosition(Vector3(346.f, -88.f, 0.f));
+        }        
+        car->SetName(L"CarA");
+        car->GetComponent<Transform>()->SetScale(0.5f, 0.5f, 0.5f);
+        car->GetComponent<Transform>()->SetPosition(450.f, 0.f, 0.f);
+
+        scene->AddGameObject(car, eLayerType::Default);
+    }
+
+    {
+        GameObject* car = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\truck_1.png");
+        car->AddComponent<CarController>();
+        {
+            GameObject* wheel1 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\tyre.png");            
+            wheel1->SetParent(car);
+            wheel1->GetComponent<Transform>()->SetPosition(Vector3(-395.f, -130.f, 0.f));
+            
+
+            GameObject* wheel2 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\tyre.png");
+            wheel2->SetParent(car);
+            wheel2->GetComponent<Transform>()->SetPosition(Vector3(190.f, -130.f, 0.f));
+            
+
+            GameObject* wheel3 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\tyre.png");
+            wheel3->SetParent(car);
+            wheel3->GetComponent<Transform>()->SetPosition(Vector3(360.f, -130.f, 0.f));            
+
+            car->GetComponent<CarController>()->AddWheel(wheel1);
+            car->GetComponent<CarController>()->AddWheel(wheel2);
+            car->GetComponent<CarController>()->AddWheel(wheel3);
+        }
+        car->SetName(L"CarB");
+        car->GetComponent<Transform>()->SetScale(0.5f, 0.5f, 0.5f);
+        car->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
+
+        
+
+        scene->AddGameObject(car, eLayerType::Default);
+    }
+
+
     SceneManager::GetInstance()->LoadScene(scene);
 
     while (true)

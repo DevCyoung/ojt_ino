@@ -454,8 +454,120 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\Release\Resources\Shader\Header\ConstantBuffer.fxh" />
+    <None Include="..\bin\Release\Resources\Shader\Header\Sampler.fxh" />
+    <None Include="..\bin\Release\Resources\Shader\Header\Struct.fxh" />
+    <None Include="..\bin\Release\Resources\Shader\Header\TestShaderHeader.fxh" />
+    <None Include="..\bin\Release\Resources\Shader\Header\Texture.fxh" />
     <None Include="DirectXTex.inl" />
     <None Include="DXMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\Release\Resources\Shader\animation3d.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\ColorFun.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\copybone.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\deferred3d.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\Light2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSAfterImage.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSAlphaTo.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSAnimation2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSFillDebug2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSGrayPostProcess.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSGrid2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSLightAnimation2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSLightSprite2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSLineDebug2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSNextScene.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSSprite2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSUI2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSWave.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\ShadowMap.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\std3d.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\std3d_debug.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\stdCS.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSAfterImage.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSAlphaTo.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSAnimation2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSFillDebug2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSGrayPostProcess.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSGrid2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSLightAnimation2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSLightSprite2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSLineDebug2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSNextScene.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSSprite2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSUI2D.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSWave.hlsl">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

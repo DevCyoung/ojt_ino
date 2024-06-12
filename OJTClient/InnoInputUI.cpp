@@ -19,7 +19,7 @@ InnoInputUI::InnoInputUI()
 	constexpr int width = 800;
 	constexpr int height = 210;
 
-	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", width, height);
+	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", width, height * 2);
 	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", width, height);
 
 	ImPlot::CreateContext();
@@ -127,7 +127,7 @@ void InnoInputUI::drawForm()
 	}
 
 	ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
-	ImGui::Image((void*)renderTexB->GetSRV(), renderTargetSizeB);
+	//ImGui::Image((void*)renderTexB->GetSRV(), renderTargetSizeB);
 
 #pragma endregion
 	static float testFloat = 0.f;

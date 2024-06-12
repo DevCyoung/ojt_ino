@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CarController.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InnoDataManager.h" />
     <ClInclude Include="InnoInputUI.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="ClientTestUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CarController.cpp" />
     <ClCompile Include="InnoDataManager.cpp" />
     <ClCompile Include="InnoInputUI.cpp" />
     <ClCompile Include="InnoOJTClient.cpp" />
