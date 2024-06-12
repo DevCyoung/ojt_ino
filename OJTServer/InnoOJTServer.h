@@ -29,12 +29,8 @@ struct tInnoChanel
 struct tInnoRoom
 {
 	bool bTraining;
-
-	float poses[INNO_MAX_ROOM_USER];
-	int	posSize[INNO_MAX_ROOM_USER];
-	bool bStop[INNO_MAX_ROOM_USER];
-
-	std::vector<float> posesArray[INNO_MAX_ROOM_USER];
+	float curPoses[INNO_MAX_ROOM_USER];
+	float curTime;
 	std::vector<tInnoClient> clients;
 };
 
@@ -65,6 +61,8 @@ public:
 	void RemoveClient(const SOCKET clientSocket);
 
 	void DisConnect();
+
+	void RoomInit();
 
 	static inline int serializeNumber = 0;
 	tInnoClient GetInncoClient(SOCKET socket);

@@ -7,10 +7,6 @@
 static std::mutex gClientsMutex;
 static SOCKET gListenSocket = INVALID_SOCKET;
 
-//TEST
-#include <InputManager.h>
-//TEST
-
 InnoOJTServer::InnoOJTServer()
 	: mPanelManager(nullptr)
 	, mChannelUI(nullptr)
@@ -20,13 +16,6 @@ InnoOJTServer::InnoOJTServer()
 	, mIP()
 	, mServerState(eServerState::None)
 {
-	mRoom.bTraining = false;
-
-	for (int i = 0; i < INNO_MAX_ROOM_USER; ++i)
-	{
-		mRoom.posesArray[i].reserve(1000000);
-	}
-
 	mPanelManager = PanelUIManager::GetInstance();
 	mChannelUI = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
 	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
@@ -167,27 +156,32 @@ static void handleAccept()
 
 void InnoOJTServer::run()
 {
-	if (gListenSocket == INVALID_SOCKET)
+	constexpr float oneFrame = (1.f / 120.f);
+
+	if (IsListening())
 	{
 		return;
 	}
 
-	static float trainingTime = 0.f;
-	trainingTime += gDeltaTime;
-
-	//TEST
-	if (gInput->GetKeyDown(eKeyCode::SPACE))
 	{
-		closesocket(mClients[0].Socket);
-	}
-	//TEST
+		//Room Training
+		static float trainingTime = 0.f;
 
-	if (mRoom.bTraining && trainingTime >= (1.f / 120.f))
-	{
-		//position broadcast
+		trainingTime += gDeltaTime;
+		if (trainingTime < oneFrame)
+		{
+			return;
+		}
+		trainingTime = 0.f;
+
+		if (mRoom.bTraining)
+		{
+			return;
+		}
+
 		for (int i = 0; i < mRoom.clients.size(); ++i)
 		{
-			//broad cast
+			//BroadCast
 			for (int j = 0; j < mRoom.clients.size(); ++j)
 			{
 				if (i == j)
@@ -195,10 +189,9 @@ void InnoOJTServer::run()
 					continue;
 				}
 
-				SendPos(mRoom.clients[i].ClientID, mRoom.poses[j]);
+				SendPos(mRoom.clients[i].ClientID, mRoom.curPoses[j]);
 			}
 		}
-		trainingTime = 0.f;
 	}
 }
 
@@ -378,7 +371,7 @@ void InnoOJTServer::RecivePos(int clientID, const tPacketPos& outPacket)
 	{
 		if (clientID == mRoom.clients[i].ClientID)
 		{
-			mRoom.poses[i] = outPacket.Position;
+			mRoom.curPoses[i] = outPacket.Position;
 			break;
 		}
 	}
@@ -386,28 +379,28 @@ void InnoOJTServer::RecivePos(int clientID, const tPacketPos& outPacket)
 
 void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 {
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		if (clientID == mRoom.clients[i].ClientID)
-		{
-			mRoom.bStop[i] = true;
-			break;
-		}
-	}
-
-	//모두가 데이터 전송을 완료했다면
-	int bStopCount = 0;
-	for (int i = 0; i < mRoom.clients.size(); i++)
-	{
-		if (mRoom.bStop[i])
-		{
-			++bStopCount;
-		}
-	}
-	if (bStopCount != mRoom.clients.size())
-	{
-		return;
-	}
+	//for (int i = 0; i < mRoom.clients.size(); ++i)
+	//{
+	//	if (clientID == mRoom.clients[i].ClientID)
+	//	{
+	//		mRoom.bStop[i] = true;
+	//		break;
+	//	}
+	//}
+	//
+	////모두가 데이터 전송을 완료했다면
+	//int bStopCount = 0;
+	//for (int i = 0; i < mRoom.clients.size(); i++)
+	//{
+	//	if (mRoom.bStop[i])
+	//	{
+	//		++bStopCount;
+	//	}
+	//}
+	//if (bStopCount != mRoom.clients.size())
+	//{
+	//	return;
+	//}
 
 	//각 위치정보를 BroadCast 해준다.
 	//for (int i = 0; i < mRoom.clients.size(); ++i)
@@ -587,7 +580,9 @@ void InnoOJTServer::DisConnect()
 		clientSockets.push_back(mClients[i].Socket);
 	}
 
-	mRoom.clients.clear();
+	//mRoom.clients.clear();
+	RoomInit();
+
 	mChannel.clients.clear();
 	mClients.clear();
 
@@ -611,4 +606,14 @@ void InnoOJTServer::DisConnect()
 	gListenSocket = INVALID_SOCKET;
 	mServerState = eServerState::None;
 	serializeNumber = 0;
+}
+void InnoOJTServer::RoomInit()
+{
+	mRoom.bTraining = false;
+	mRoom.clients.clear();
+	for (int i = 0; i < INNO_MAX_ROOM_USER; ++i)
+	{
+		mRoom.curPoses[i] = 0.f;
+	}
+	mRoom.curTime = 0.f;
 }
