@@ -150,14 +150,20 @@ static void ClientRecive(SOCKET serverSocket)
 		}
 		else if (bytesReceived == 0)
 		{			
-			gLogListUIClient->WriteLine("Connection closed by server.");			
-			innoClient->mClientState = eClientState::None;			
+			gLogListUIClient->WriteLine("Connection closed by server.");		
+			innoClient->mClientState = eClientState::None;
+			closesocket(innoClient->mServerSocket);
+			innoClient->mServerSocket = INVALID_SOCKET;
+			//innoClient->mClientState = eClientState::None;						
 			break;
 		}
 		else
 		{
 			gLogListUIClient->WriteError("Connection closed by server.");			
-			innoClient->mClientState = eClientState::None;			
+			innoClient->mClientState = eClientState::None;
+			closesocket(innoClient->mServerSocket);
+			innoClient->mServerSocket = INVALID_SOCKET;
+			//innoClient->mClientState = eClientState::None;						
 			break;
 		}
 	}
@@ -166,7 +172,7 @@ static void ClientRecive(SOCKET serverSocket)
 }
 
 //서버에게 Connect 함수 (스레드)
-static void ClientConnect(const std::string& ip, const int port, SOCKET* pServerSocket, std::thread* pRpecive, eClientState* clientState)
+void ClientConnect(const std::string& ip, const int port, SOCKET* pServerSocket, std::thread* pRpecive, eClientState* clientState)
 {
 	std::lock_guard<std::mutex> guard(gClientMutex);
 
@@ -216,6 +222,12 @@ static void ClientConnect(const std::string& ip, const int port, SOCKET* pServer
 	gLogListUIClient->WriteLine("Connect Success!");	
 
 	// 서버로부터 메시지를 받는 쓰레드 시작
+
+	if (pRpecive->joinable())	
+	{
+		pRpecive->join();
+	}
+
 	*pRpecive = std::thread(ClientRecive, *pServerSocket);
 	*clientState = eClientState::Connected;
 	return;

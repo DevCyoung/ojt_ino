@@ -66,7 +66,6 @@ void ListenUI::drawForm()
 			if (!ImGui::IsPopupOpen("Server::DisConnect"))
 				ImGui::OpenPopup("Server::DisConnect");
 		}
-
 	}
 	else
 	{
