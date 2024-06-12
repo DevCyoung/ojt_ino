@@ -110,14 +110,7 @@ static void handleClient(SOCKET clientSocket)
 				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
 				innoServer->RecivePos(clientID, pos);
 			}
-			break;
-			case Poses:
-			{
-				tPacketPoses poses;
-				deserializeData(recvbuf, sizeof(tPacketPoses), &poses);
-				innoServer->RecivePoses(clientID, poses);
-			}
-			break;
+			break;			
 			case Stop:
 			{
 				tPacketStop stop;
@@ -373,14 +366,6 @@ void InnoOJTServer::SendStart(int clientID)
 	send_start(client.Socket);
 }
 
-void InnoOJTServer::SendPoses(int clientID, int size, const float* poses)
-{
-	std::lock_guard<std::mutex> guard(gClientsMutex);
-	tInnoClient client = GetInncoClient(clientID);
-
-	send_poses(client.Socket, size, poses);
-}
-
 void InnoOJTServer::ReciveLog(int clientID, const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
@@ -425,51 +410,51 @@ void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 	}
 
 	//각 위치정보를 BroadCast 해준다.
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		for (int j = 0; j < mRoom.clients.size(); ++j)
-		{
-			if (i == j)
-			{
-				continue;
-			}
-
-			//i번째 클라이언트의 데이터를 j종류만큼 브로드캐스트한다.
-			tInnoClient client = GetInncoClient(mRoom.clients[i].ClientID);
-
-			int count = mRoom.posesArray[i].size();
-			std::queue<float> vecPoses;
-
-			for (int k = 0; k < count; ++k)
-			{
-				vecPoses.push(mRoom.posesArray[i][k]);
-			}
-
-			//INNO_MAX_POS_SIZE 만큼 끊어서 보낸다.
-			while (!vecPoses.empty())
-			{
-				std::vector<float> tempPoses;
-				for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
-				{
-					if (vecPoses.empty())
-					{
-						break;
-					}
-
-					tempPoses.push_back(vecPoses.front());
-					vecPoses.pop();
-
-				}
-
-				if (vecPoses.empty())
-				{
-					break;
-				}
-
-				send_poses(client.Socket, tempPoses.size(), tempPoses.data());
-			}
-		}
-	}
+	//for (int i = 0; i < mRoom.clients.size(); ++i)
+	//{
+	//	for (int j = 0; j < mRoom.clients.size(); ++j)
+	//	{
+	//		if (i == j)
+	//		{
+	//			continue;
+	//		}
+	//
+	//		//i번째 클라이언트의 데이터를 j종류만큼 브로드캐스트한다.
+	//		tInnoClient client = GetInncoClient(mRoom.clients[i].ClientID);
+	//
+	//		int count = mRoom.posesArray[i].size();
+	//		std::queue<float> vecPoses;
+	//
+	//		for (int k = 0; k < count; ++k)
+	//		{
+	//			vecPoses.push(mRoom.posesArray[i][k]);
+	//		}
+	//
+	//		//INNO_MAX_POS_SIZE 만큼 끊어서 보낸다.
+	//		while (!vecPoses.empty())
+	//		{
+	//			std::vector<float> tempPoses;
+	//			for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
+	//			{
+	//				if (vecPoses.empty())
+	//				{
+	//					break;
+	//				}
+	//
+	//				tempPoses.push_back(vecPoses.front());
+	//				vecPoses.pop();
+	//
+	//			}
+	//
+	//			if (vecPoses.empty())
+	//			{
+	//				break;
+	//			}
+	//
+	//			send_poses(client.Socket, tempPoses.size(), tempPoses.data());
+	//		}
+	//	}
+	//}
 
 	//모든위치정보를 브로드캐스트했다. 최종 종료를알림
 	for (int i = 0; i < mRoom.clients.size(); ++i)
@@ -478,21 +463,6 @@ void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
 	}
 
 	gLogListUI->WriteLine("Training Finish");
-}
-
-void InnoOJTServer::RecivePoses(int clientID, const tPacketPoses& outPacket)
-{
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		if (clientID == mRoom.clients[i].ClientID)
-		{
-			for (int j = 0; j < outPacket.Size; ++j)
-			{
-				mRoom.posesArray[i].push_back(outPacket.Poses[j]);
-			}
-			break;
-		}
-	}
 }
 
 std::string InnoOJTServer::GetClientIP(SOCKET clientSocket)

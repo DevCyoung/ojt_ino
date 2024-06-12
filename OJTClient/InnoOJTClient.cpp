@@ -129,14 +129,7 @@ static void ClientRecive(SOCKET serverSocket)
 				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				innoClient->ReciveStop(stop);
 			}			
-			break;
-			case Poses:
-			{
-				tPacketPoses poses;
-				deserializeData(recvbuf, sizeof(tPacketPoses), &poses);
-				innoClient->RecivePoses(poses);
-			}
-			break;
+			break;			
 			case Finish:
 			{
 				tPacketFinish finish;
@@ -298,11 +291,6 @@ void InnoOJTClient::SendStop()
 	send_stop(mServerSocket);
 }
 
-void InnoOJTClient::SendPoses(int size, const float* poses)
-{
-	send_poses(mServerSocket, size, poses);
-}
-
 void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
@@ -314,14 +302,6 @@ void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 {
 	mCurPos[1] = outPacket.Position;
-}
-
-void InnoOJTClient::RecivePoses(const tPacketPoses& outPacket)
-{
-	for (int i = 0; i < outPacket.Size; ++i)
-	{
-		mBPosArray.push_back(outPacket.Poses[i]);
-	}
 }
 
 void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)

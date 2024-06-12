@@ -57,12 +57,10 @@ public:
 	void SendPos(int clientID, float pos);
 	void SendStop(int clientID);
 	void SendStart(int clientID);	
-	void SendPoses(int clientID, int size, const float* poses);
 
 	void ReciveLog(int clientID, const tPacketLog& outPacket);
 	void RecivePos(int clientID, const tPacketPos& outPacket);
 	void ReciveStop(int clientID, const tPacketStop& outPacket);	
-	void RecivePoses(int clientID, const tPacketPoses& outPacket);
 
 	void RemoveClient(const SOCKET clientSocket);
 
@@ -76,9 +74,6 @@ public:
 
 	std::string GetClientIP(SOCKET clientSocket);
 	std::string GetServerIP() { return mIP; }
-
-private:
-	
 
 public:
 	PanelUIManager* mPanelManager;
@@ -95,4 +90,3 @@ public:
 
 	eServerState mServerState;
 };
-

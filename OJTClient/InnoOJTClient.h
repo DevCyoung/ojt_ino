@@ -27,11 +27,9 @@ public:
 	void SendLog(int messageLen, const char* message);
 	void SendPos(float pos);
 	void SendStop();	
-	void SendPoses(int size, const float* poses);
 
 	void ReciveLog(const tPacketLog& outPacket);
-	void RecivePos(const tPacketPos& outPacket);
-	void RecivePoses(const tPacketPoses& outPacket);
+	void RecivePos(const tPacketPos& outPacket);	
 	void ReciveFinish(const tPacketFinish& outPacket);
 	void ReciveStop(const tPacketStop& packet);
 	void ReciveStart(const tPacketStart& packet);
