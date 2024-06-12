@@ -21,6 +21,7 @@
 #include <Material.h>
 #include "PanelLoader.h"
 #include <Transform.h>
+#include "GameManager.h"
 #include "CarController.h"
 #define MAX_LOADSTRING 100
 
@@ -83,63 +84,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Editor::initialize();
     PanelLoader::initialize();
     InnoOJTClient::initialize();
-
-    //Content::initialize();
-    Scene* scene = new Scene();
-
-    
-    {
-        GameObject* car = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\SperCar\\Cars\\car_1.png");
-        car->AddComponent<CarController>();
-        {
-            GameObject* wheel1 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\SperCar\\Cars\\tyre.png");
-            wheel1->SetParent(car);
-            wheel1->GetComponent<Transform>()->SetPosition(Vector3(-314.f, -88.f, 0.f));
-
-            GameObject* wheel2 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\SperCar\\Cars\\tyre.png");
-            wheel2->SetParent(car);
-            wheel2->GetComponent<Transform>()->SetPosition(Vector3(346.f, -88.f, 0.f));
-        }        
-        car->SetName(L"CarA");
-        car->GetComponent<Transform>()->SetScale(0.5f, 0.5f, 0.5f);
-        car->GetComponent<Transform>()->SetPosition(450.f, 0.f, 0.f);
-
-        scene->AddGameObject(car, eLayerType::Default);
-    }
-
-    {
-        GameObject* car = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\truck_1.png");
-        car->AddComponent<CarController>();
-        {
-            GameObject* wheel1 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\tyre.png");            
-            wheel1->SetParent(car);
-            wheel1->GetComponent<Transform>()->SetPosition(Vector3(-395.f, -130.f, 0.f));
-            
-
-            GameObject* wheel2 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\tyre.png");
-            wheel2->SetParent(car);
-            wheel2->GetComponent<Transform>()->SetPosition(Vector3(190.f, -130.f, 0.f));
-            
-
-            GameObject* wheel3 = CreateSpriteGameObject(L"\\Texture\\asset\\Cars\\Truck\\tyre.png");
-            wheel3->SetParent(car);
-            wheel3->GetComponent<Transform>()->SetPosition(Vector3(360.f, -130.f, 0.f));            
-
-            car->GetComponent<CarController>()->AddWheel(wheel1);
-            car->GetComponent<CarController>()->AddWheel(wheel2);
-            car->GetComponent<CarController>()->AddWheel(wheel3);
-        }
-        car->SetName(L"CarB");
-        car->GetComponent<Transform>()->SetScale(0.5f, 0.5f, 0.5f);
-        car->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
-
-        
-
-        scene->AddGameObject(car, eLayerType::Default);
-    }
-
-
-    SceneManager::GetInstance()->LoadScene(scene);
+    GameManager::initialize();
 
     while (true)
     {
@@ -165,7 +110,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-
+    GameManager::deleteInstance();
     InnoOJTClient::deleteInstance();
     PanelLoader::deleteInstance();
     Editor::deleteInstance();

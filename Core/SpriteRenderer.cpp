@@ -20,6 +20,7 @@ SpriteRenderer::SpriteRenderer()
 	, bColorInfo(0)	
 	, mUvOffsetX(1.f)
 	, mSprite2DInfo{}
+	, mOffset{}
 {	
 	mSprite2DInfo.UV = Vector2::One;
 	SetMesh(gResourceManager->FindOrNull<Mesh>(L"FillRect2D"));
@@ -130,8 +131,8 @@ void SpriteRenderer::render(const Matrix& viewMatrix, const Matrix& projectionMa
 			= Vector3(mMaterials[0]->GetTexture(TEX_0)->GetWidth(),
 				mMaterials[0]->GetTexture(TEX_0)->GetHeight(), 1.f);
 		const Matrix& SCALE_MATRIX = Matrix::CreateScale(SCALE);
-
-		CBTransform.World = SCALE_MATRIX * GetOwner()->GetComponent<Transform>()->GetWorldMatrix();
+		Matrix pos = Matrix::CreateTranslation(Vector3(mOffset.x, mOffset.y, 0.f));
+		CBTransform.World = SCALE_MATRIX * GetOwner()->GetComponent<Transform>()->GetWorldMatrix() * pos;
 		CBTransform.View = viewMatrix;
 		CBTransform.Proj = projectionMatrix;
 

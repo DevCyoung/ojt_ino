@@ -51,6 +51,9 @@
     <ClInclude Include="CarController.h">
       <Filter>Source\Component</Filter>
     </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTClient.ico">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="CarController.cpp">
       <Filter>Source\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -14,10 +14,12 @@ public:
 
 	CLONE(CarController);
 	void AddWheel(GameObject* wheel) { mWheels.push_back(wheel); }
+	void SetCamera(GameObject* camera) { mCamera = camera; }
 private:
 	virtual void initialize() override final;
 	virtual void update() override final;
 	virtual void lateUpdate() override final;
 
 	std::vector<GameObject*> mWheels;
+	GameObject* mCamera;
 };

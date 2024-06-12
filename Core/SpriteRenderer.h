@@ -33,6 +33,9 @@ public:
 	void MulColorA(float a);	
 	void MulColorReset();
 
+	void SetOffset(Vector2 offset) { mOffset = offset; }
+	Vector2 GetOffset() { return mOffset; }
+
 
 	CLONE(SpriteRenderer)
 private:
@@ -47,4 +50,6 @@ public:
 	tSprite2DInfo mSprite2DInfo;
 	int bColorInfo;
 	float mUvOffsetX;
+
+	Vector2 mOffset;
 };

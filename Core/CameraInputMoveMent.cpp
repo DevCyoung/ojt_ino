@@ -84,9 +84,9 @@ void CameraInputMoveMent::MoveCamera()
 		{
 			cameraSize = 0.01f;
 		}
-		else if (cameraSize >= 5.f)
+		else if (cameraSize >= 100.f)
 		{
-			cameraSize = 5.f;
+			cameraSize = 100.f;
 		}
 
 		camera->Set2DSize(cameraSize);

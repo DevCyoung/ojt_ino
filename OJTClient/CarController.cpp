@@ -3,10 +3,15 @@
 #include <Transform.h>
 #include <TimeManager.h>
 #include <InputManager.h>
-
+#include "InnoDataManager.h"
+#include <RenderTargetRenderer.h>
+#include <DebugRenderer2D.h>
+#include <SceneManager.h>
+#include <GameSystem.h>
 CarController::CarController()
 	: ScriptComponent(eScriptComponentType::CarController)
 	, mWheels()
+	, mCamera(nullptr)
 {
 }
 
@@ -20,21 +25,49 @@ void CarController::initialize()
 
 void CarController::update()
 {
+	Vector3 position = GetComponent<Transform>()->GetPosition();
 
-	
 
-	if (gInput->GetKey(eKeyCode::A))
-	{
-		Vector3 position = GetComponent<Transform>()->GetPosition();
-		position.x -= gRealDeltaTime * 70.f;
+	if (InnoSimulator::GetInstance()->IsPlaying())
+	{		
+		position.x += InnoSimulator::GetInstance()->GetSpeed() * 100 * gDeltaTime;
 		GetComponent<Transform>()->SetPosition(position);
 	}
+
+	Vector3 debugPos = position;
+	debugPos.y -= 80.f;
+	gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(Vector3(0.f, -300.f, 0.f), Vector2(10.f, 300.f), 0.f, Vector4(1.f, 0.f, 0.f, 1.f));
+	gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(Vector3(1000.f, -300.f, 0.f), Vector2(10.f, 300.f), 0.f, Vector4(0.f, 1.f, 0.f, 1.f));
+	gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(debugPos, Vector2(8.f, 20.f), 0.f, Vector4(1.f, 1.f, 1.f, 1.f));
+	
+	//if (position.x >= 1000.f)
+	//{
+	//	__debugbreak();
+	//}
+
+	//if (gInput->GetKey(eKeyCode::A))
+	//{		
+	//	position.x += gDeltaTime * 800.f;
+	//	GetComponent<Transform>()->SetPosition(position);
+	//}
 
 	for (int i = 0; i < mWheels.size(); ++i)
 	{
 		Vector3 rotation = mWheels[i]->GetComponent<Transform>()->GetRotation();
 		rotation.z += 360 * gDeltaTime * 0.1f;
 		mWheels[i]->GetComponent<Transform>()->SetRotation(rotation);
+	}
+
+	//offset
+	float xOffset = 450.f;
+	float yOffset = 120.f;
+
+	position.x += xOffset;
+	position.y += yOffset;
+	if (mCamera)
+	{
+		mCamera->GetComponent<Transform>()->SetPosition(position);
+
 	}
 }
 

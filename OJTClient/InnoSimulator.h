@@ -40,7 +40,7 @@ public:
 	void Update();
 	eInnoSimulatorState GetSimulatorState() { return mState; }
 	float GetCurTime() { return mCurTime; }
-
+	float GetSpeed() { return mSpeed; }
 	void SetMS(const float ms) { mMS = ms; }
 	void SetMU(const float mu) { mMU = mu; }
 	void SetKS(const float ks) { mKS = ks; }
@@ -65,6 +65,8 @@ public:
 	float GetSamplintTIme() { return mSamplingTime; }
 
 	tInnoSampleData CreateSampleData(float sampleTime);
+
+	bool IsPlaying() { return mState == eInnoSimulatorState::Playing; }
 
 private:
 	eInnoSimulatorState mState;

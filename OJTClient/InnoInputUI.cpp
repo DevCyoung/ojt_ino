@@ -15,28 +15,20 @@
 #include <LogListUI.h>
 #include <PanelUIManager.h>
 #include <imgui_internal.h>
-
+#include "GameManager.h"
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 InnoInputUI::InnoInputUI()
-	: mSceneRenderHelperA(nullptr)
-	, mSceneRenderHelperB(nullptr)
 {
 
 	constexpr int width = 800;
-	constexpr int height = 210;
-
-	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", width, height * 2);
-	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", width, height);
+	constexpr int height = 210;	
 
 	ImPlot::CreateContext();
 }
 
 InnoInputUI::~InnoInputUI()
 {
-	DELETE_POINTER(mSceneRenderHelperA);
-	DELETE_POINTER(mSceneRenderHelperB);
-
 	ImPlot::DestroyContext();
 }
 
@@ -146,11 +138,11 @@ void InnoInputUI::drawForm()
 
 #pragma region InputScreen
 	ImGui::Begin("ScreenUI");
-	mSceneRenderHelperA->Draw(gCurrentScene);
-	mSceneRenderHelperB->Draw(gCurrentScene);
+	GameManager::GetInstance()->mSceneRenderHelperA->Draw(gCurrentScene);
+	GameManager::GetInstance()->mSceneRenderHelperB->Draw(gCurrentScene);
 
-	Texture* renderTexA = mSceneRenderHelperA->GetRenderTexture();
-	Texture* renderTexB = mSceneRenderHelperB->GetRenderTexture();
+	Texture* renderTexA = GameManager::GetInstance()->mSceneRenderHelperA->GetRenderTexture();
+	Texture* renderTexB = GameManager::GetInstance()->mSceneRenderHelperB->GetRenderTexture();
 
 	ImVec2 renderTargetSizeA = ImVec2(renderTexA->GetWidth(), renderTexA->GetHeight());
 	ImVec2 renderTargetSizeB = ImVec2(renderTexB->GetWidth(), renderTexB->GetHeight());
@@ -158,7 +150,7 @@ void InnoInputUI::drawForm()
 #pragma region Screen	
 	if (ImGui::IsWindowFocused())
 	{
-		mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
+		GameManager::GetInstance()->mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
 	}
 
 	ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
