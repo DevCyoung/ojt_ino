@@ -25,14 +25,43 @@ static int CloseSocket(const SOCKET serverSocket)
 	return S_OK;
 }
 
+static int getPort(SOCKET socket) {
+	sockaddr_in addr;
+	int addrLen = sizeof(addr);
+
+	if (getpeername(socket, (sockaddr*)&addr, &addrLen) == SOCKET_ERROR) {
+		return -1;
+	}
+
+	return ntohs(addr.sin_port);
+}
+
+static std::string getIPAddress(SOCKET socket) {
+	sockaddr_in addr;
+	int addrLen = sizeof(addr);
+
+	if (getpeername(socket, (sockaddr*)&addr, &addrLen) == SOCKET_ERROR) {
+		//std::cerr << "Failed to get IP address: " << WSAGetLastError() << std::endl;
+		return "";
+	}
+
+	char ip[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &addr.sin_addr, ip, sizeof(ip));
+
+	return std::string(ip);
+}
+
+
+
 InnoOJTClient::InnoOJTClient()
 	: mbServerTraining(false)
-	, mbServerTrainingFinish(false)
+	, mbServerTrainingFinish(false)	
 	, mCarDirection(1.f)
 	, mCurPos{ 0, }
-	, mBPosArray()		
+	, mBPosArray()
 	, mServerSocket(INVALID_SOCKET)
 	, mRecive()
+	, mClientState(eClientState::None)
 {
 	InnoDataManager::initialize();
 	InnoSimulator::initialize();
@@ -51,6 +80,16 @@ InnoOJTClient::~InnoOJTClient()
 	InnoDataManager::deleteInstance();	
 }
 
+std::string InnoOJTClient::GetServerIP()
+{
+	return getIPAddress(mServerSocket);
+}
+
+int InnoOJTClient::GetServerPort()
+{
+	return getPort(mServerSocket);
+}
+
 // 서버로부터 메시지 수신하는 함수
 static void ClientRecive(SOCKET serverSocket)
 {
@@ -62,7 +101,7 @@ static void ClientRecive(SOCKET serverSocket)
 	while (true)
 	{
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
-		std::lock_guard<std::mutex> guard(gClientMutex);		
+		std::lock_guard<std::mutex> guard(gClientMutex);
 
 		if (bytesReceived > 0)
 		{
@@ -132,6 +171,62 @@ static void ClientRecive(SOCKET serverSocket)
 	CloseSocket(serverSocket);
 }
 
+//서버에게 Connect 함수 (스레드)
+static void ClientConnect(const std::string& ip, const int port, SOCKET* pServerSocket, std::thread* pRpecive, eClientState* clientState)
+{
+	std::lock_guard<std::mutex> guard(gClientMutex);
+
+	WSADATA wsaData;
+	sockaddr_in clientService;
+
+	// Winsock 초기화
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		gLogListUIClient->WriteError("WSAStartup failed.");
+		*clientState = eClientState::None;
+		return;
+	}
+
+	//클라이언트소켓 생성
+	*pServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (INVALID_SOCKET  == *pServerSocket)
+	{	
+		gLogListUIClient->WriteError("Socket creation failed.");
+		*clientState = eClientState::None;
+		return;
+	}
+
+	// 서버 주소 설정
+	clientService.sin_family = AF_INET;
+	clientService.sin_port = htons(port);
+
+	//소켓에 바인딩한다.
+	if (inet_pton(AF_INET, ip.c_str(), &clientService.sin_addr) <= 0)
+	{
+		gLogListUIClient->WriteError("Invalid address Address not supported .");
+		CloseSocket(*pServerSocket);
+		*pServerSocket = INVALID_SOCKET;
+		*clientState = eClientState::None;
+		return;
+	}
+
+	if (connect(*pServerSocket, (sockaddr*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
+		gLogListUIClient->WriteError("Connect failed");
+		CloseSocket(*pServerSocket);
+		*pServerSocket = INVALID_SOCKET;
+		*clientState = eClientState::None;
+		return;
+	}
+
+	//서버와 연결됨
+	gLogListUIClient->WriteLine("Connect Success!");	
+
+	// 서버로부터 메시지를 받는 쓰레드 시작
+	*pRpecive = std::thread(ClientRecive, *pServerSocket);
+	*clientState = eClientState::Connected;
+
+	return;
+}
 
 void InnoOJTClient::run()
 {
@@ -155,47 +250,21 @@ void InnoOJTClient::run()
 
 int InnoOJTClient::Connect(const std::string& ip, const int port)
 {
-	WSADATA wsaData;
-	sockaddr_in clientService;
-
-	// Winsock 초기화
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	if (eClientState::None == mClientState)
 	{
-		gLogListUIClient->WriteError("WSAStartup failed.");
-		return E_FAIL;
+		mClientState = eClientState::Connecting;
+		std::thread(ClientConnect, ip, port, &mServerSocket, &mRecive, &mClientState).detach();
 	}
-
-	//클라이언트소켓 생성
-	mServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (mServerSocket == INVALID_SOCKET)
+	else if (eClientState::Connecting == mClientState)
 	{
-		gLogListUIClient->WriteError("Socket creation failed.");
-		return E_FAIL;
+		return S_OK;
 	}
 
-	// 서버 주소 설정
-	clientService.sin_family = AF_INET;
-	clientService.sin_port = htons(INNO_DEFAULT_PORT);
-
-	// 서버에 연결
-	if (inet_pton(AF_INET, ip.c_str(), &clientService.sin_addr) <= 0)
+	if (INVALID_SOCKET != mServerSocket)
 	{
-		gLogListUIClient->WriteError("Invalid address Address not supported .");
-		CloseSocket(mServerSocket);		
-		return E_FAIL;
-	}
+		return S_OK;
+	}	
 
-	if (connect(mServerSocket, (sockaddr*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
-		gLogListUIClient->WriteError("Connect failed");
-		CloseSocket(mServerSocket);
-		return E_FAIL;
-	}
-
-	//서버와 연결됨
-	gLogListUIClient->WriteLine("Connected to server.");
-
-	// 서버로부터 메시지를 받는 쓰레드 시작
-	mRecive = std::thread(ClientRecive, mServerSocket);
 	return S_OK;
 }
 

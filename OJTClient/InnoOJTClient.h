@@ -1,6 +1,14 @@
 #pragma once
 
 #include "InnoSimulator.h"
+
+enum eClientState
+{
+	None,
+	Connecting,
+	Connected,
+};
+
 class InnoOJTClient
 {
 	PUBLIC_SINGLETON_DECLARE(InnoOJTClient);
@@ -8,6 +16,11 @@ class InnoOJTClient
 public:
 	void run();
 	int Connect(const std::string& ip, const int port);	
+	bool IsConnecting() { return mClientState == eClientState::Connecting; }
+	bool IsConnected() { return mClientState == eClientState::Connected; }
+
+	std::string GetServerIP();
+	int GetServerPort();
 
 	void SendLog(int messageLen, const char* message);
 	void SendPos(float pos);
@@ -23,6 +36,7 @@ public:
 
 	bool mbServerTraining;
 	bool mbServerTrainingFinish;
+	//bool mbConnect;
 	float mCarDirection;
 	float mCurPos[2];	
 	std::vector<float> mBPosArray;
@@ -30,5 +44,6 @@ public:
 	//InnoSimulator* mSimulator;
 	SOCKET mServerSocket;
 	std::thread mRecive;
+	eClientState mClientState;
 };
 

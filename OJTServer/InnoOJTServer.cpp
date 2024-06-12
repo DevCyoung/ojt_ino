@@ -7,12 +7,17 @@
 static std::mutex gClientsMutex;
 static SOCKET gListenSocket = INVALID_SOCKET;
 
+//TEST
+#include <InputManager.h>
+//TEST
+
 InnoOJTServer::InnoOJTServer()
 	: mPanelManager(nullptr)
 	, mChannelUI(nullptr)
 	, mListenUI(nullptr)
 	, mRoom{}
 	, mClientThreads{}
+	, mIP()
 {
 	mRoom.bTraining = false;
 
@@ -28,6 +33,42 @@ InnoOJTServer::InnoOJTServer()
 	Assert(mPanelManager, ASSERT_MSG_NULL);
 	Assert(mChannelUI, ASSERT_MSG_NULL);
 	Assert(mListenUI, ASSERT_MSG_NULL);
+
+	WSADATA wsaData;
+	char hostName[256];
+	struct addrinfo hints, * result, * ptr;
+	char ip[INET_ADDRSTRLEN];
+
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		return;
+	}
+
+	if (gethostname(hostName, sizeof(hostName)) == SOCKET_ERROR) {		
+		WSACleanup();
+		return;
+	}
+
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_INET;  // IPv4
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	if (getaddrinfo(hostName, nullptr, &hints, &result) != 0) {		
+		WSACleanup();
+		return;
+	}
+
+	for (ptr = result; ptr != nullptr; ptr = ptr->ai_next) {
+		struct sockaddr_in* sockaddr_ipv4 = (struct sockaddr_in*)ptr->ai_addr;
+		inet_ntop(AF_INET, &sockaddr_ipv4->sin_addr, ip, sizeof(ip));
+	}
+
+	freeaddrinfo(result);
+	WSACleanup();
+
+	mIP = ip;
+
+	return ;
 }
 
 InnoOJTServer::~InnoOJTServer()
@@ -41,6 +82,7 @@ InnoOJTServer::~InnoOJTServer()
 	{
 		clientSockets.push_back(mClients[i].Socket);
 	}
+
 	mRoom.clients.clear();
 	mChannel.clients.clear();
 	mClients.clear();
@@ -167,6 +209,13 @@ void InnoOJTServer::run()
 
 	static float trainingTime = 0.f;
 	trainingTime += gDeltaTime;
+
+	//TEST
+	if (gInput->GetKeyDown(eKeyCode::SPACE))
+	{
+		closesocket(mClients[0].Socket);
+	}
+	//TEST
 
 	if (mRoom.bTraining && trainingTime >= (1.f / 120.f))
 	{

@@ -7,6 +7,7 @@
 
 #define INNO_MAX_ROOM_USER 8
 #define INNO_MAX_THREAD_SIZE 2048
+
 struct tInnoClient
 {
 	int ClientID;
@@ -65,6 +66,8 @@ public:
 	bool TryGetInncoClient(int clientID, tInnoClient* outInnoClient);
 
 	std::string GetClientIP(SOCKET clientSocket);
+	std::string GetServerIP() { return mIP; }
+
 private:
 	
 
@@ -78,5 +81,7 @@ public:
 
 	std::vector<tInnoClient> mClients;
 	std::thread mClientThreads[INNO_MAX_THREAD_SIZE];
+
+	std::string mIP;	
 };
 

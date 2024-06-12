@@ -24,17 +24,19 @@ ListenUI::~ListenUI()
 
 void ListenUI::drawForm()
 {
-	static int port = 0;
+	static int port = INNO_DEFAULT_PORT;
+	constexpr float offset = 16.f;
+	std::string ip = InnoOJTServer::GetInstance()->GetServerIP();
 
 	ImGui::Begin("ListenUI");
-	ImGui::Text("192.168.1.186");
+	ImGui::Text("IP: %s  Port:", ip.c_str());
+	ImGui::SameLine(175.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::InputInt("##ListenPort", &port, 0, 0);
 	ImGui::SameLine();
-	//ImGui::PushStyleVar(0,0);
-	ImGui::InputInt("Port ", &port);
-	//ImGui::PopStyleVar();
-
-	ImGui::SameLine();
-	if (ImGui::Button("Listen"))
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	
+	if (ImGui::Button("Listen", ImVec2(90.f, 20.f)))
 	{
 		InnoOJTServer::GetInstance()->Listen(port);
 	}

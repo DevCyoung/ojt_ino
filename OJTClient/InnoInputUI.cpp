@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "InnoInputUI.h"
+#include "InnoOJTClient.h"
+
 #include <RenderTargetRenderer.h>
 #include <GameSystem.h>
 #include <SceneManager.h>
@@ -10,6 +12,11 @@
 #include <TimeManager.h>
 #include <implot.h>
 #include <InputManager.h>
+#include <LogListUI.h>
+#include <PanelUIManager.h>
+#include <imgui_internal.h>
+
+#define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 InnoInputUI::InnoInputUI()
 	: mSceneRenderHelperA(nullptr)
@@ -83,6 +90,34 @@ static void ShowGraph(const char* label, const std::vector<float>& values, const
 
 		ImPlot::EndPlot();
 	}
+}
+
+void IndeterminateProgressBar(const ImVec2& size_arg)
+{
+	using namespace ImGui;
+
+	ImGuiContext& g = *GImGui;
+	ImGuiWindow* window = GetCurrentWindow();
+	if (window->SkipItems)
+		return;
+
+	ImGuiStyle& style = g.Style;
+	ImVec2 size = CalcItemSize(size_arg, CalcItemWidth(), g.FontSize + style.FramePadding.y * 2.0f);
+	ImVec2 pos = window->DC.CursorPos;
+	ImRect bb(pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+	ItemSize(size);
+	if (!ItemAdd(bb, 0))
+		return;
+
+	const float speed = g.FontSize * 0.05f;
+	const float phase = ImFmod((float)g.Time * speed, 1.0f);
+	const float width_normalized = 0.2f;
+	float t0 = phase * (1.0f + width_normalized) - width_normalized;
+	float t1 = t0 + width_normalized;
+
+	RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
+	bb.Expand(ImVec2(-style.FrameBorderSize, -style.FrameBorderSize));
+	RenderRectFilledRangeH(window->DrawList, bb, GetColorU32(ImGuiCol_PlotHistogram), t0, t1, style.FrameRounding);
 }
 
 void InnoInputUI::drawForm()
@@ -277,24 +312,8 @@ void InnoInputUI::drawForm()
 
 #pragma endregion InputUI2
 
-#pragma region InputUI3
+#pragma region InputUI3	
 	ImGui::Begin("InputUI3");
-
-	ImGui::Text("ServerIP");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##ServerIP", buff, 16);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("Port");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##Port", buff, 16);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
 
 	//ImGui::Text("SamplingTime");
 	//ImGui::SameLine(45.0f);
@@ -303,7 +322,96 @@ void InnoInputUI::drawForm()
 	//ImGui::InputText("##MU", buff, 16);
 	//ImGui::PopItemWidth();
 	//ImGui::Spacing();
-	ImGui::Button("Connect");
+
+	bool bConnecting = InnoOJTClient::GetInstance()->IsConnecting();
+	bool bConnected = InnoOJTClient::GetInstance()->IsConnected();
+
+	static char ipBuff[256] = "127.0.0.1";
+	static int portNumber = INNO_DEFAULT_PORT;
+
+	if (false == bConnected)
+	{		
+		ImGui::Text("ServerIP");
+		ImGui::SameLine(100.0f);
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+		ImGui::PushItemWidth(100.0f);
+		ImGui::InputText("##ServerIP", ipBuff, 16);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+
+		ImGui::Text("Port");
+		ImGui::SameLine(100.0f);
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+		ImGui::PushItemWidth(100.0f);
+		ImGui::InputInt("##PortNumber", &portNumber, 0, 0);
+		ImGui::PopItemWidth();
+		ImGui::Spacing();
+	}
+
+	if (bConnecting)
+	{
+		IndeterminateProgressBar(ImVec2(196.f, 20.f));
+	}	
+	else if (bConnected)
+	{
+		std::string serverIP = InnoOJTClient::GetInstance()->GetServerIP();
+		int serverPort = InnoOJTClient::GetInstance()->GetServerPort();
+
+		ImGui::Text("Sokcet Connected");
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+		ImGui::Spacing();
+
+		ImGui::Text("Server IP : %s", serverIP.c_str());
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+		ImGui::Spacing();
+
+		ImGui::Text("Server Port : %d", serverPort);
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+		ImGui::Spacing();
+
+		// 메시지 박스를 표시합니다.
+		
+
+		if (ImGui::Button("DisConnect", ImVec2(196, 20.f)))
+		{
+			//Message Box
+			int msgboxID = MessageBox(
+				NULL,
+				L"Are you sure you want to continue?", // 메시지 텍스트
+				L"Confirmation", // 메시지 박스 제목
+				MB_ICONQUESTION | MB_OKCANCEL // 아이콘과 버튼 설정
+			);
+
+			// 사용자가 클릭한 버튼에 따라 다른 동작을 수행합니다.
+			switch (msgboxID) {
+			case IDOK:
+				//std::cout << "User clicked OK." << std::endl;
+				// 확인 버튼을 눌렀을 때의 동작을 여기에 추가
+				gLogListUIClient->WriteLine("OK");
+				break;
+			case IDCANCEL:
+				//std::cout << "User clicked Cancel." << std::endl;
+				// 취소 버튼을 눌렀을 때의 동작을 여기에 추가
+				gLogListUIClient->WriteLine("CANCLE");
+				break;
+			default:
+				//std::cerr << "Unexpected result from MessageBox: " << msgboxID << std::endl;
+				break;
+			}
+
+			
+		}
+	}
+	else
+	{		
+		if (ImGui::Button("Connect", ImVec2(196, 20.f)))
+		{
+			char connectBuffer[256] = { 0, };
+			sprintf_s(connectBuffer, "Connect\nIP : %s\nPort : %d", ipBuff, portNumber);
+			gLogListUIClient->WriteLine(connectBuffer);
+			InnoOJTClient::GetInstance()->Connect(ipBuff, portNumber);
+		}
+	}		
 
 	ImGui::End();
 #pragma endregion InputUI3
