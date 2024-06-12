@@ -18,7 +18,7 @@ static int CloseSocket(const SOCKET serverSocket)
 	}
 	else if (0 != closesocket(serverSocket))
 	{
-		return S_FALSE;
+		return S_FALSE;	
 	}
 
 	WSACleanup();
@@ -50,8 +50,6 @@ static std::string getIPAddress(SOCKET socket) {
 
 	return std::string(ip);
 }
-
-
 
 InnoOJTClient::InnoOJTClient()
 	: mbServerTraining(false)
@@ -157,13 +155,14 @@ static void ClientRecive(SOCKET serverSocket)
 		}
 		else if (bytesReceived == 0)
 		{			
-			gLogListUIClient->WriteLine("Connection closed by server.");
-			
+			gLogListUIClient->WriteLine("Connection closed by server.");			
+			innoClient->mClientState = eClientState::None;
 			break;
 		}
 		else
 		{
-			gLogListUIClient->WriteError("Connection closed by server.");
+			gLogListUIClient->WriteError("Connection closed by server.");			
+			innoClient->mClientState = eClientState::None;
 			break;
 		}
 	}
@@ -224,7 +223,6 @@ static void ClientConnect(const std::string& ip, const int port, SOCKET* pServer
 	// 서버로부터 메시지를 받는 쓰레드 시작
 	*pRpecive = std::thread(ClientRecive, *pServerSocket);
 	*clientState = eClientState::Connected;
-
 	return;
 }
 
@@ -243,9 +241,6 @@ void InnoOJTClient::run()
 		mCurPos[0] += gDeltaTime * 15.f * mCarDirection;
 		SendPos(mCurPos[0]);
 	}
-
-	//mSimulator->Play();
-	//mSimulator->Finish();
 }
 
 int InnoOJTClient::Connect(const std::string& ip, const int port)

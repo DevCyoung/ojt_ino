@@ -8,6 +8,12 @@
 #define INNO_MAX_ROOM_USER 8
 #define INNO_MAX_THREAD_SIZE 2048
 
+enum eServerState
+{
+	None,	
+	Listening
+};
+
 struct tInnoClient
 {
 	int ClientID;
@@ -40,6 +46,8 @@ public:
 	void run();
 
 	int Listen(const int port);
+	bool IsListening() { return mServerState == eServerState::Listening; }
+
 	int Accept(SOCKET ClientSocket);
 
 	void EnterRoom(int clientID);
@@ -55,9 +63,10 @@ public:
 	void RecivePos(int clientID, const tPacketPos& outPacket);
 	void ReciveStop(int clientID, const tPacketStop& outPacket);	
 	void RecivePoses(int clientID, const tPacketPoses& outPacket);
-	
 
-	void RemoveClient(const SOCKET clientSocket);	
+	void RemoveClient(const SOCKET clientSocket);
+
+	void DisConnect();
 
 	static inline int serializeNumber = 0;
 	tInnoClient GetInncoClient(SOCKET socket);
@@ -83,5 +92,7 @@ public:
 	std::thread mClientThreads[INNO_MAX_THREAD_SIZE];
 
 	std::string mIP;	
+
+	eServerState mServerState;
 };
 

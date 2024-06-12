@@ -18,6 +18,7 @@ InnoOJTServer::InnoOJTServer()
 	, mRoom{}
 	, mClientThreads{}
 	, mIP()
+	, mServerState(eServerState::None)
 {
 	mRoom.bTraining = false;
 
@@ -73,36 +74,7 @@ InnoOJTServer::InnoOJTServer()
 
 InnoOJTServer::~InnoOJTServer()
 {	
-
-	std::vector<SOCKET> clientSockets;
-
-	gClientsMutex.lock();
-
-	for (int i = 0; i < mClients.size(); i++)
-	{
-		clientSockets.push_back(mClients[i].Socket);
-	}
-
-	mRoom.clients.clear();
-	mChannel.clients.clear();
-	mClients.clear();
-
-	gClientsMutex.unlock();
-
-	for (int i = 0; i < clientSockets.size(); ++i)
-	{
-		closesocket(clientSockets[i]);
-	}
-
-	for (int i = 0; i < INNO_MAX_THREAD_SIZE; ++i)
-	{
-		if (mClientThreads[i].joinable())
-		{
-			mClientThreads[i].join();
-		}
-	}
-
-	closesocket(gListenSocket);
+	DisConnect();
 }
 
 // 클라이언트 핸들링 함수
@@ -184,9 +156,9 @@ static void handleAccept()
 	{
 		SOCKET clientSocket = accept(gListenSocket, NULL, NULL);
 
-		if (clientSocket == INVALID_SOCKET)
+		if (INVALID_SOCKET == clientSocket)
 		{
-			gLogListUI->WriteError("Accept failed.");
+			gLogListUI->WriteLine("Accept handle close");
 			closesocket(gListenSocket);
 			gListenSocket = INVALID_SOCKET;
 			continue;
@@ -276,7 +248,6 @@ int InnoOJTServer::Listen(const int port)
 		gLogListUI->WriteError("Bind failed.");
 		closesocket(gListenSocket);
 		WSACleanup();
-
 		return E_FAIL;
 	}
 
@@ -296,6 +267,7 @@ int InnoOJTServer::Listen(const int port)
 	std::thread accept(handleAccept);
 	accept.detach();
 
+	mServerState = eServerState::Listening;
 	return S_OK;
 }
 
@@ -632,4 +604,39 @@ bool InnoOJTServer::TryGetInncoClient(int clientID, tInnoClient* outInnoClient)
 	}
 
 	return bflag;
+}
+
+void InnoOJTServer::DisConnect()
+{
+	std::vector<SOCKET> clientSockets;
+
+	gClientsMutex.lock();
+
+	for (int i = 0; i < mClients.size(); i++)
+	{
+		clientSockets.push_back(mClients[i].Socket);
+	}
+
+	mRoom.clients.clear();
+	mChannel.clients.clear();
+	mClients.clear();
+
+	gClientsMutex.unlock();
+
+	for (int i = 0; i < clientSockets.size(); ++i)
+	{
+		closesocket(clientSockets[i]);
+	}
+
+	for (int i = 0; i < INNO_MAX_THREAD_SIZE; ++i)
+	{
+		if (mClientThreads[i].joinable())
+		{
+			mClientThreads[i].join();
+		}
+	}
+
+	closesocket(gListenSocket);
+
+	mServerState = eServerState::None;
 }
