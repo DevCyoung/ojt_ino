@@ -37,10 +37,36 @@ void ListenUI::drawForm()
 		ImGui::Text("Listening... IP: %s Port: %d", ip.c_str(), port);
 		ImGui::SameLine();
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+
+
+		if (ImGui::BeginPopupModal("Server::DisConnect", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Are you sure disconnect?");
+
+			ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
+
+			if (ImGui::Button("Yes", button_size))
+			{
+				InnoOJTServer::GetInstance()->DisConnect();
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("No", button_size))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
 		if (ImGui::Button("DisConnect", ImVec2(90.f, 20.f)))
 		{
-			InnoOJTServer::GetInstance()->DisConnect();
+			if (!ImGui::IsPopupOpen("Server::DisConnect"))
+				ImGui::OpenPopup("Server::DisConnect");
 		}
+
 	}
 	else
 	{

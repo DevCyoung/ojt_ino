@@ -67,12 +67,7 @@ InnoOJTClient::InnoOJTClient()
 
 InnoOJTClient::~InnoOJTClient()
 {
-	CloseSocket(mServerSocket);
-
-	if (mRecive.joinable())
-	{
-		mRecive.join();
-	}	
+	DisConnect();
 
 	InnoSimulator::deleteInstance();
 	InnoDataManager::deleteInstance();	
@@ -156,13 +151,13 @@ static void ClientRecive(SOCKET serverSocket)
 		else if (bytesReceived == 0)
 		{			
 			gLogListUIClient->WriteLine("Connection closed by server.");			
-			innoClient->mClientState = eClientState::None;
+			innoClient->mClientState = eClientState::None;			
 			break;
 		}
 		else
 		{
 			gLogListUIClient->WriteError("Connection closed by server.");			
-			innoClient->mClientState = eClientState::None;
+			innoClient->mClientState = eClientState::None;			
 			break;
 		}
 	}
@@ -261,6 +256,19 @@ int InnoOJTClient::Connect(const std::string& ip, const int port)
 	}	
 
 	return S_OK;
+}
+
+void InnoOJTClient::DisConnect()
+{
+	CloseSocket(mServerSocket);
+
+	if (mRecive.joinable())
+	{
+		mRecive.join();
+	}
+
+	mClientState = eClientState::None;
+	mServerSocket = INVALID_SOCKET;
 }
 
 void InnoOJTClient::SendLog(int messageLen, const char* message)

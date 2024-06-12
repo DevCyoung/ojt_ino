@@ -15,6 +15,8 @@ class InnoOJTClient
 
 public:
 	void run();
+	void DisConnect();
+
 	int Connect(const std::string& ip, const int port);	
 	bool IsConnecting() { return mClientState == eClientState::Connecting; }
 	bool IsConnected() { return mClientState == eClientState::Connected; }

@@ -140,7 +140,7 @@ void InnoInputUI::drawForm()
 		style = newStyle;
 	}
 
-	ImPlot::ShowDemoWindow();
+	//ImPlot::ShowDemoWindow();
 
 	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
 
@@ -371,35 +371,31 @@ void InnoInputUI::drawForm()
 
 		// 메시지 박스를 표시합니다.
 		
+		
+		if (ImGui::BeginPopupModal("Client::DisConnect", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Are you sure disconnect?");
+
+			ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
+
+			if (ImGui::Button("Yes", button_size))
+			{
+				InnoOJTClient::GetInstance()->DisConnect();
+				ImGui::CloseCurrentPopup();
+			}			
+			ImGui::SameLine();
+			if (ImGui::Button("No", button_size))
+			{	
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
 
 		if (ImGui::Button("DisConnect", ImVec2(196, 20.f)))
 		{
-			//Message Box
-			int msgboxID = MessageBox(
-				NULL,
-				L"Are you sure you want to continue?", // 메시지 텍스트
-				L"Confirmation", // 메시지 박스 제목
-				MB_ICONQUESTION | MB_OKCANCEL // 아이콘과 버튼 설정
-			);
-
-			// 사용자가 클릭한 버튼에 따라 다른 동작을 수행합니다.
-			switch (msgboxID) {
-			case IDOK:
-				//std::cout << "User clicked OK." << std::endl;
-				// 확인 버튼을 눌렀을 때의 동작을 여기에 추가
-				gLogListUIClient->WriteLine("OK");
-				break;
-			case IDCANCEL:
-				//std::cout << "User clicked Cancel." << std::endl;
-				// 취소 버튼을 눌렀을 때의 동작을 여기에 추가
-				gLogListUIClient->WriteLine("CANCLE");
-				break;
-			default:
-				//std::cerr << "Unexpected result from MessageBox: " << msgboxID << std::endl;
-				break;
-			}
-
-			
+			if (!ImGui::IsPopupOpen("Client::DisConnect"))
+				ImGui::OpenPopup("Client::DisConnect");
 		}
 	}
 	else
@@ -407,7 +403,7 @@ void InnoInputUI::drawForm()
 		if (ImGui::Button("Connect", ImVec2(196, 20.f)))
 		{
 			char connectBuffer[256] = { 0, };
-			sprintf_s(connectBuffer, "Connect\nIP : %s\nPort : %d", ipBuff, portNumber);
+			sprintf_s(connectBuffer, "Connecting...\nIP : %s\nPort : %d", ipBuff, portNumber);
 			gLogListUIClient->WriteLine(connectBuffer);
 			InnoOJTClient::GetInstance()->Connect(ipBuff, portNumber);
 		}
