@@ -15,8 +15,12 @@ InnoInputUI::InnoInputUI()
 	: mSceneRenderHelperA(nullptr)
 	, mSceneRenderHelperB(nullptr)
 {
-	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", 800, 190);
-	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", 800, 190);
+
+	constexpr int width = 800;
+	constexpr int height = 210;
+
+	mSceneRenderHelperA = new SceneRenderHelper(L"PlayerA", width, height);
+	mSceneRenderHelperB = new SceneRenderHelper(L"PlayerB", width, height);
 
 	ImPlot::CreateContext();
 }
