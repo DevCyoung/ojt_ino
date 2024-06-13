@@ -11,14 +11,14 @@
 static std::mutex gClientMutex;
 
 static int CloseSocket(const SOCKET serverSocket)
-{	
+{
 	if (INVALID_SOCKET == serverSocket)
 	{
 		return S_FALSE;
 	}
 	else if (0 != closesocket(serverSocket))
 	{
-		return S_FALSE;	
+		return S_FALSE;
 	}
 
 	WSACleanup();
@@ -53,7 +53,7 @@ static std::string getIPAddress(SOCKET socket) {
 
 InnoOJTClient::InnoOJTClient()
 	: mbServerTraining(false)
-	, mbServerTrainingFinish(false)		
+	, mbServerTrainingFinish(false)
 	, mServerSocket(INVALID_SOCKET)
 	, mRecive()
 	, mClientState(eClientState::None)
@@ -67,7 +67,7 @@ InnoOJTClient::~InnoOJTClient()
 	DisConnect();
 
 	InnoSimulator::deleteInstance();
-	InnoDataManager::deleteInstance();	
+	InnoDataManager::deleteInstance();
 }
 
 std::string InnoOJTClient::GetServerIP()
@@ -127,26 +127,31 @@ static void ClientRecive(SOCKET serverSocket)
 				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				innoClient->ReciveStop(stop);
 				gLogListUIClient->WriteLine("Recive: Stop");
-			}			
-			break;						
+			}
+			break;
 			default:
-				break;
+			{
+				char errorBuff[256] = {};
+				sprintf_s(errorBuff, "Invalid Packet %d", packetID);
+				gLogListUIClient->WriteLine(errorBuff);
+			}
+			break;
 			}
 		}
 		else if (bytesReceived == 0)
-		{			
-			gLogListUIClient->WriteLine("Connection closed by server.");		
+		{
+			gLogListUIClient->WriteLine("Connection closed by server.");
 			innoClient->mClientState = eClientState::None;
 			closesocket(innoClient->mServerSocket);
-			innoClient->mServerSocket = INVALID_SOCKET;			
+			innoClient->mServerSocket = INVALID_SOCKET;
 			break;
 		}
 		else
 		{
-			gLogListUIClient->WriteError("Connection closed by server.");			
+			gLogListUIClient->WriteError("Connection closed by server.");
 			innoClient->mClientState = eClientState::None;
 			closesocket(innoClient->mServerSocket);
-			innoClient->mServerSocket = INVALID_SOCKET;							
+			innoClient->mServerSocket = INVALID_SOCKET;
 			break;
 		}
 	}
@@ -172,8 +177,8 @@ void ClientConnect(const std::string& ip, const int port, SOCKET* pServerSocket,
 
 	//클라이언트소켓 생성
 	*pServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (INVALID_SOCKET  == *pServerSocket)
-	{	
+	if (INVALID_SOCKET == *pServerSocket)
+	{
 		gLogListUIClient->WriteError("Socket creation failed.");
 		*clientState = eClientState::None;
 		return;
@@ -202,11 +207,11 @@ void ClientConnect(const std::string& ip, const int port, SOCKET* pServerSocket,
 	}
 
 	//서버와 연결됨
-	gLogListUIClient->WriteLine("Connect Success!");	
+	gLogListUIClient->WriteLine("Connect Success!");
 
 	// 서버로부터 메시지를 받는 쓰레드 시작
 	// 쓰레드 초기화
-	if (pRpecive->joinable())	
+	if (pRpecive->joinable())
 	{
 		pRpecive->join();
 	}
@@ -227,7 +232,7 @@ void InnoOJTClient::run()
 
 	//서버 트레이닝중이라면 내위치를 전송	
 	if (mbServerTraining)
-	{		
+	{
 		SendPos(InnoDataManager::GetInstance()->GetXPoses().back());
 	}
 }
@@ -247,7 +252,7 @@ int InnoOJTClient::Connect(const std::string& ip, const int port)
 	if (INVALID_SOCKET != mServerSocket)
 	{
 		return S_OK;
-	}	
+	}
 
 	return S_OK;
 }

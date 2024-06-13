@@ -50,8 +50,13 @@ void TrainingUI::drawForm()
 		{
 			for (int i = 0; i < room.clients.size(); ++i)
 			{
+				char trainingBuff[256] = {0,};
+				sprintf_s(trainingBuff, "client id : %d End", room.clients[i].ClientID);
+
+				gLogListUI->WriteLine(trainingBuff);
 				InnoOJTServer::GetInstance()->SendStop(room.clients[i].ClientID);
 			}
+
 			InnoOJTServer::GetInstance()->RoomInit();
 		}		
 	}	

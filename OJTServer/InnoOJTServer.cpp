@@ -44,7 +44,7 @@ InnoOJTServer::InnoOJTServer()
 	hints.ai_protocol = IPPROTO_TCP;
 
 	if (getaddrinfo(hostName, nullptr, &hints, &result) != 0) {		
-		WSACleanup();
+		WSACleanup();	
 		return;
 	}
 
@@ -102,7 +102,9 @@ static void handleClient(SOCKET clientSocket)
 			break;						
 			default:
 			{
-				gLogListUI->WriteError("Invalied packet");
+				char errorBuff[256] = {};
+				sprintf_s(errorBuff, "ID:%d , Invalid Packet %d", clientID, packetID);
+				gLogListUI->WriteLine(errorBuff);
 			}
 			break;
 			}
