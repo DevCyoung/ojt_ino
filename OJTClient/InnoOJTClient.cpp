@@ -5,7 +5,7 @@
 #include <PanelUIManager.h>
 #include <TimeManager.h>
 #include "InnoDataManager.h"
-#include "InnoClientMessageQueue.h"
+#include <InnoMessageQueue.h>
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 static std::mutex gClientMutex;
@@ -60,14 +60,14 @@ InnoOJTClient::InnoOJTClient()
 {
 	InnoDataManager::initialize();
 	InnoSimulator::initialize();
-	InnoClientMessageQueue::initialize();
+	InnoMessageQueue::initialize();
 }
 
 InnoOJTClient::~InnoOJTClient()
 {
 	DisConnect();
 
-	InnoClientMessageQueue::initialize();
+	InnoMessageQueue::deleteInstance();
 	InnoSimulator::deleteInstance();
 	InnoDataManager::deleteInstance();
 }
@@ -82,7 +82,6 @@ int InnoOJTClient::GetServerPort()
 	return getPort(mServerSocket);
 }
 
-// 서버로부터 메시지 수신하는 함수
 static void ClientRecive(SOCKET serverSocket)
 {
 	char recvbuf[INNO_MAX_PACKET_SIZE];
@@ -97,64 +96,71 @@ static void ClientRecive(SOCKET serverSocket)
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
 
 		std::lock_guard<std::mutex> guard(gClientMutex);
-
-
+		
 		if (bytesReceived > 0)
-		{			
-			ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
-			//Message						
+		{
+			InnoMessageQueue::GetInstance()->PushPacket(recvbuf, bytesReceived);
 
-			switch (packetID)
+			while (!InnoMessageQueue::GetInstance()->IsEmpty())
 			{
-			case Log:
-			{
-				assert(bytesReceived == sizeof(tPacketLog));
+				tPacketMessage pakcetMessage = InnoMessageQueue::GetInstance()->GetNextMessage();
 
-				tPacketLog log;
-				deserializeData(recvbuf, sizeof(tPacketLog), &log);
-				innoClient->ReciveLog(log);
-			}
-			break;
-			case Pos:
-			{
-				assert(bytesReceived == sizeof(tPacketPos));
+				ePacketID packetID = pakcetMessage.PacketID;
 
-				tPacketPos pos;
-				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
-				innoClient->RecivePos(pos);
-			}
-			break;
-			case Start:
-			{
-				assert(bytesReceived == sizeof(tPacketStart));
+				switch (packetID)
+				{
+				case Log:
+				{
+					tPacketLog packetLog = {};
+					packetLog.PacketID = packetID;
+					packetLog.MessageLen = pakcetMessage.MessageLen;
+					memcpy(packetLog.Message, pakcetMessage.buffer, INNO_MAX_POS_SIZE);
 
-				tPacketStart start;
-				deserializeData(recvbuf, sizeof(tPacketStart), &start);
-				innoClient->ReciveStart(start);
-				gLogListUIClient->WriteLine("Recive: Start");
-			}
-			break;
-			case Stop:
-			{
-				assert(bytesReceived == sizeof(tPacketStop));
+					gLogListUIClient->WriteLine("Recive: Log");
 
-				tPacketStop stop;
-				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
-				innoClient->ReciveStop(stop);
-				gLogListUIClient->WriteLine("Recive: Stop");
-			}
-			break;
-			default:
-			{
-				//assert(bytesReceived == sizeof(tPacketLog));
+					innoClient->ReciveLog(packetLog);
+				}					
+					break;
+				case Pos:
+				{
+					tPacketPos packetPos = {};
+					packetPos.PacketID = packetID;
+					packetPos.Position = pakcetMessage.Position;
 
-				char errorBuff[256] = {};
-				sprintf_s(errorBuff, "Invalid Packet %d", packetID);
-				gLogListUIClient->WriteLine(errorBuff);
+					innoClient->RecivePos(packetPos);
+				}
+					break;
+				case Start:
+				{
+					tPacketStart packetStart = {};
+					packetStart.PacketID = packetID;
+
+					innoClient->ReciveStart(packetStart);
+
+					gLogListUIClient->WriteLine("Recive: Start");
+				}
+					break;
+				case Stop:
+				{
+					tPacketStop packetStop = {};
+					packetStop.PacketID = packetID;
+
+					innoClient->ReciveStop(packetStop);
+
+					gLogListUIClient->WriteLine("Recive: Stop");
+				}
+					break;
+				default:
+				{
+					assert(false);					
+				}
+					break;
+				}
+
 			}
-			break;
-			}
-		}
+
+
+		}		
 		else if (bytesReceived == 0)
 		{
 			gLogListUIClient->WriteLine("Connection closed by server.");
@@ -171,6 +177,7 @@ static void ClientRecive(SOCKET serverSocket)
 			innoClient->mServerSocket = INVALID_SOCKET;
 			break;
 		}
+
 	}
 
 	CloseSocket(serverSocket);

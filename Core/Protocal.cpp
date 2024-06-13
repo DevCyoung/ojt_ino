@@ -28,6 +28,13 @@ int getPacketId(char(&buffer)[], int recvSize)
 	return header;
 }
 
+int getPacketId(const char* buffer)
+{
+	int header = 0;
+	std::memcpy(&header, buffer, sizeof(int));
+	return header;
+}
+
 void send_log(SOCKET socket, int messageLen, const char* message)
 {
 	tPacketLog packet = {};

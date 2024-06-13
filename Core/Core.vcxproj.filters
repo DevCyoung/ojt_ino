@@ -457,6 +457,7 @@
     <ClInclude Include="implot_internal.h">
       <Filter>Source\ImGUI\implot</Filter>
     </ClInclude>
+    <ClInclude Include="InnoMessageQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -850,6 +851,7 @@
     <ClCompile Include="implot_items.cpp">
       <Filter>Source\ImGUI\implot</Filter>
     </ClCompile>
+    <ClCompile Include="InnoMessageQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">
