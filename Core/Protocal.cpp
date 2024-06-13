@@ -13,7 +13,8 @@ void deserializeData(const void* packetBuffer, size_t dataSize, void* ori)
 }
 
 // 패킷 ID를 확인하는 함수
-int getPacketId(char(&buffer)[], int recvSize) {
+int getPacketId(char(&buffer)[], int recvSize) 
+{
 	// 버퍼가 헤더 크기보다 작으면 유효한 패킷이 아님
 	if (recvSize < sizeof(int))
 	{
@@ -47,20 +48,6 @@ void send_pos(SOCKET socket, float pos)
 
 	packet.PacketID = ePacketID::Pos;
 	packet.Position = pos;
-
-	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
-	{
-		assert(false);
-	}
-}
-
-void send_poses(SOCKET socket, int size, const float* poses)
-{
-	tPacketPoses packet = {};
-
-	packet.Size = size;
-	packet.PacketID = ePacketID::Poses;
-	memcpy(packet.Poses, poses, sizeof(float) * size);
 
 	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
 	{
@@ -103,4 +90,3 @@ void send_finish(SOCKET socket)
 		assert(false);
 	}
 }
-

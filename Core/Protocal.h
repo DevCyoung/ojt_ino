@@ -11,7 +11,6 @@ enum ePacketID
 	Pos,
 	Start,
 	Stop,	
-	Poses,
 	Finish,
 };
 
@@ -63,7 +62,6 @@ int getPacketId(char(&buffer)[], int recvSize);
 
 void send_log(SOCKET socket, int messageLen, const char* message);
 void send_pos(SOCKET socket, float pos);
-void send_poses(SOCKET socket, int size, const float* poses);
 void send_stop(SOCKET socket);
 void send_start(SOCKET socket);
 void send_finish(SOCKET socket);
