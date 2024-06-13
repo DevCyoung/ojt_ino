@@ -23,6 +23,8 @@ struct tInnoSampleData
 
 	float xPos;
 	float xSpeed;
+
+	float xPosOther;
 };
 
 class InnoSimulator
@@ -35,6 +37,11 @@ private:
 	void finish();
 
 public:
+	//void SetPlayerAPos(float playerAPos) { mPlayerAPos = playerAPos; }
+	void SetPlayerBPos(float playerBPos) { mPlayerBPos = playerBPos; }
+	//float GetPlayerPosA() { return mPlayerAPos; }
+	float GetPlayerPosB() { return mPlayerBPos; }
+
 	void Play();
 	void Finish();	
 	void Update();
@@ -71,7 +78,7 @@ public:
 private:
 	eInnoSimulatorState mState;
 	float mCurTime;
-
+	float mPlayerBPos;
 	float mMS;
 	float mMU;
 	float mKS;

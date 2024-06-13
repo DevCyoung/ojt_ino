@@ -37,9 +37,9 @@ public:
 	bool mbServerTraining;
 	bool mbServerTrainingFinish;
 	//bool mbConnect;
-	float mCarDirection;
-	float mCurPos[2];	
-	std::vector<float> mBPosArray;
+	//float mCarDirection;
+	//float mCurPos[2];	
+	//std::vector<float> mBPosArray;
 	//InnoCarSimulation mSimulation;
 	//InnoSimulator* mSimulator;
 	SOCKET mServerSocket;

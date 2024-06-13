@@ -1,28 +1,41 @@
 #include "pch.h"
 #include "InnoInputUI.h"
 #include "InnoOJTClient.h"
+#include "GameManager.h"
+#include "InnoSimulator.h"
+#include "InnoDataManager.h"
 
 #include <RenderTargetRenderer.h>
 #include <GameSystem.h>
 #include <SceneManager.h>
 #include <AlphaHelper.h>
 #include <Texture.h>
-#include "InnoSimulator.h"
-#include "InnoDataManager.h"
 #include <TimeManager.h>
 #include <implot.h>
 #include <InputManager.h>
 #include <LogListUI.h>
 #include <PanelUIManager.h>
 #include <imgui_internal.h>
-#include "GameManager.h"
+
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
+#define offset 16.f
 
 InnoInputUI::InnoInputUI()
 {
+	//for (int i = ImGuiTheme::ImGuiTheme_ImGuiColorsClassic; i < ImGuiTheme::ImGuiTheme_Count; ++i)
+	//{
+	//	vecZsAcc.push_back(ImGuiTheme::ImGuiTheme_Name((ImGuiTheme::ImGuiTheme_)i));
+	//}
+	//
+	//if (ImGui::Combo("combo", &current_item, vecZsAcc))
+	//{
+	//
+	//}
 
-	constexpr int width = 800;
-	constexpr int height = 210;	
+	static int current_item = 7;
+	ImGuiStyle newStyle = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_(current_item));
+	ImGuiStyle& style = ImGui::GetStyle();
+	style = newStyle;
 
 	ImPlot::CreateContext();
 }
@@ -33,12 +46,9 @@ InnoInputUI::~InnoInputUI()
 }
 
 
-#define offset 16.f
 
-static void ShowGraph(const char* label, const std::vector<float>& values, const std::vector<float>& times, int axxSize = 150)
-{
-	Assert(times.size() == values.size(), ASSERT_MSG_INVALID);
-
+static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize = 150)
+{	
 	std::string key = "##";
 
 	key += label;
@@ -49,9 +59,9 @@ static void ShowGraph(const char* label, const std::vector<float>& values, const
 		double max = 0.0001f;
 		double min = -0.0001f;
 
-		for (int i = 0; i < values.size(); ++i)
+		for (int i = 0; i < dataCount; ++i)
 		{
-			if (times[i] < times.back() - history || times[i] > times.back())
+			if (times[i] < times[dataCount - 1] - history || times[i] > times[dataCount - 1])
 			{
 				continue;
 			}
@@ -75,11 +85,9 @@ static void ShowGraph(const char* label, const std::vector<float>& values, const
 
 		//invert
 		//ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_Invert, 0);
-
 		ImPlot::SetupAxisLinks(ImAxis_Y1, &min, &max);
-		ImPlot::SetupAxisLimits(ImAxis_X1, times.back() - history, times.back(), ImGuiCond_Always);
-		ImPlot::PlotLine(label, times.data(), values.data(), values.size(), ImPlotFlags_NoFrame);
-
+		ImPlot::SetupAxisLimits(ImAxis_X1, times[dataCount - 1] - history, times[dataCount - 1], ImGuiCond_Always);
+		ImPlot::PlotLine(label, times, values, dataCount, ImPlotFlags_NoFrame);
 		ImPlot::EndPlot();
 	}
 }
@@ -114,26 +122,7 @@ void IndeterminateProgressBar(const ImVec2& size_arg)
 
 void InnoInputUI::drawForm()
 {
-
-	static int current_item = 7;
-	//for (int i = ImGuiTheme::ImGuiTheme_ImGuiColorsClassic; i < ImGuiTheme::ImGuiTheme_Count; ++i)
-	//{
-	//	vecZsAcc.push_back(ImGuiTheme::ImGuiTheme_Name((ImGuiTheme::ImGuiTheme_)i));
-	//}
-	//
-	//if (ImGui::Combo("combo", &current_item, vecZsAcc))
-	//{
-	//
-	//}
-
-	{
-		ImGuiStyle newStyle = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_(current_item));
-		ImGuiStyle& style = ImGui::GetStyle();
-		style = newStyle;
-	}
-
 	//ImPlot::ShowDemoWindow();
-
 	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
 
 #pragma region InputScreen
@@ -147,7 +136,6 @@ void InnoInputUI::drawForm()
 	ImVec2 renderTargetSizeA = ImVec2(renderTexA->GetWidth(), renderTexA->GetHeight());
 	ImVec2 renderTargetSizeB = ImVec2(renderTexB->GetWidth(), renderTexB->GetHeight());
 
-#pragma region Screen	
 	if (ImGui::IsWindowFocused())
 	{
 		GameManager::GetInstance()->mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
@@ -156,11 +144,12 @@ void InnoInputUI::drawForm()
 	ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
 	//ImGui::Image((void*)renderTexB->GetSRV(), renderTargetSizeB);
 
-#pragma endregion
-	static float testFloat = 0.f;
+	static float testFloat = 0.f;	
+	static float testFloatMax = 1.f;
+
 	ImGui::Separator();
 	ImGui::PushItemWidth(800.f);
-	ImGui::SliderFloat("##testFloat", &testFloat, 0.f, 100000.f);
+	ImGui::SliderFloat("##testFloat", &testFloat, 0.f, testFloatMax);
 	ImGui::PopItemWidth();
 	ImGui::Separator();
 
@@ -425,85 +414,68 @@ void InnoInputUI::drawForm()
 	const float GRAPH_HEIGHT = 100.f;
 
 
-	const int maxValueSize = 800;
+	const int maxValueSize = 1200;
 	//마지막 maxValueSize개만 그리면된다.
-	const std::vector<tInnoSampleData>& playerASampleDatas = InnoDataManager::GetInstance()->GetPlayerASampleDatas();
+	//const std::vector<tInnoSampleData>& playerASampleDatas = InnoDataManager::GetInstance()->GetPlayerASampleDatas();
 
+
+	const std::vector<float>& vecTimes		= InnoDataManager::GetInstance()->GetTimes();
+	const std::vector<float>& vecZsPos		= InnoDataManager::GetInstance()->GetZsPoses();
+	const std::vector<float>& vecZsSpeed	= InnoDataManager::GetInstance()->GetZsSpeeds();
+	const std::vector<float>& vecZsAcc		= InnoDataManager::GetInstance()->GeetZsAccs();
+	const std::vector<float>& vecZuPos		= InnoDataManager::GetInstance()->GetZuPoses();
+	const std::vector<float>& vecZuSpeed	= InnoDataManager::GetInstance()->GetZuSpeeds();
+	const std::vector<float>& vecZuAcc		= InnoDataManager::GetInstance()->GetZuAccs();
+	const std::vector<float>& vecZr			= InnoDataManager::GetInstance()->GetZrs();
+	const std::vector<float>& vecxPos		= InnoDataManager::GetInstance()->GetXPoses();
+	const std::vector<float>& vecXSpeed		= InnoDataManager::GetInstance()->GetXSpeeds();	
+
+	static float prevData = -1.f;
+
+	bool swapFlag = false;
+
+	if (!vecTimes.empty() && prevData != vecTimes.back())
+	{
+		prevData = vecTimes.size();
+		swapFlag = true;
+	}
 
 	static float frameTime = 0.f;
-
-	static std::vector<float> vecZsPos(maxValueSize, 0.f);
-	static std::vector<float> vecZsSpeed(maxValueSize, 0.f);
-	static std::vector<float> vecZsAcc(maxValueSize, 0.f);
-	static std::vector<float> vecZuPos(maxValueSize, 0.f);
-	static std::vector<float> vecZuSpeed(maxValueSize, 0.f);
-	static std::vector<float> vecZuAcc(maxValueSize, 0.f);
-	static std::vector<float> vecZr(maxValueSize, 0.f);
-	static std::vector<float> vecxPos(maxValueSize, 0.f);
-	static std::vector<float> vecXSpeed(maxValueSize, 0.f);
-
-	static std::vector<float> vecTimes(maxValueSize, 0.f);
-
 	frameTime += gDeltaTime;
 
 	static bool checker = true;
 
-	if (gInput->GetKeyDown(eKeyCode::SPACE))
+	int dataSize = min(maxValueSize, vecTimes.size());	
+	int dataPos = 0;
+
+	testFloatMax = vecTimes.back();
+
+	if (InnoSimulator::GetInstance()->IsPlaying())
 	{
-		checker = !checker;
+		if (vecTimes.size() >= maxValueSize)
+		{
+			dataPos = vecTimes.size() - maxValueSize;
+		}
 	}
-
-	if (checker && frameTime >= (1.f / 60.f))
+	else
 	{
-		frameTime = 0.f;		
-
-		if (vecZsPos.size() >= maxValueSize)
-		{
-			vecZsPos.erase(vecZsPos.begin());
-			vecZsSpeed.erase(vecZsSpeed.begin());
-			vecZsAcc.erase(vecZsAcc.begin());
-			vecZuPos.erase(vecZuPos.begin());
-			vecZuSpeed.erase(vecZuSpeed.begin());
-			vecZuAcc.erase(vecZuAcc.begin());
-			vecZr.erase(vecZr.begin());
-			vecxPos.erase(vecxPos.begin());
-			vecXSpeed.erase(vecXSpeed.begin());
-
-			vecTimes.erase(vecTimes.begin()	);
-		}
-
-		if (!playerASampleDatas.empty())
-		{
-			vecZsPos.push_back(playerASampleDatas.back().ZsPos);
-			vecZsSpeed.push_back(playerASampleDatas.back().ZsSpeed);
-			vecZsAcc.push_back(playerASampleDatas.back().ZsAcc);
-			vecZuPos.push_back(playerASampleDatas.back().ZuPos);
-			vecZuSpeed.push_back(playerASampleDatas.back().ZuSpeed);
-			vecZuAcc.push_back(playerASampleDatas.back().ZuAcc);
-			vecZr.push_back(playerASampleDatas.back().Zr);
-			vecxPos.push_back(playerASampleDatas.back().xPos);
-			vecXSpeed.push_back(playerASampleDatas.back().xSpeed);
-
-			vecTimes.push_back(playerASampleDatas.back().Time);
-		}
+		dataPos = testFloat;
 	}
 
 	ImGui::Begin("GraphUI1");
 	{
 		static int axxSize = 150;
 		ImGui::SliderInt("##AXXSize", &axxSize, 50, 600);
-
-
 		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
-		ShowGraph("ZsPos", vecZsPos, vecTimes  , axxSize);
-		ShowGraph("ZsSpeed", vecZsSpeed, vecTimes, axxSize);
-		ShowGraph("ZsAcc", vecZsAcc, vecTimes, axxSize);
-		ShowGraph("ZuPos", vecZsPos, vecTimes, axxSize);
-		ShowGraph("ZuSpeed", vecZuSpeed, vecTimes, axxSize);
-		ShowGraph("ZuAcc", vecZuAcc, vecTimes, axxSize);
-		ShowGraph("Zr", vecZr, vecTimes, axxSize);
-		ShowGraph("xPos", vecxPos, vecTimes, axxSize);
-		ShowGraph("XSpeed", vecXSpeed, vecTimes, axxSize);
+		ShowGraph("ZsPos", &vecZsPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("ZsSpeed", &vecZsSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("ZsAcc", &vecZsAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("ZuPos", &vecZsPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("ZuSpeed", &vecZuSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("ZuAcc", &vecZuAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("Zr", &vecZr[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("xPos", &vecxPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("XSpeed", &vecXSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
 	}
 	ImGui::End();
 #pragma endregion GraphUI1

@@ -2,6 +2,7 @@
 #include "InnoSimulator.h"
 #include "InnoDataManager.h"
 #include <TimeManager.h>
+
 InnoSimulator::InnoSimulator()
 	: mState(eInnoSimulatorState::None)
 	, mCurTime(0.f)
@@ -10,7 +11,7 @@ InnoSimulator::InnoSimulator()
 	, mKS(10300.0f)
 	, mCS(1000.0f)
 	, mKT(18000.0f)
-	, mSpeed(10.0f)
+	, mSpeed(1.0f)
 	, mBumpStart(0.0f)
 	, mBumpEnd(3.0f)
 	, mBumpAmp(0.05f)
@@ -77,11 +78,25 @@ void InnoSimulator::Update()
 	}
 	else if (mState == eInnoSimulatorState::Playing)
 	{
+		static float frame = 0.f; //120.f «¡∑π¿”
 		mCurTime += gDeltaTime;
 
+
+		frame += gRealDeltaTime;
+		if (frame < 1.f / 120.f)
+		{
+			return;
+		}
+		frame = 0.f;
+
+		//if (mCurTime >= 1.f)
+		//{
+		//	__debugbreak();
+		//}
+
 		InnoDataManager* dataManager = InnoDataManager::GetInstance();
-		tInnoSampleData sampleData = CreateSampleData(mCurTime);
-		dataManager->PushPlayerASampleData(sampleData);
+		tInnoSampleData simData = CreateSampleData(mCurTime);		
+		dataManager->PushPlayerASampleData(simData);
 	}
 }
 
@@ -113,17 +128,17 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime)
 
 	tInnoSampleData sampleData = {};	
 
-	sampleData.Time		= sampleTime;
-	sampleData.ZsPos	= mX[0];
-	sampleData.ZsSpeed	= mX[1];
-	sampleData.ZsAcc	= mXDot[1];
-	sampleData.ZuPos	= mX[2];
-	sampleData.ZuSpeed	= mX[3];
-	sampleData.ZuAcc	= mXDot[3];
-	sampleData.Zr		= zr;
-	sampleData.xPos		= mPrevPos + mSpeed * gDeltaTime;
-	sampleData.xSpeed	= mSpeed;
-
+	sampleData.Time		 = sampleTime;
+	sampleData.ZsPos	 = mX[0];
+	sampleData.ZsSpeed	 = mX[1];
+	sampleData.ZsAcc	 = mXDot[1];
+	sampleData.ZuPos	 = mX[2];
+	sampleData.ZuSpeed	 = mX[3];
+	sampleData.ZuAcc	 = mXDot[3];
+	sampleData.Zr		 = zr;
+	sampleData.xPos		 = mPrevPos + mSpeed * gDeltaTime;
+	sampleData.xSpeed	 = mSpeed;
+	sampleData.xPosOther = mPlayerBPos;
 
 	mPrevPos = sampleData.xPos;
 	return sampleData;

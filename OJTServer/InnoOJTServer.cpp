@@ -156,9 +156,8 @@ static void handleAccept()
 
 void InnoOJTServer::run()
 {
-	constexpr float oneFrame = (1.f / 120.f);
-
-	if (IsListening())
+	constexpr float oneFrame = (1.f / 120.f);	
+	if (!IsListening())
 	{
 		return;
 	}
@@ -174,14 +173,14 @@ void InnoOJTServer::run()
 		}
 		trainingTime = 0.f;
 
-		if (mRoom.bTraining)
+		if (!mRoom.bTraining)
 		{
 			return;
 		}
 
+		//BroadCast
 		for (int i = 0; i < mRoom.clients.size(); ++i)
-		{
-			//BroadCast
+		{			
 			for (int j = 0; j < mRoom.clients.size(); ++j)
 			{
 				if (i == j)

@@ -53,10 +53,7 @@ static std::string getIPAddress(SOCKET socket) {
 
 InnoOJTClient::InnoOJTClient()
 	: mbServerTraining(false)
-	, mbServerTrainingFinish(false)	
-	, mCarDirection(1.f)
-	, mCurPos{ 0, }
-	, mBPosArray()
+	, mbServerTrainingFinish(false)		
 	, mServerSocket(INVALID_SOCKET)
 	, mRecive()
 	, mClientState(eClientState::None)
@@ -146,8 +143,7 @@ static void ClientRecive(SOCKET serverSocket)
 			gLogListUIClient->WriteLine("Connection closed by server.");		
 			innoClient->mClientState = eClientState::None;
 			closesocket(innoClient->mServerSocket);
-			innoClient->mServerSocket = INVALID_SOCKET;
-			//innoClient->mClientState = eClientState::None;						
+			innoClient->mServerSocket = INVALID_SOCKET;			
 			break;
 		}
 		else
@@ -155,8 +151,7 @@ static void ClientRecive(SOCKET serverSocket)
 			gLogListUIClient->WriteError("Connection closed by server.");			
 			innoClient->mClientState = eClientState::None;
 			closesocket(innoClient->mServerSocket);
-			innoClient->mServerSocket = INVALID_SOCKET;
-			//innoClient->mClientState = eClientState::None;						
+			innoClient->mServerSocket = INVALID_SOCKET;							
 			break;
 		}
 	}
@@ -215,7 +210,7 @@ void ClientConnect(const std::string& ip, const int port, SOCKET* pServerSocket,
 	gLogListUIClient->WriteLine("Connect Success!");	
 
 	// 서버로부터 메시지를 받는 쓰레드 시작
-
+	// 쓰레드 초기화
 	if (pRpecive->joinable())	
 	{
 		pRpecive->join();
@@ -235,11 +230,10 @@ void InnoOJTClient::run()
 		return;
 	}
 
-	//동역학 갱신
+	//서버 트레이닝중이라면 내위치를 전송	
 	if (mbServerTraining)
-	{
-		mCurPos[0] += gDeltaTime * 15.f * mCarDirection;
-		SendPos(mCurPos[0]);
+	{		
+		SendPos(InnoDataManager::GetInstance()->GetXPoses().back());
 	}
 }
 
@@ -301,7 +295,8 @@ void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 
 void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 {
-	mCurPos[1] = outPacket.Position;
+	//서버로부터 B위치를 수신
+	InnoSimulator::GetInstance()->SetPlayerBPos(outPacket.Position);	
 }
 
 void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
@@ -315,48 +310,10 @@ void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
 	mbServerTraining = false;
-	//TODO
-	//for (int i = 0; i < 100000; ++i)
-	//{
-	//	mSimulation.Update();
-	//}
-	//
-	//int sampleCount = mSimulation.GetSampleDataCount();
-	//std::queue<float> vecPoses;
-	//
-	//for (int i = 0; i < sampleCount; ++i)
-	//{
-	//	vecPoses.push(mSimulation.GetSampleData(i).xPos);
-	//}
-
-	//SendPosesSize(11);
-	//TODO
-	//while (!vecPoses.empty())
-	//{
-	//	std::vector<float> tempPoses;
-	//	for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
-	//	{
-	//		if (vecPoses.empty())
-	//		{
-	//			break;
-	//		}
-	//
-	//		tempPoses.push_back(vecPoses.front());
-	//		vecPoses.pop();
-	//	}
-	//
-	//	if (vecPoses.empty())
-	//	{
-	//		break;
-	//	}
-	//
-	//	SendPoses(tempPoses.size(), tempPoses.data());
-	//}
-	//
-	//SendStop();
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)
 {
 	mbServerTraining = true;
+	InnoSimulator::GetInstance()->Play();
 }
