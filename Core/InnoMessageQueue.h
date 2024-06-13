@@ -1,21 +1,25 @@
 #pragma once
+#include "InnoOJTCore.h"
+
 class InnoMessageQueue
 {
 public:
 	PUBLIC_SINGLETON_DECLARE(InnoMessageQueue);
 
 public:
-	void PushPacket(const void* data, int dataSize);
-	bool IsEmpty() { return mMessageQueue.empty(); }
+	void PushRecivePacket(const void* data, int dataSize);
+	void PushSendPacket(SOCKET socket, const void* data, int dataSize);
+	void Clear();
+	bool IsEmpty() { return mReciveMessageQueue.empty(); }
 	tPacketMessage GetNextMessage()
 	{
-		tPacketMessage message = mMessageQueue.front();
-		mMessageQueue.pop();
+		tPacketMessage message = mReciveMessageQueue.front();
+		mReciveMessageQueue.pop();
 		return message;
 	}
 
 private:
-	std::vector<BYTE> mBytes;
-	std::queue<tPacketMessage> mMessageQueue;
+	std::vector<BYTE> mReciveBytes;
+	std::queue<tPacketMessage> mReciveMessageQueue;
 };
 

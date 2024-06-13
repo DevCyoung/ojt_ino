@@ -94,12 +94,11 @@ static void ClientRecive(SOCKET serverSocket)
 	while (true)
 	{
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
-
 		std::lock_guard<std::mutex> guard(gClientMutex);
 		
 		if (bytesReceived > 0)
 		{
-			InnoMessageQueue::GetInstance()->PushPacket(recvbuf, bytesReceived);
+			InnoMessageQueue::GetInstance()->PushRecivePacket(recvbuf, bytesReceived);
 
 			while (!InnoMessageQueue::GetInstance()->IsEmpty())
 			{
@@ -289,6 +288,8 @@ void InnoOJTClient::DisConnect()
 	{
 		mRecive.join();
 	}
+
+	InnoMessageQueue::GetInstance()->Clear();
 
 	mClientState = eClientState::None;
 	mServerSocket = INVALID_SOCKET;

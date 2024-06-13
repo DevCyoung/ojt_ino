@@ -35,6 +35,34 @@ int getPacketId(const char* buffer)
 	return header;
 }
 
+void send(SOCKET socket, const void* data, int dataSize)
+{
+	const BYTE* pByte = (const BYTE*)data;
+
+	while (1)
+	{
+		int sendSize = send(socket, (const char*)pByte, dataSize, 0);
+
+		if (sendSize == SOCKET_ERROR)
+		{
+			assert(false);
+		}
+		else if (sendSize > dataSize)
+		{
+			assert(false);
+		}
+
+
+		if (sendSize == dataSize)
+		{
+			break;
+		}
+
+		pByte += sendSize;
+		dataSize -= sendSize;
+	}
+}
+
 void send_log(SOCKET socket, int messageLen, const char* message)
 {
 	tPacketLog packet = {};
@@ -43,9 +71,7 @@ void send_log(SOCKET socket, int messageLen, const char* message)
 	packet.MessageLen = messageLen;
 	memcpy(packet.Message, message, messageLen);
 
-	int sendSize = send(socket, (const char*)&packet, sizeof(packet), 0);
-	assert(sendSize != SOCKET_ERROR);
-	assert(sendSize == sizeof(packet));
+	send(socket, &packet, sizeof(tPacketLog));
 }
 
 void send_pos(SOCKET socket, float pos)
@@ -55,9 +81,7 @@ void send_pos(SOCKET socket, float pos)
 	packet.PacketID = ePacketID::Pos;
 	packet.Position = pos;
 
-	int sendSize = send(socket, (const char*)&packet, sizeof(packet), 0);
-	assert(sendSize != SOCKET_ERROR);
-	assert(sendSize == sizeof(packet));
+	send(socket, &packet, sizeof(tPacketPos));
 }
 
 void send_stop(SOCKET socket)
@@ -66,9 +90,7 @@ void send_stop(SOCKET socket)
 
 	packet.PacketID = ePacketID::Stop;
 
-	int sendSize = send(socket, (const char*)&packet, sizeof(packet), 0);
-	assert(sendSize != SOCKET_ERROR);
-	assert(sendSize == sizeof(packet));
+	send(socket, &packet, sizeof(tPacketStop));
 }
 
 void send_start(SOCKET socket)
@@ -77,7 +99,5 @@ void send_start(SOCKET socket)
 
 	packet.PacketID = ePacketID::Start;
 
-	int sendSize = send(socket, (const char*)&packet, sizeof(packet), 0);
-	assert(sendSize != SOCKET_ERROR);
-	assert(sendSize == sizeof(packet));
+	send(socket, &packet, sizeof(tPacketStart));
 }

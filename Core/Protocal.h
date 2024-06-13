@@ -56,7 +56,7 @@ void deserializeData(const void* packetBuffer, size_t dataSize, void* ori);
 int getPacketId(char(&buffer)[], int recvSize);
 int getPacketId(const char* buffer);
 
-
+void send(SOCKET socket, const void* data, int dataSize);
 void send_log(SOCKET socket, int messageLen, const char* message);
 void send_pos(SOCKET socket, float pos);
 void send_stop(SOCKET socket);

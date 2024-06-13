@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "InnoOJTServer.h"
 #include <TimeManager.h>
+#include <InnoMessageQueue.h>
 
 #define gLogListUI (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI")))
 
@@ -58,13 +59,45 @@ InnoOJTServer::InnoOJTServer()
 
 	mIP = ip;
 
+	InnoMessageQueue::initialize();
+
 	return ;
 }
 
 InnoOJTServer::~InnoOJTServer()
 {	
+	InnoMessageQueue::deleteInstance();
+
 	DisConnect();
 }
+//
+//ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
+//int clientID = innoServer->GetInncoClient(clientSocket).ClientID;
+//
+//switch (packetID)
+//{
+//case Log:
+//{
+//	tPacketLog log;
+//	deserializeData(recvbuf, sizeof(tPacketLog), &log);
+//	innoServer->ReciveLog(clientID, log);
+//}
+//break;
+//case Pos:
+//{
+//	tPacketPos pos;
+//	deserializeData(recvbuf, sizeof(tPacketPos), &pos);
+//	innoServer->RecivePos(clientID, pos);
+//}
+//break;
+//default:
+//{
+//	char errorBuff[256] = {};
+//	sprintf_s(errorBuff, "ID:%d , Invalid Packet %d", clientID, packetID);
+//	gLogListUI->WriteLine(errorBuff);
+//}
+//break;
+//}
 
 // 클라이언트 핸들링 함수
 static void handleClient(SOCKET clientSocket)
@@ -81,32 +114,42 @@ static void handleClient(SOCKET clientSocket)
 
 		if (bytesReceived > 0)
 		{
-			ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
-			int clientID = innoServer->GetInncoClient(clientSocket).ClientID;
+			InnoMessageQueue::GetInstance()->PushRecivePacket(recvbuf, bytesReceived);
 
-			switch (packetID)
+			while (!InnoMessageQueue::GetInstance()->IsEmpty())
 			{
-			case Log:
-			{
-				tPacketLog log;
-				deserializeData(recvbuf, sizeof(tPacketLog), &log);
-				innoServer->ReciveLog(clientID, log);
-			}
-			break;
-			case Pos:
-			{
-				tPacketPos pos;
-				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
-				innoServer->RecivePos(clientID, pos);
-			}
-			break;						
-			default:
-			{
-				char errorBuff[256] = {};
-				sprintf_s(errorBuff, "ID:%d , Invalid Packet %d", clientID, packetID);
-				gLogListUI->WriteLine(errorBuff);
-			}
-			break;
+				tPacketMessage pakcetMessage = InnoMessageQueue::GetInstance()->GetNextMessage();
+
+				ePacketID packetID = pakcetMessage.PacketID;
+				int clientID = innoServer->GetInncoClient(clientSocket).ClientID;
+				switch (packetID)
+				{
+				case Log:
+				{
+					tPacketLog packetLog = {};
+					packetLog.PacketID = packetID;
+					packetLog.MessageLen = pakcetMessage.MessageLen;
+					memcpy(packetLog.Message, pakcetMessage.buffer, INNO_MAX_POS_SIZE);
+
+					innoServer->ReciveLog(clientID, packetLog);
+				}
+					break;
+				case Pos:
+				{
+					tPacketPos packetPos = {};
+					packetPos.PacketID = packetID;
+					packetPos.Position = pakcetMessage.Position;
+
+					innoServer->RecivePos(clientID, packetPos);
+				}
+					break;
+				default:
+				{
+					assert(false);
+				}
+					break;
+				}
+
 			}
 		}
 		else if (bytesReceived == 0)
@@ -516,6 +559,8 @@ void InnoOJTServer::DisConnect()
 			mClientThreads[i].join();
 		}
 	}
+
+	InnoMessageQueue::GetInstance()->Clear();
 
 	closesocket(gListenSocket);
 	gListenSocket = INVALID_SOCKET;
