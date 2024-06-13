@@ -5,7 +5,7 @@
 #include <PanelUIManager.h>
 #include <TimeManager.h>
 #include "InnoDataManager.h"
-#include <InnoMessageQueue.h>
+#include <InnoMessageQueue.h>	//메세지큐 헤더추가
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 static std::mutex gClientMutex;
@@ -98,13 +98,16 @@ static void ClientRecive(SOCKET serverSocket)
 		
 		if (bytesReceived > 0)
 		{
+			//bytesReceived 가 0이상일때 패킷받기
 			InnoMessageQueue::GetInstance()->PushRecivePacket(recvbuf, bytesReceived);
 
+			//완성된 메세지가 하나라도있다면
 			while (!InnoMessageQueue::GetInstance()->IsEmpty())
 			{
-				tPacketMessage pakcetMessage = InnoMessageQueue::GetInstance()->GetNextMessage();
+				//완성된 메세지가 하나라도있다면 메세지를 꺼낸다 꺼낼때 메세지는 pop 되므로 주의
+				tPacketMessage pakcetMessage = InnoMessageQueue::GetInstance()->PopPacketMessage();
 
-				ePacketID packetID = pakcetMessage.PacketID;
+				const ePacketID packetID = pakcetMessage.PacketID;
 
 				switch (packetID)
 				{

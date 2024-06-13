@@ -11,7 +11,7 @@ public:
 	void PushSendPacket(SOCKET socket, const void* data, int dataSize);
 	void Clear();
 	bool IsEmpty() { return mReciveMessageQueue.empty(); }
-	tPacketMessage GetNextMessage()
+	tPacketMessage PopPacketMessage()
 	{
 		tPacketMessage message = mReciveMessageQueue.front();
 		mReciveMessageQueue.pop();
