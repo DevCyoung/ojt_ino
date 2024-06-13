@@ -59,6 +59,10 @@ void InnoSimulator::Stop()
 	{
 		mState = eInnoSimulatorState::Stop;
 	}
+	else if (mState == eInnoSimulatorState::Editing)
+	{
+		mState = eInnoSimulatorState::Stop;
+	}
 	else
 	{
 		Assert(false, ASSERT_MSG_INVALID);

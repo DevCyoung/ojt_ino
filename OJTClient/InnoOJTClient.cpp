@@ -93,6 +93,8 @@ static void ClientRecive(SOCKET serverSocket)
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
 		std::lock_guard<std::mutex> guard(gClientMutex);
 
+		
+
 		if (bytesReceived > 0)
 		{
 			ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
@@ -101,6 +103,8 @@ static void ClientRecive(SOCKET serverSocket)
 			{
 			case Log:
 			{
+				assert(bytesReceived == sizeof(tPacketLog));
+
 				tPacketLog log;
 				deserializeData(recvbuf, sizeof(tPacketLog), &log);
 				innoClient->ReciveLog(log);
@@ -108,6 +112,8 @@ static void ClientRecive(SOCKET serverSocket)
 			break;
 			case Pos:
 			{
+				assert(bytesReceived == sizeof(tPacketPos));
+
 				tPacketPos pos;
 				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
 				innoClient->RecivePos(pos);
@@ -115,6 +121,8 @@ static void ClientRecive(SOCKET serverSocket)
 			break;
 			case Start:
 			{
+				assert(bytesReceived == sizeof(tPacketStart));
+
 				tPacketStart start;
 				deserializeData(recvbuf, sizeof(tPacketStart), &start);
 				innoClient->ReciveStart(start);
@@ -123,6 +131,8 @@ static void ClientRecive(SOCKET serverSocket)
 			break;
 			case Stop:
 			{
+				assert(bytesReceived == sizeof(tPacketStop));
+
 				tPacketStop stop;
 				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				innoClient->ReciveStop(stop);
@@ -131,6 +141,8 @@ static void ClientRecive(SOCKET serverSocket)
 			break;
 			default:
 			{
+				//assert(bytesReceived == sizeof(tPacketLog));
+
 				char errorBuff[256] = {};
 				sprintf_s(errorBuff, "Invalid Packet %d", packetID);
 				gLogListUIClient->WriteLine(errorBuff);
