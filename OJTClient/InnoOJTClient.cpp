@@ -126,14 +126,7 @@ static void ClientRecive(SOCKET serverSocket)
 				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				innoClient->ReciveStop(stop);
 			}			
-			break;			
-			case Finish:
-			{
-				tPacketFinish finish;
-				deserializeData(recvbuf, sizeof(tPacketFinish), &finish);
-				innoClient->ReciveFinish(finish);
-			}
-			break;
+			break;						
 			default:
 				break;
 			}

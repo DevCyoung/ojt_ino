@@ -56,7 +56,7 @@ public:
 
 	void ReciveLog(int clientID, const tPacketLog& outPacket);
 	void RecivePos(int clientID, const tPacketPos& outPacket);
-	void ReciveStop(int clientID, const tPacketStop& outPacket);	
+	//void ReciveStop(int clientID, const tPacketStop& outPacket);	
 
 	void RemoveClient(const SOCKET clientSocket);
 

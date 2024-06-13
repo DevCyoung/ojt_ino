@@ -10,8 +10,7 @@ enum ePacketID
 	Log,
 	Pos,
 	Start,
-	Stop,	
-	Finish,
+	Stop,
 };
 
 struct tPacketLog
@@ -64,4 +63,3 @@ void send_log(SOCKET socket, int messageLen, const char* message);
 void send_pos(SOCKET socket, float pos);
 void send_stop(SOCKET socket);
 void send_start(SOCKET socket);
-void send_finish(SOCKET socket);

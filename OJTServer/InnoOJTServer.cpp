@@ -99,14 +99,7 @@ static void handleClient(SOCKET clientSocket)
 				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
 				innoServer->RecivePos(clientID, pos);
 			}
-			break;			
-			case Stop:
-			{
-				tPacketStop stop;
-				deserializeData(recvbuf, sizeof(stop), &stop);
-				innoServer->ReciveStop(clientID, stop);
-			}
-			break;
+			break;						
 			default:
 			{
 				gLogListUI->WriteError("Invalied packet");
@@ -377,86 +370,6 @@ void InnoOJTServer::RecivePos(int clientID, const tPacketPos& outPacket)
 	}
 }
 
-void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
-{
-	//for (int i = 0; i < mRoom.clients.size(); ++i)
-	//{
-	//	if (clientID == mRoom.clients[i].ClientID)
-	//	{
-	//		mRoom.bStop[i] = true;
-	//		break;
-	//	}
-	//}
-	//
-	////모두가 데이터 전송을 완료했다면
-	//int bStopCount = 0;
-	//for (int i = 0; i < mRoom.clients.size(); i++)
-	//{
-	//	if (mRoom.bStop[i])
-	//	{
-	//		++bStopCount;
-	//	}
-	//}
-	//if (bStopCount != mRoom.clients.size())
-	//{
-	//	return;
-	//}
-
-	//각 위치정보를 BroadCast 해준다.
-	//for (int i = 0; i < mRoom.clients.size(); ++i)
-	//{
-	//	for (int j = 0; j < mRoom.clients.size(); ++j)
-	//	{
-	//		if (i == j)
-	//		{
-	//			continue;
-	//		}
-	//
-	//		//i번째 클라이언트의 데이터를 j종류만큼 브로드캐스트한다.
-	//		tInnoClient client = GetInncoClient(mRoom.clients[i].ClientID);
-	//
-	//		int count = mRoom.posesArray[i].size();
-	//		std::queue<float> vecPoses;
-	//
-	//		for (int k = 0; k < count; ++k)
-	//		{
-	//			vecPoses.push(mRoom.posesArray[i][k]);
-	//		}
-	//
-	//		//INNO_MAX_POS_SIZE 만큼 끊어서 보낸다.
-	//		while (!vecPoses.empty())
-	//		{
-	//			std::vector<float> tempPoses;
-	//			for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
-	//			{
-	//				if (vecPoses.empty())
-	//				{
-	//					break;
-	//				}
-	//
-	//				tempPoses.push_back(vecPoses.front());
-	//				vecPoses.pop();
-	//
-	//			}
-	//
-	//			if (vecPoses.empty())
-	//			{
-	//				break;
-	//			}
-	//
-	//			send_poses(client.Socket, tempPoses.size(), tempPoses.data());
-	//		}
-	//	}
-	//}
-
-	//모든위치정보를 브로드캐스트했다. 최종 종료를알림
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		send_finish(mRoom.clients[i].Socket);
-	}
-
-	gLogListUI->WriteLine("Training Finish");
-}
 
 std::string InnoOJTServer::GetClientIP(SOCKET clientSocket)
 {
