@@ -78,15 +78,3 @@ void send_start(SOCKET socket)
 		assert(false);
 	}
 }
-
-void send_finish(SOCKET socket)
-{
-	tPacketFinish packet = {};
-
-	packet.PacketID = ePacketID::Finish;
-
-	if (send(socket, (const char*)&packet, sizeof(packet), 0) == SOCKET_ERROR)
-	{
-		assert(false);
-	}
-}
