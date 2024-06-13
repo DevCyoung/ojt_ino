@@ -57,7 +57,7 @@ void send_pos(SOCKET socket, float pos)
 
 void send_stop(SOCKET socket)
 {
-	tPacketPoses packet = {};
+	tPacketStop packet = {};
 
 	packet.PacketID = ePacketID::Stop;
 
@@ -69,7 +69,7 @@ void send_stop(SOCKET socket)
 
 void send_start(SOCKET socket)
 {
-	tPacketPoses packet = {};
+	tPacketStart packet = {};
 
 	packet.PacketID = ePacketID::Start;
 

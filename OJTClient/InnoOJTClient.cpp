@@ -118,6 +118,7 @@ static void ClientRecive(SOCKET serverSocket)
 				tPacketStart start;
 				deserializeData(recvbuf, sizeof(tPacketStart), &start);
 				innoClient->ReciveStart(start);
+				gLogListUIClient->WriteLine("Recive: Start");
 			}
 			break;
 			case Stop:
@@ -125,6 +126,7 @@ static void ClientRecive(SOCKET serverSocket)
 				tPacketStop stop;
 				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				innoClient->ReciveStop(stop);
+				gLogListUIClient->WriteLine("Recive: Stop");
 			}			
 			break;						
 			default:

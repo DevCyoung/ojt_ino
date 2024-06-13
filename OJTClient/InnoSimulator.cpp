@@ -19,6 +19,7 @@ InnoSimulator::InnoSimulator()
 	, mPrevPos(0.f)
 	, mX{ 0.f }
 	, mXDot{ 0.f }
+	, mPlayerBPos(0.f)
 {
 }
 
@@ -36,6 +37,7 @@ void InnoSimulator::playing()
 
 void InnoSimulator::finish()
 {
+	mPlayerBPos = 0.f;
 	InnoDataManager::GetInstance()->Clear();
 }
 
@@ -61,7 +63,7 @@ void InnoSimulator::Stop()
 	{
 		Assert(false, ASSERT_MSG_INVALID);
 	}
-}
+}	
 
 void InnoSimulator::Finish()
 {	

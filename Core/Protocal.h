@@ -36,18 +36,6 @@ struct tPacketStop
 	ePacketID PacketID;
 };
 
-struct tPacketPoses
-{
-	ePacketID PacketID;
-	int Size;
-	float Poses[INNO_MAX_POS_SIZE];
-};
-
-struct tPacketFinish
-{
-	ePacketID PacketID;
-};
-
 // 직렬화 함수
 //ori 를 패킷버퍼로 바꿈
 void serializeData(const void* ori, size_t dataSize, void* packetBuffer);
