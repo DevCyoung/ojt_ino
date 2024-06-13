@@ -51,7 +51,7 @@ void InnoSimulator::Play()
 
 void InnoSimulator::Finish()
 {
-	if (mState == eInnoSimulatorState::None)
+	if (mState == eInnoSimulatorState::Playing)
 	{
 		mState = eInnoSimulatorState::Finish;
 	}

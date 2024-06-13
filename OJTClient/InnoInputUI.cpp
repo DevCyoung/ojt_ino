@@ -162,9 +162,20 @@ void InnoInputUI::drawForm()
 		button1Name = "Playing";
 	}
 
-	if (ImGui::Button(button1Name.c_str()) && simulatorState == eInnoSimulatorState::None)
+	if (ImGui::Button(button1Name.c_str()))
 	{
-		innoSimulator->Play();
+		if (simulatorState == eInnoSimulatorState::None)
+		{
+			innoSimulator->Play();
+		}
+		else
+		{
+			innoSimulator->Finish();
+		}
+	}
+	if (simulatorState == eInnoSimulatorState::Playing)
+	{
+		
 	}
 
 	ImGui::SameLine();
@@ -457,9 +468,16 @@ void InnoInputUI::drawForm()
 			dataPos = vecTimes.size() - maxValueSize;
 		}
 	}
-	else
-	{
-		dataPos = testFloat;
+	else if (testFloatMax != 0.f)
+	{				
+		//dataPos = testFloat * 120;
+		float cp = testFloat / testFloatMax;
+		dataPos = (vecTimes.size() - 1200) * cp;
+
+		//if (dataPos > 1200)
+		//{
+		//	dataPos -= 1200;
+		//}
 	}
 
 	ImGui::Begin("GraphUI1");
@@ -483,7 +501,7 @@ void InnoInputUI::drawForm()
 	innoSimulator->SetMS(MS);
 	innoSimulator->SetMU(MU);
 	innoSimulator->SetKS(KS);
-	innoSimulator->SetCS(CS);
+	innoSimulator->SetCS(CS);	
 	innoSimulator->SetKT(KT);
 	innoSimulator->SetSpeed(Speed);
 	innoSimulator->SetBumpStart(BumpStart);
