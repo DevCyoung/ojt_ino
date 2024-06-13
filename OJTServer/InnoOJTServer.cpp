@@ -118,7 +118,7 @@ static void handleClient(SOCKET clientSocket)
 
 			while (!InnoMessageQueue::GetInstance()->IsEmpty())
 			{
-				tPacketMessage pakcetMessage = InnoMessageQueue::GetInstance()->GetNextMessage();
+				tPacketMessage pakcetMessage = InnoMessageQueue::GetInstance()->PopPacketMessage();
 
 				ePacketID packetID = pakcetMessage.PacketID;
 				int clientID = innoServer->GetInncoClient(clientSocket).ClientID;
