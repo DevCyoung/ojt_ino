@@ -66,9 +66,8 @@ InnoOJTServer::InnoOJTServer()
 
 InnoOJTServer::~InnoOJTServer()
 {	
-	InnoMessageQueue::deleteInstance();
-
 	DisConnect();
+	InnoMessageQueue::deleteInstance();
 }
 //
 //ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
