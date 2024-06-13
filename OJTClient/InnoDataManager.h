@@ -26,6 +26,8 @@ public:
 	const std::vector<float>& GetXSpeeds() { return mXSpeeds; }
 	const std::vector<float>& GetOtherPoses() { return mPlayerBSamplePostions; }
 
+	void Clear();
+
 private:	
 	std::vector<float> mTimes;
 	std::vector<float> mZsPoses;

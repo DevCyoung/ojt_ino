@@ -4,7 +4,9 @@ enum class eInnoSimulatorState
 	None,
 	Start,
 	Playing,
-	Finish,
+	Stop,
+	Editing,
+	Finish,	
 };
 
 struct tInnoSampleData
@@ -42,8 +44,10 @@ public:
 	//float GetPlayerPosA() { return mPlayerAPos; }
 	float GetPlayerPosB() { return mPlayerBPos; }
 
-	void Play();
-	void Finish();	
+	void Play();	// 시뮬레이션을 시작합니다 (None -> Start -> Playing)
+	void Stop();	// 시뮬레이션을 종료합니다. 에디터모드가 됩니다. (Playing -> Stop-> Editing)
+	void Finish();  // 에디터모드를 종료합니다. (Edting -> Finish -> None)
+
 	void Update();
 	eInnoSimulatorState GetSimulatorState() { return mState; }
 	float GetCurTime() { return mCurTime; }
@@ -71,7 +75,7 @@ public:
 	float GetBumpAmp() const { return mBumpAmp; }
 	float GetSamplintTIme() { return mSamplingTime; }
 
-	tInnoSampleData CreateSampleData(float sampleTime);
+	tInnoSampleData CreateSampleData(float sampleTime, float deltaTime);
 
 	bool IsPlaying() { return mState == eInnoSimulatorState::Playing; }
 

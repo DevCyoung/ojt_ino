@@ -35,15 +35,12 @@ void CarController::update()
 	//	GetComponent<Transform>()->SetPosition(position);
 	//}
 
-	
-
 	Vector3 debugPos = position;
 	debugPos.y -= 80.f;
 	gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(Vector3(0.f, -300.f, 0.f), Vector2(10.f, 300.f), 0.f, Vector4(1.f, 0.f, 0.f, 1.f));
 	gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(Vector3(1000.f, -300.f, 0.f), Vector2(10.f, 300.f), 0.f, Vector4(0.f, 1.f, 0.f, 1.f));
 	gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(debugPos, Vector2(8.f, 20.f), 0.f, Vector4(1.f, 1.f, 1.f, 1.f));
 	
-
 	//Network Test
 	{
 		Vector3 pA = position;
@@ -59,17 +56,6 @@ void CarController::update()
 			gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(pB, Vector2(50.f, 50.f), 0.f, Vector4(0.f, 0.f, 1.f, 1.f));
 		}		
 	}
-
-	//if (position.x >= 1000.f)
-	//{
-	//	__debugbreak();
-	//}
-
-	//if (gInput->GetKey(eKeyCode::A))
-	//{		
-	//	position.x += gDeltaTime * 800.f;
-	//	GetComponent<Transform>()->SetPosition(position);
-	//}
 
 	for (int i = 0; i < mWheels.size(); ++i)
 	{

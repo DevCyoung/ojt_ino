@@ -45,8 +45,6 @@ InnoInputUI::~InnoInputUI()
 	ImPlot::DestroyContext();
 }
 
-
-
 static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize = 150)
 {	
 	std::string key = "##";
@@ -125,8 +123,17 @@ void InnoInputUI::drawForm()
 	//ImPlot::ShowDemoWindow();
 	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
 
-#pragma region InputScreen
-	ImGui::Begin("ScreenUI");
+	const std::vector<float>& vecTimes = InnoDataManager::GetInstance()->GetTimes();
+	const std::vector<float>& vecZsPos = InnoDataManager::GetInstance()->GetZsPoses();
+	const std::vector<float>& vecZsSpeed = InnoDataManager::GetInstance()->GetZsSpeeds();
+	const std::vector<float>& vecZsAcc = InnoDataManager::GetInstance()->GeetZsAccs();
+	const std::vector<float>& vecZuPos = InnoDataManager::GetInstance()->GetZuPoses();
+	const std::vector<float>& vecZuSpeed = InnoDataManager::GetInstance()->GetZuSpeeds();
+	const std::vector<float>& vecZuAcc = InnoDataManager::GetInstance()->GetZuAccs();
+	const std::vector<float>& vecZr = InnoDataManager::GetInstance()->GetZrs();
+	const std::vector<float>& vecxPos = InnoDataManager::GetInstance()->GetXPoses();
+	const std::vector<float>& vecXSpeed = InnoDataManager::GetInstance()->GetXSpeeds();
+
 	GameManager::GetInstance()->mSceneRenderHelperA->Draw(gCurrentScene);
 	GameManager::GetInstance()->mSceneRenderHelperB->Draw(gCurrentScene);
 
@@ -136,6 +143,45 @@ void InnoInputUI::drawForm()
 	ImVec2 renderTargetSizeA = ImVec2(renderTexA->GetWidth(), renderTexA->GetHeight());
 	ImVec2 renderTargetSizeB = ImVec2(renderTexB->GetWidth(), renderTexB->GetHeight());
 
+	std::string button1Name = "Play";
+
+	const eInnoSimulatorState simulatorState = innoSimulator->GetSimulatorState();
+
+	struct Funcs
+	{
+		static float ZsPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsPos; }
+		static float ZsSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsSpeed; }
+		static float ZsAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsAcc; }
+		static float ZuPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuPos; }
+		static float ZuSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuSpeed; }
+		static float ZuAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuAcc; }
+		static float Zr(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].Zr; }
+		static float XPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xPos; }
+		static float XSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xSpeed; }
+	};
+
+	float (*funcZsPos)      (void*, int) = (float (*)(void*, int))Funcs::ZsPos;
+	float (*funcZsSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZsSpeed;
+	float (*funcZsAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZsAcc;
+	float (*funcZuPos)      (void*, int) = (float (*)(void*, int))Funcs::ZuPos;
+	float (*funcZuSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZuSpeed;
+	float (*funcZuAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZuAcc;
+	float (*funcZr)         (void*, int) = (float (*)(void*, int))Funcs::Zr;
+
+	const float GRAPH_MIN = -0.05f;
+	const float GRAPH_MAX = 0.05f;
+	const float GRAPH_HEIGHT = 100.f;
+
+	static float slidePos = 0.f;
+	static float slideMax = 1.f;	
+
+	int dataSize = min(INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND, vecTimes.size());
+	int dataPos = 0;
+
+
+#pragma region InputScreen
+	ImGui::Begin("ScreenUI");
+
 	if (ImGui::IsWindowFocused())
 	{
 		GameManager::GetInstance()->mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
@@ -144,51 +190,46 @@ void InnoInputUI::drawForm()
 	ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
 	//ImGui::Image((void*)renderTexB->GetSRV(), renderTargetSizeB);
 
-	static float testFloat = 0.f;	
-	static float testFloatMax = 1.f;
-
 	ImGui::Separator();
 	ImGui::PushItemWidth(800.f);
-	ImGui::SliderFloat("##testFloat", &testFloat, 0.f, testFloatMax);
+	ImGui::SliderFloat("##testFloat", &slidePos, 0.f, slideMax);
 	ImGui::PopItemWidth();
 	ImGui::Separator();
 
-	eInnoSimulatorState simulatorState = innoSimulator->GetSimulatorState();
 
-	std::string button1Name = "Play";
-
-	if (simulatorState == eInnoSimulatorState::Playing)
+	if (simulatorState == eInnoSimulatorState::None)
 	{
-		button1Name = "Playing";
-	}
-
-	if (ImGui::Button(button1Name.c_str()))
-	{
-		if (simulatorState == eInnoSimulatorState::None)
+		if (ImGui::Button("Start Training"))
 		{
 			innoSimulator->Play();
 		}
-		else
+	}	
+	else if (simulatorState == eInnoSimulatorState::Playing)
+	{
+		if (ImGui::Button("Stop Training"))
+		{
+			innoSimulator->Stop();
+		}		
+	}		
+	else if (simulatorState == eInnoSimulatorState::Editing)
+	{
+		if (ImGui::Button("Stop Editing"))
 		{
 			innoSimulator->Finish();
 		}
-	}
-	if (simulatorState == eInnoSimulatorState::Playing)
-	{
-		
-	}
 
-	ImGui::SameLine();
+		ImGui::SameLine();
 
-	ImGui::Button(">>");
+		ImGui::Button(">>");
 
-	ImGui::SameLine();
+		ImGui::SameLine();
 
-	ImGui::Button("<<");
+		ImGui::Button("<<");
+	}	
 
 	ImGui::SameLine(600.f);
 
-	ImGui::Text("Play Time : 00.00 / 00.00 ");
+	ImGui::Text("Play Time : %.2f / %.2f", vecTimes.back(), vecTimes.back());
 
 	//ImGui::Separator();
 
@@ -397,87 +438,20 @@ void InnoInputUI::drawForm()
 #pragma endregion InputUI3
 
 #pragma region GraphUI1
+	
+	slideMax = vecTimes.back();
 
-	struct Funcs
+	if (simulatorState == eInnoSimulatorState::Playing)
 	{
-		static float ZsPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsPos; }
-		static float ZsSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsSpeed; }
-		static float ZsAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZsAcc; }
-		static float ZuPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuPos; }
-		static float ZuSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuSpeed; }
-		static float ZuAcc(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].ZuAcc; }
-		static float Zr(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].Zr; }
-		static float XPos(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xPos; }
-		static float XSpeed(const std::vector<tInnoSampleData>* playerASampleDatas, int i) { return (*playerASampleDatas)[i].xSpeed; }
-		//static float Saw(void*, int i) { return (i & 1) ? 1.0f : -1.0f; }
-	};
-
-	float (*funcZsPos)      (void*, int) = (float (*)(void*, int))Funcs::ZsPos;
-	float (*funcZsSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZsSpeed;
-	float (*funcZsAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZsAcc;
-	float (*funcZuPos)      (void*, int) = (float (*)(void*, int))Funcs::ZuPos;
-	float (*funcZuSpeed)    (void*, int) = (float (*)(void*, int))Funcs::ZuSpeed;
-	float (*funcZuAcc)      (void*, int) = (float (*)(void*, int))Funcs::ZuAcc;
-	float (*funcZr)         (void*, int) = (float (*)(void*, int))Funcs::Zr;
-
-	const float GRAPH_MIN = -0.05f;
-	const float GRAPH_MAX = 0.05f;
-	const float GRAPH_HEIGHT = 100.f;
-
-
-	const int maxValueSize = 1200;
-	//마지막 maxValueSize개만 그리면된다.
-	//const std::vector<tInnoSampleData>& playerASampleDatas = InnoDataManager::GetInstance()->GetPlayerASampleDatas();
-
-
-	const std::vector<float>& vecTimes		= InnoDataManager::GetInstance()->GetTimes();
-	const std::vector<float>& vecZsPos		= InnoDataManager::GetInstance()->GetZsPoses();
-	const std::vector<float>& vecZsSpeed	= InnoDataManager::GetInstance()->GetZsSpeeds();
-	const std::vector<float>& vecZsAcc		= InnoDataManager::GetInstance()->GeetZsAccs();
-	const std::vector<float>& vecZuPos		= InnoDataManager::GetInstance()->GetZuPoses();
-	const std::vector<float>& vecZuSpeed	= InnoDataManager::GetInstance()->GetZuSpeeds();
-	const std::vector<float>& vecZuAcc		= InnoDataManager::GetInstance()->GetZuAccs();
-	const std::vector<float>& vecZr			= InnoDataManager::GetInstance()->GetZrs();
-	const std::vector<float>& vecxPos		= InnoDataManager::GetInstance()->GetXPoses();
-	const std::vector<float>& vecXSpeed		= InnoDataManager::GetInstance()->GetXSpeeds();	
-
-	static float prevData = -1.f;
-
-	bool swapFlag = false;
-
-	if (!vecTimes.empty() && prevData != vecTimes.back())
-	{
-		prevData = vecTimes.size();
-		swapFlag = true;
-	}
-
-	static float frameTime = 0.f;
-	frameTime += gDeltaTime;
-
-	static bool checker = true;
-
-	int dataSize = min(maxValueSize, vecTimes.size());	
-	int dataPos = 0;
-
-	testFloatMax = vecTimes.back();
-
-	if (InnoSimulator::GetInstance()->IsPlaying())
-	{
-		if (vecTimes.size() >= maxValueSize)
+		if (vecTimes.size() >= INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND)
 		{
-			dataPos = vecTimes.size() - maxValueSize;
+			dataPos = vecTimes.size() - INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND;
 		}
 	}
-	else if (testFloatMax != 0.f)
-	{				
-		//dataPos = testFloat * 120;
-		float cp = testFloat / testFloatMax;
-		dataPos = (vecTimes.size() - 1200) * cp;
-
-		//if (dataPos > 1200)
-		//{
-		//	dataPos -= 1200;
-		//}
+	else if (simulatorState == eInnoSimulatorState::Editing)
+	{						
+		float cp = slidePos / slideMax;
+		dataPos = (vecTimes.size() - INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND) * cp;		
 	}
 
 	ImGui::Begin("GraphUI1");

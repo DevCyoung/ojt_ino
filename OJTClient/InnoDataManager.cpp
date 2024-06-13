@@ -2,17 +2,17 @@
 #include "InnoDataManager.h"
 
 InnoDataManager::InnoDataManager()	
-	: mTimes(1200.f, 0.f)
-	, mZsPoses(1200.f, 0.f)
-	, mZsSpeeds(1200.f, 0.f)
-	, mZsAccs(1200.f, 0.f)
-	, mZuPoses(1200.f, 0.f)
-	, mZuSpeeds(1200.f, 0.f)
-	, mZuAccs(1200.f, 0.f)
-	, mZrs(1200.f, 0.f)
-	, mXPoses(1200.f, 0.f)
-	, mXSpeeds(1200.f, 0.f)
-	, mPlayerBSamplePostions(1200.f, 0.f)
+	: mTimes(INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mZsPoses(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mZsSpeeds(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mZsAccs(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mZuPoses(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mZuSpeeds(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mZuAccs(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mZrs(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mXPoses(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mXSpeeds(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
+	, mPlayerBSamplePostions(INNO_CLIENT_FRAME_PER_SECOND* INNO_GRAPH_HISTORY_SECOND, 0.f)
 {
 
 	mTimes.reserve(1000000);
@@ -55,4 +55,34 @@ void InnoDataManager::PushPlayerASampleData(const tInnoSampleData& sampleData)
 	mXSpeeds.push_back(sampleData.xSpeed);
 
 	mPlayerBSamplePostions.push_back(sampleData.xPosOther);
+}
+
+void InnoDataManager::Clear()
+{
+	mTimes.clear();
+	mZsPoses.clear();
+	mZsSpeeds.clear();
+	mZsAccs.clear();
+	mZuPoses.clear();
+	mZuSpeeds.clear();
+	mZuAccs.clear();
+	mZrs.clear();
+	mXPoses.clear();
+	mXSpeeds.clear();
+	mPlayerBSamplePostions.clear();
+
+	for (int i = 0; i < INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND; ++i)
+	{
+		mTimes.push_back(0.f);
+		mZsPoses.push_back(0.f);
+		mZsSpeeds.push_back(0.f);
+		mZsAccs.push_back(0.f);
+		mZuPoses.push_back(0.f);
+		mZuSpeeds.push_back(0.f);
+		mZuAccs.push_back(0.f);
+		mZrs.push_back(0.f);
+		mXPoses.push_back(0.f);
+		mXSpeeds.push_back(0.f);
+		mPlayerBSamplePostions.push_back(0.f);
+	}
 }

@@ -296,7 +296,7 @@ void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 {
 	//서버로부터 B위치를 수신
-	InnoSimulator::GetInstance()->SetPlayerBPos(outPacket.Position);	
+	InnoSimulator::GetInstance()->SetPlayerBPos(outPacket.Position);
 }
 
 void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
@@ -310,6 +310,7 @@ void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
 	mbServerTraining = false;
+	InnoSimulator::GetInstance()->Stop();
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)

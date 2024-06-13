@@ -12,6 +12,7 @@
 #include <SceneManager.h>
 #include <SceneRenderHelper.h>
 #include <Camera.h>
+
 static GameObject* CreateSpriteGameObject(const wchar_t* path)
 {
     Texture* tex = gResourceManager->FindAndLoad<Texture>(path);

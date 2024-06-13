@@ -156,40 +156,41 @@ static void handleAccept()
 
 void InnoOJTServer::run()
 {
-	constexpr float oneFrame = (1.f / 120.f);	
 	if (!IsListening())
 	{
 		return;
 	}
 
+	//Room Training
+	static float trainingTime = 0.f;
+
+	trainingTime += gDeltaTime;
+	if (trainingTime < INN_FRAME_DELTA_TIME)
 	{
-		//Room Training
-		static float trainingTime = 0.f;
+		return;
+	}
 
-		trainingTime += gDeltaTime;
-		if (trainingTime < oneFrame)
+	while (trainingTime > INN_FRAME_DELTA_TIME)
+	{
+		trainingTime -= INN_FRAME_DELTA_TIME;
+	}
+
+	if (!mRoom.bTraining)
+	{
+		return;
+	}
+
+	//BroadCast
+	for (int i = 0; i < mRoom.clients.size(); ++i)
+	{
+		for (int j = 0; j < mRoom.clients.size(); ++j)
 		{
-			return;
-		}
-		trainingTime = 0.f;
-
-		if (!mRoom.bTraining)
-		{
-			return;
-		}
-
-		//BroadCast
-		for (int i = 0; i < mRoom.clients.size(); ++i)
-		{			
-			for (int j = 0; j < mRoom.clients.size(); ++j)
+			if (i == j)
 			{
-				if (i == j)
-				{
-					continue;
-				}
-
-				SendPos(mRoom.clients[i].ClientID, mRoom.curPoses[j]);
+				continue;
 			}
+
+			SendPos(mRoom.clients[i].ClientID, mRoom.curPoses[j]);
 		}
 	}
 }

@@ -17,7 +17,7 @@ InnoSimulator::InnoSimulator()
 	, mBumpAmp(0.05f)
 	, mSamplingTime(0.001f)
 	, mPrevPos(0.f)
-	, mX{0.f}
+	, mX{ 0.f }
 	, mXDot{ 0.f }
 {
 }
@@ -36,24 +36,42 @@ void InnoSimulator::playing()
 
 void InnoSimulator::finish()
 {
+	InnoDataManager::GetInstance()->Clear();
 }
 
 void InnoSimulator::Play()
 {
-	Assert(mState == eInnoSimulatorState::None, ASSERT_MSG_INVALID);
-
-
 	if (mState == eInnoSimulatorState::None)
 	{
 		mState = eInnoSimulatorState::Start;
 	}
+	else
+	{
+		Assert(false, ASSERT_MSG_INVALID);
+	}
 }
 
-void InnoSimulator::Finish()
+void InnoSimulator::Stop()
 {
 	if (mState == eInnoSimulatorState::Playing)
 	{
+		mState = eInnoSimulatorState::Stop;
+	}
+	else
+	{
+		Assert(false, ASSERT_MSG_INVALID);
+	}
+}
+
+void InnoSimulator::Finish()
+{	
+	if (mState == eInnoSimulatorState::Editing)
+	{
 		mState = eInnoSimulatorState::Finish;
+	}
+	else
+	{
+		Assert(false, ASSERT_MSG_INVALID);
 	}
 }
 
@@ -63,47 +81,46 @@ void InnoSimulator::Update()
 	{
 		return;
 	}
-	else if (mState == eInnoSimulatorState::Finish)
-	{
-		finish();
-		mState = eInnoSimulatorState::None;
-	}
 	else if (mState == eInnoSimulatorState::Start)
 	{
 		start();
 		//clear
 		mCurTime = 0.f;
-		mPrevPos = 0.f;		
+		mPrevPos = 0.f;
 		mState = eInnoSimulatorState::Playing;
 	}
 	else if (mState == eInnoSimulatorState::Playing)
 	{
-		static float frame = 0.f; //120.f 프레임
+		static float frameDeltatime = 0.f;
 		mCurTime += gDeltaTime;
+		frameDeltatime += gDeltaTime;
 
-
-		frame += gRealDeltaTime;
-		if (frame < 1.f / 120.f)
+		if (frameDeltatime < INNO_FRAME_DELTA_TIME)
 		{
 			return;
 		}
-		frame = 0.f;
 
-		//if (mCurTime >= 1.f)
-		//{
-		//	__debugbreak();
-		//}
-
-		InnoDataManager* dataManager = InnoDataManager::GetInstance();
-		tInnoSampleData simData = CreateSampleData(mCurTime);		
-		dataManager->PushPlayerASampleData(simData);
+		InnoDataManager::GetInstance()->PushPlayerASampleData(CreateSampleData(mCurTime, frameDeltatime));
+		frameDeltatime = 0.f;
+	}
+	else if (mState == eInnoSimulatorState::Stop)
+	{		
+		mState = eInnoSimulatorState::Editing;
+	}
+	else if (mState == eInnoSimulatorState::Editing)
+	{
+			
+	}
+	else if (mState == eInnoSimulatorState::Finish)
+	{
+		finish();
+		mState = eInnoSimulatorState::None;
 	}
 }
 
-tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime)
+tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTime)
 {
 	//mSamplingTime 이전프레임과 지금프레임의 거리
-
 	//도로의 높이
 	float zr = 0.f;
 
@@ -121,23 +138,23 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime)
 	mXDot[3] = (mKS * (mX[0] - mX[2]) + mCS * (mX[1] - mX[3]) - mKT * (mX[2] - zr)) / mMU;
 
 	//적분
-	mX[0] = mX[0] + gDeltaTime * mXDot[0];
-	mX[1] = mX[1] + gDeltaTime * mXDot[1];
-	mX[2] = mX[2] + gDeltaTime * mXDot[2];
-	mX[3] = mX[3] + gDeltaTime * mXDot[3];
+	mX[0] = mX[0] + deltaTime * mXDot[0];
+	mX[1] = mX[1] + deltaTime * mXDot[1];
+	mX[2] = mX[2] + deltaTime * mXDot[2];
+	mX[3] = mX[3] + deltaTime * mXDot[3];
 
-	tInnoSampleData sampleData = {};	
+	tInnoSampleData sampleData = {};
 
-	sampleData.Time		 = sampleTime;
-	sampleData.ZsPos	 = mX[0];
-	sampleData.ZsSpeed	 = mX[1];
-	sampleData.ZsAcc	 = mXDot[1];
-	sampleData.ZuPos	 = mX[2];
-	sampleData.ZuSpeed	 = mX[3];
-	sampleData.ZuAcc	 = mXDot[3];
-	sampleData.Zr		 = zr;
-	sampleData.xPos		 = mPrevPos + mSpeed * gDeltaTime;
-	sampleData.xSpeed	 = mSpeed;
+	sampleData.Time = sampleTime;
+	sampleData.ZsPos = mX[0];
+	sampleData.ZsSpeed = mX[1];
+	sampleData.ZsAcc = mXDot[1];
+	sampleData.ZuPos = mX[2];
+	sampleData.ZuSpeed = mX[3];
+	sampleData.ZuAcc = mXDot[3];
+	sampleData.Zr = zr;
+	sampleData.xPos = mPrevPos + mSpeed * deltaTime;
+	sampleData.xSpeed = mSpeed;
 	sampleData.xPosOther = mPlayerBPos;
 
 	mPrevPos = sampleData.xPos;
