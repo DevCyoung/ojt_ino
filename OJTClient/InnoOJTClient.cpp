@@ -294,14 +294,6 @@ void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 	InnoSimulator::GetInstance()->SetPlayerBPos(outPacket.Position);
 }
 
-void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
-{
-	mbServerTrainingFinish = true;
-
-	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
-	logList->WriteError("Training Finish");
-}
-
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
 	mbServerTraining = false;

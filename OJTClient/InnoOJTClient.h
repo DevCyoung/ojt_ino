@@ -30,7 +30,6 @@ public:
 
 	void ReciveLog(const tPacketLog& outPacket);
 	void RecivePos(const tPacketPos& outPacket);	
-	void ReciveFinish(const tPacketFinish& outPacket);
 	void ReciveStop(const tPacketStop& packet);
 	void ReciveStart(const tPacketStart& packet);
 
