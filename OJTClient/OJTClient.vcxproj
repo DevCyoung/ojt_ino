@@ -146,6 +146,7 @@
     <ClInclude Include="CarController.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="InnoClientMessageQueue.h" />
     <ClInclude Include="InnoDataManager.h" />
     <ClInclude Include="InnoInputUI.h" />
     <ClInclude Include="InnoOJTClient.h" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="CarController.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="InnoClientMessageQueue.cpp" />
     <ClCompile Include="InnoDataManager.cpp" />
     <ClCompile Include="InnoInputUI.cpp" />
     <ClCompile Include="InnoOJTClient.cpp" />

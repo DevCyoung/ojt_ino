@@ -54,6 +54,7 @@
     <ClInclude Include="GameManager.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="InnoClientMessageQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTClient.ico">
@@ -99,5 +100,6 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="InnoClientMessageQueue.cpp" />
   </ItemGroup>
 </Project>

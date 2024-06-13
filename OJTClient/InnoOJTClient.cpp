@@ -5,7 +5,7 @@
 #include <PanelUIManager.h>
 #include <TimeManager.h>
 #include "InnoDataManager.h"
-
+#include "InnoClientMessageQueue.h"
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 static std::mutex gClientMutex;
@@ -60,12 +60,14 @@ InnoOJTClient::InnoOJTClient()
 {
 	InnoDataManager::initialize();
 	InnoSimulator::initialize();
+	InnoClientMessageQueue::initialize();
 }
 
 InnoOJTClient::~InnoOJTClient()
 {
 	DisConnect();
 
+	InnoClientMessageQueue::initialize();
 	InnoSimulator::deleteInstance();
 	InnoDataManager::deleteInstance();
 }
@@ -88,16 +90,19 @@ static void ClientRecive(SOCKET serverSocket)
 
 	InnoOJTClient* const innoClient = InnoOJTClient::GetInstance();
 
+	char buffer[INNO_AMX_PACKET_BUFFER_SIZE];
+
 	while (true)
 	{
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
+
 		std::lock_guard<std::mutex> guard(gClientMutex);
 
-		
 
 		if (bytesReceived > 0)
-		{
+		{			
 			ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
+			//Message						
 
 			switch (packetID)
 			{
