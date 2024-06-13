@@ -30,10 +30,10 @@ void TimeManager::update()
 
 	mDeltaTime = DIFERENCE_FREQUENCY / static_cast<float>(mCpuFrequency.QuadPart);
 
-	if (mDeltaTime >= 0.026f)
-	{
-		mDeltaTime = 0.016f;
-	}
+	//if (mDeltaTime >= 0.026f)
+	//{
+	//	mDeltaTime = 0.016f;
+	//}
 
 	mRealDeltaTime = mDeltaTime;
 

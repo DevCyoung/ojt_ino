@@ -9,6 +9,7 @@ enum class eScriptComponentType
 	CursorMovement,
 	PlayerMovement,
 	ThirdPersonOrbitCam,
+	CarController,
 	End
 };
 

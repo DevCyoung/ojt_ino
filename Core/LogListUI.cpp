@@ -19,6 +19,10 @@ void LogListUI::drawForm()
 	ImGui::Begin(GetTitle().c_str());
 	std::lock_guard guard(WriteMutex);
 
+	static int count = mLogs.size();
+
+	
+
 	for (auto& log: mLogs)
 	{
 		if (log.Type == eInnoMessageType::Default)
@@ -40,7 +44,15 @@ void LogListUI::drawForm()
 		}
 		ImGui::Text(log.Message.c_str());
 		ImGui::PopStyleColor();
-	}		
+	}
+
+	if (count != mLogs.size())
+	{
+		ImGui::SetScrollHereY();
+
+		count = mLogs.size();
+	}
+
 	ImGui::End();
 }
 

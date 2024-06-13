@@ -61,6 +61,15 @@
     <Filter Include="Protocal">
       <UniqueIdentifier>{fd9dd1d5-970b-4746-b636-480ea9f6e76f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ImGUI\implot">
+      <UniqueIdentifier>{6bb9b655-e4a7-4199-8c3c-3356f1fd804a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shader">
+      <UniqueIdentifier>{e9d4885c-5063-495d-9e09-a533908d1b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shader\Header">
+      <UniqueIdentifier>{c0bca93f-094b-4847-96ab-e6aadaed20c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InnoOJTCore.h">
@@ -441,6 +450,12 @@
     <ClInclude Include="imgui_theme.h" />
     <ClInclude Include="SceneRenderHelper.h">
       <Filter>Source\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="implot.h">
+      <Filter>Source\ImGUI\implot</Filter>
+    </ClInclude>
+    <ClInclude Include="implot_internal.h">
+      <Filter>Source\ImGUI\implot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -826,6 +841,15 @@
     <ClCompile Include="SceneRenderHelper.cpp">
       <Filter>Source\Render</Filter>
     </ClCompile>
+    <ClCompile Include="implot.cpp">
+      <Filter>Source\ImGUI\implot</Filter>
+    </ClCompile>
+    <ClCompile Include="implot_demo.cpp">
+      <Filter>Source\ImGUI\implot</Filter>
+    </ClCompile>
+    <ClCompile Include="implot_items.cpp">
+      <Filter>Source\ImGUI\implot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">
@@ -833,6 +857,126 @@
     </None>
     <None Include="DXMath.inl">
       <Filter>Source\Heper</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\Header\ConstantBuffer.fxh">
+      <Filter>Source\Shader\Header</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\Header\Sampler.fxh">
+      <Filter>Source\Shader\Header</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\Header\Struct.fxh">
+      <Filter>Source\Shader\Header</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\Header\TestShaderHeader.fxh">
+      <Filter>Source\Shader\Header</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\Header\Texture.fxh">
+      <Filter>Source\Shader\Header</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\animation3d.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\ColorFun.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\copybone.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\deferred3d.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\Light2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSAfterImage.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSAlphaTo.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSAnimation2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSFillDebug2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSGrayPostProcess.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSGrid2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSLightAnimation2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSLightSprite2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSLineDebug2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSNextScene.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSSprite2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSUI2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\PSWave.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\ShadowMap.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\std3d.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\std3d_debug.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\stdCS.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSAfterImage.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSAlphaTo.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSAnimation2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSFillDebug2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSGrayPostProcess.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSGrid2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSLightAnimation2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSLightSprite2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSLineDebug2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSNextScene.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSSprite2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSUI2D.hlsl">
+      <Filter>Source\Shader</Filter>
+    </None>
+    <None Include="..\bin\Release\Resources\Shader\VSWave.hlsl">
+      <Filter>Source\Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

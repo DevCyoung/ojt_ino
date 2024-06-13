@@ -2,6 +2,8 @@
 #include "TrainingUI.h"
 #include "InnoOJTServer.h"
 
+#define gLogListUI (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI")))
+
 TrainingUI::TrainingUI()
 {
 	SetTitle("TrainingUI");
@@ -15,28 +17,44 @@ void TrainingUI::drawForm()
 {
 	ImGui::Begin("TrainingUI");	
 
+	//SelectRoom
 	const tInnoRoom& room = InnoOJTServer::GetInstance()->mRoom;
-
-	if (ImGui::Button("Traing Start"))
+	
+	//BroadCast
+	if (false == room.bTraining) // »∆∑√Ω√¿€
 	{
 		
-
-		for (int i = 0; i < room.clients.size(); ++i)
+		if (ImGui::Button("Traing Start"))
 		{			
-			InnoOJTServer::GetInstance()->SendStart(room.clients[i].ClientID);
-		}
+			if (room.clients.size() < 2)
+			{
+				gLogListUI->WriteWarning("Room1: User count not 2");
+			}
+			else
+			{
+				gLogListUI->WriteLine("Room1: Training Start");
 
-		InnoOJTServer::GetInstance()->mRoom.bTraining = true;
-		//InnoOJTServer::GetInstance()->SendLog(0, strlen("hello client"), "hello client");		
+				for (int i = 0; i < room.clients.size(); ++i)
+				{
+					InnoOJTServer::GetInstance()->SendLog(room.clients[i].ClientID, strlen("Training ready"), "Training Start");
+					InnoOJTServer::GetInstance()->SendStart(room.clients[i].ClientID);
+				}
+
+				InnoOJTServer::GetInstance()->mRoom.bTraining = true;
+			}		
+		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Traing End"))
+	else // »∆∑√¡æ∑·
 	{
-		for (int i = 0; i < room.clients.size(); ++i)
+		if (ImGui::Button("Traing End"))
 		{
-			InnoOJTServer::GetInstance()->SendStop(room.clients[i].ClientID);
+			for (int i = 0; i < room.clients.size(); ++i)
+			{
+				InnoOJTServer::GetInstance()->SendStop(room.clients[i].ClientID);
+			}
+			InnoOJTServer::GetInstance()->RoomInit();
 		}		
-	}
+	}	
 	ImGui::End();
 }
 	

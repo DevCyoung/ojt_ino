@@ -21,8 +21,20 @@
 #include <Material.h>
 #include "PanelLoader.h"
 #include <Transform.h>
-
+#include "GameManager.h"
+#include "CarController.h"
 #define MAX_LOADSTRING 100
+
+static GameObject* CreateSpriteGameObject(const wchar_t* path)
+{        
+    Texture* tex = gResourceManager->FindAndLoad<Texture>(path);
+
+    GameObject* obj = CreateGameObject();
+    obj->AddComponent<SpriteRenderer>();
+    obj->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);    
+
+    return obj;
+}
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -45,8 +57,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#if DEBUG_TARGET
-    _CrtSetBreakAlloc(DEBUG_TARGET);
+#if 0
+    _CrtSetBreakAlloc(11445);
 #endif
 #endif
 
@@ -72,20 +84,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Editor::initialize();
     PanelLoader::initialize();
     InnoOJTClient::initialize();
-
-    //Content::initialize();
-    Scene* scene = new Scene();
-    Texture* tex = gResourceManager->FindAndLoad<Texture>(L"\\Texture\\Preview2.png");
-    //
-    GameObject* car = CreateGameObject();
-    car->AddComponent<SpriteRenderer>();
-    car->GetComponent<SpriteRenderer>()->GetMaterial(0)->SetTexture(TEX_0, tex);
-
-    car->GetComponent<Transform>()->SetScale(0.4f, 0.4f, 0.4f);
-    //
-    ////car->AddComponent<
-    scene->AddGameObject(car, eLayerType::Default);
-    SceneManager::GetInstance()->LoadScene(scene);
+    GameManager::initialize();
 
     while (true)
     {
@@ -105,14 +104,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             Engine::GetInstance()->run();
             Editor::GetInstance()->run();
-
             InnoOJTClient::GetInstance()->run();
 
             Engine::GetInstance()->present();
         }
     }
 
-
+    GameManager::deleteInstance();
     InnoOJTClient::deleteInstance();
     PanelLoader::deleteInstance();
     Editor::deleteInstance();

@@ -18,36 +18,66 @@ static int CloseSocket(const SOCKET serverSocket)
 	}
 	else if (0 != closesocket(serverSocket))
 	{
-		return S_FALSE;
+		return S_FALSE;	
 	}
 
 	WSACleanup();
 	return S_OK;
 }
 
+static int getPort(SOCKET socket) {
+	sockaddr_in addr;
+	int addrLen = sizeof(addr);
+
+	if (getpeername(socket, (sockaddr*)&addr, &addrLen) == SOCKET_ERROR) {
+		return -1;
+	}
+
+	return ntohs(addr.sin_port);
+}
+
+static std::string getIPAddress(SOCKET socket) {
+	sockaddr_in addr;
+	int addrLen = sizeof(addr);
+
+	if (getpeername(socket, (sockaddr*)&addr, &addrLen) == SOCKET_ERROR) {
+		//std::cerr << "Failed to get IP address: " << WSAGetLastError() << std::endl;
+		return "";
+	}
+
+	char ip[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &addr.sin_addr, ip, sizeof(ip));
+
+	return std::string(ip);
+}
+
 InnoOJTClient::InnoOJTClient()
 	: mbServerTraining(false)
-	, mbServerTrainingFinish(false)
-	, mCarDirection(1.f)
-	, mCurPos{ 0, }
-	, mBPosArray()
-	, mSimulation()
+	, mbServerTrainingFinish(false)		
 	, mServerSocket(INVALID_SOCKET)
 	, mRecive()
+	, mClientState(eClientState::None)
 {
 	InnoDataManager::initialize();
+	InnoSimulator::initialize();
 }
 
 InnoOJTClient::~InnoOJTClient()
 {
-	CloseSocket(mServerSocket);
+	DisConnect();
 
-	if (mRecive.joinable())
-	{
-		mRecive.join();
-	}	
+	InnoSimulator::deleteInstance();
+	InnoDataManager::deleteInstance();	
+}
 
-	InnoDataManager::deleteInstance();
+std::string InnoOJTClient::GetServerIP()
+{
+	return getIPAddress(mServerSocket);
+}
+
+int InnoOJTClient::GetServerPort()
+{
+	return getPort(mServerSocket);
 }
 
 // 서버로부터 메시지 수신하는 함수
@@ -61,7 +91,7 @@ static void ClientRecive(SOCKET serverSocket)
 	while (true)
 	{
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
-		std::lock_guard<std::mutex> guard(gClientMutex);		
+		std::lock_guard<std::mutex> guard(gClientMutex);
 
 		if (bytesReceived > 0)
 		{
@@ -96,34 +126,25 @@ static void ClientRecive(SOCKET serverSocket)
 				deserializeData(recvbuf, sizeof(tPacketStop), &stop);
 				innoClient->ReciveStop(stop);
 			}			
-			break;
-			case Poses:
-			{
-				tPacketPoses poses;
-				deserializeData(recvbuf, sizeof(tPacketPoses), &poses);
-				innoClient->RecivePoses(poses);
-			}
-			break;
-			case Finish:
-			{
-				tPacketFinish finish;
-				deserializeData(recvbuf, sizeof(tPacketFinish), &finish);
-				innoClient->ReciveFinish(finish);
-			}
-			break;
+			break;						
 			default:
 				break;
 			}
 		}
 		else if (bytesReceived == 0)
 		{			
-			gLogListUIClient->WriteLine("Connection closed by server.");
-			
+			gLogListUIClient->WriteLine("Connection closed by server.");		
+			innoClient->mClientState = eClientState::None;
+			closesocket(innoClient->mServerSocket);
+			innoClient->mServerSocket = INVALID_SOCKET;			
 			break;
 		}
 		else
 		{
-			gLogListUIClient->WriteError("Connection closed by server.");
+			gLogListUIClient->WriteError("Connection closed by server.");			
+			innoClient->mClientState = eClientState::None;
+			closesocket(innoClient->mServerSocket);
+			innoClient->mServerSocket = INVALID_SOCKET;							
 			break;
 		}
 	}
@@ -131,24 +152,11 @@ static void ClientRecive(SOCKET serverSocket)
 	CloseSocket(serverSocket);
 }
 
-
-void InnoOJTClient::run()
+//서버에게 Connect 함수 (스레드)
+void ClientConnect(const std::string& ip, const int port, SOCKET* pServerSocket, std::thread* pRpecive, eClientState* clientState)
 {
-	if (mServerSocket == INVALID_SOCKET)
-	{
-		return;
-	}
+	std::lock_guard<std::mutex> guard(gClientMutex);
 
-	//동역학 갱신
-	if (mbServerTraining)
-	{
-		mCurPos[0] += gDeltaTime * 15.f * mCarDirection;
-		SendPos(mCurPos[0]);
-	}
-}
-
-int InnoOJTClient::Connect(const std::string& ip, const int port)
-{
 	WSADATA wsaData;
 	sockaddr_in clientService;
 
@@ -156,41 +164,103 @@ int InnoOJTClient::Connect(const std::string& ip, const int port)
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
 		gLogListUIClient->WriteError("WSAStartup failed.");
-		return E_FAIL;
+		*clientState = eClientState::None;
+		return;
 	}
 
 	//클라이언트소켓 생성
-	mServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (mServerSocket == INVALID_SOCKET)
-	{
+	*pServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (INVALID_SOCKET  == *pServerSocket)
+	{	
 		gLogListUIClient->WriteError("Socket creation failed.");
-		return E_FAIL;
+		*clientState = eClientState::None;
+		return;
 	}
 
 	// 서버 주소 설정
 	clientService.sin_family = AF_INET;
-	clientService.sin_port = htons(INNO_DEFAULT_PORT);
+	clientService.sin_port = htons(port);
 
-	// 서버에 연결
+	//소켓에 바인딩한다.
 	if (inet_pton(AF_INET, ip.c_str(), &clientService.sin_addr) <= 0)
 	{
 		gLogListUIClient->WriteError("Invalid address Address not supported .");
-		CloseSocket(mServerSocket);		
-		return E_FAIL;
+		CloseSocket(*pServerSocket);
+		*pServerSocket = INVALID_SOCKET;
+		*clientState = eClientState::None;
+		return;
 	}
 
-	if (connect(mServerSocket, (sockaddr*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
+	if (connect(*pServerSocket, (sockaddr*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
 		gLogListUIClient->WriteError("Connect failed");
-		CloseSocket(mServerSocket);
-		return E_FAIL;
+		CloseSocket(*pServerSocket);
+		*pServerSocket = INVALID_SOCKET;
+		*clientState = eClientState::None;
+		return;
 	}
 
 	//서버와 연결됨
-	gLogListUIClient->WriteLine("Connected to server.");
+	gLogListUIClient->WriteLine("Connect Success!");	
 
 	// 서버로부터 메시지를 받는 쓰레드 시작
-	mRecive = std::thread(ClientRecive, mServerSocket);
+	// 쓰레드 초기화
+	if (pRpecive->joinable())	
+	{
+		pRpecive->join();
+	}
+
+	*pRpecive = std::thread(ClientRecive, *pServerSocket);
+	*clientState = eClientState::Connected;
+	return;
+}
+
+void InnoOJTClient::run()
+{
+	InnoSimulator::GetInstance()->Update();
+
+	if (mServerSocket == INVALID_SOCKET)
+	{
+		return;
+	}
+
+	//서버 트레이닝중이라면 내위치를 전송	
+	if (mbServerTraining)
+	{		
+		SendPos(InnoDataManager::GetInstance()->GetXPoses().back());
+	}
+}
+
+int InnoOJTClient::Connect(const std::string& ip, const int port)
+{
+	if (eClientState::None == mClientState)
+	{
+		mClientState = eClientState::Connecting;
+		std::thread(ClientConnect, ip, port, &mServerSocket, &mRecive, &mClientState).detach();
+	}
+	else if (eClientState::Connecting == mClientState)
+	{
+		return S_OK;
+	}
+
+	if (INVALID_SOCKET != mServerSocket)
+	{
+		return S_OK;
+	}	
+
 	return S_OK;
+}
+
+void InnoOJTClient::DisConnect()
+{
+	CloseSocket(mServerSocket);
+
+	if (mRecive.joinable())
+	{
+		mRecive.join();
+	}
+
+	mClientState = eClientState::None;
+	mServerSocket = INVALID_SOCKET;
 }
 
 void InnoOJTClient::SendLog(int messageLen, const char* message)
@@ -208,11 +278,6 @@ void InnoOJTClient::SendStop()
 	send_stop(mServerSocket);
 }
 
-void InnoOJTClient::SendPoses(int size, const float* poses)
-{
-	send_poses(mServerSocket, size, poses);
-}
-
 void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
@@ -223,15 +288,8 @@ void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 
 void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 {
-	mCurPos[1] = outPacket.Position;
-}
-
-void InnoOJTClient::RecivePoses(const tPacketPoses& outPacket)
-{
-	for (int i = 0; i < outPacket.Size; ++i)
-	{
-		mBPosArray.push_back(outPacket.Poses[i]);
-	}
+	//서버로부터 B위치를 수신
+	InnoSimulator::GetInstance()->SetPlayerBPos(outPacket.Position);
 }
 
 void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
@@ -245,48 +303,11 @@ void InnoOJTClient::ReciveFinish(const tPacketFinish& outPacket)
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
 	mbServerTraining = false;
-	//TODO
-	//for (int i = 0; i < 100000; ++i)
-	//{
-	//	mSimulation.Update();
-	//}
-	//
-	//int sampleCount = mSimulation.GetSampleDataCount();
-	//std::queue<float> vecPoses;
-	//
-	//for (int i = 0; i < sampleCount; ++i)
-	//{
-	//	vecPoses.push(mSimulation.GetSampleData(i).xPos);
-	//}
-
-	//SendPosesSize(11);
-	//TODO
-	//while (!vecPoses.empty())
-	//{
-	//	std::vector<float> tempPoses;
-	//	for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
-	//	{
-	//		if (vecPoses.empty())
-	//		{
-	//			break;
-	//		}
-	//
-	//		tempPoses.push_back(vecPoses.front());
-	//		vecPoses.pop();
-	//	}
-	//
-	//	if (vecPoses.empty())
-	//	{
-	//		break;
-	//	}
-	//
-	//	SendPoses(tempPoses.size(), tempPoses.data());
-	//}
-	//
-	//SendStop();
+	InnoSimulator::GetInstance()->Stop();
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)
 {
 	mbServerTraining = true;
+	InnoSimulator::GetInstance()->Play();
 }

@@ -13,14 +13,9 @@ InnoOJTServer::InnoOJTServer()
 	, mListenUI(nullptr)
 	, mRoom{}
 	, mClientThreads{}
+	, mIP()
+	, mServerState(eServerState::None)
 {
-	mRoom.bTraining = false;
-
-	for (int i = 0; i < INNO_MAX_ROOM_USER; ++i)
-	{
-		mRoom.posesArray[i].reserve(1000000);
-	}
-
 	mPanelManager = PanelUIManager::GetInstance();
 	mChannelUI = static_cast<ChannelUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ChannelUI"));
 	mListenUI = static_cast<ListenUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("ListenUI"));
@@ -28,39 +23,47 @@ InnoOJTServer::InnoOJTServer()
 	Assert(mPanelManager, ASSERT_MSG_NULL);
 	Assert(mChannelUI, ASSERT_MSG_NULL);
 	Assert(mListenUI, ASSERT_MSG_NULL);
+
+	WSADATA wsaData;
+	char hostName[256];
+	struct addrinfo hints, * result, * ptr;
+	char ip[INET_ADDRSTRLEN];
+
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		return;
+	}
+
+	if (gethostname(hostName, sizeof(hostName)) == SOCKET_ERROR) {		
+		WSACleanup();
+		return;
+	}
+
+	ZeroMemory(&hints, sizeof(hints));
+	hints.ai_family = AF_INET;  // IPv4
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	if (getaddrinfo(hostName, nullptr, &hints, &result) != 0) {		
+		WSACleanup();
+		return;
+	}
+
+	for (ptr = result; ptr != nullptr; ptr = ptr->ai_next) {
+		struct sockaddr_in* sockaddr_ipv4 = (struct sockaddr_in*)ptr->ai_addr;
+		inet_ntop(AF_INET, &sockaddr_ipv4->sin_addr, ip, sizeof(ip));
+	}
+
+	freeaddrinfo(result);
+	WSACleanup();
+
+	mIP = ip;
+
+	return ;
 }
 
 InnoOJTServer::~InnoOJTServer()
 {	
-
-	std::vector<SOCKET> clientSockets;
-
-	gClientsMutex.lock();
-
-	for (int i = 0; i < mClients.size(); i++)
-	{
-		clientSockets.push_back(mClients[i].Socket);
-	}
-	mRoom.clients.clear();
-	mChannel.clients.clear();
-	mClients.clear();
-
-	gClientsMutex.unlock();
-
-	for (int i = 0; i < clientSockets.size(); ++i)
-	{
-		closesocket(clientSockets[i]);
-	}
-
-	for (int i = 0; i < INNO_MAX_THREAD_SIZE; ++i)
-	{
-		if (mClientThreads[i].joinable())
-		{
-			mClientThreads[i].join();
-		}
-	}
-
-	closesocket(gListenSocket);
+	DisConnect();
 }
 
 // 클라이언트 핸들링 함수
@@ -96,21 +99,7 @@ static void handleClient(SOCKET clientSocket)
 				deserializeData(recvbuf, sizeof(tPacketPos), &pos);
 				innoServer->RecivePos(clientID, pos);
 			}
-			break;
-			case Poses:
-			{
-				tPacketPoses poses;
-				deserializeData(recvbuf, sizeof(tPacketPoses), &poses);
-				innoServer->RecivePoses(clientID, poses);
-			}
-			break;
-			case Stop:
-			{
-				tPacketStop stop;
-				deserializeData(recvbuf, sizeof(stop), &stop);
-				innoServer->ReciveStop(clientID, stop);
-			}
-			break;
+			break;						
 			default:
 			{
 				gLogListUI->WriteError("Invalied packet");
@@ -142,9 +131,9 @@ static void handleAccept()
 	{
 		SOCKET clientSocket = accept(gListenSocket, NULL, NULL);
 
-		if (clientSocket == INVALID_SOCKET)
+		if (INVALID_SOCKET == clientSocket)
 		{
-			gLogListUI->WriteError("Accept failed.");
+			gLogListUI->WriteLine("Accept handle close");
 			closesocket(gListenSocket);
 			gListenSocket = INVALID_SOCKET;
 			continue;
@@ -160,31 +149,42 @@ static void handleAccept()
 
 void InnoOJTServer::run()
 {
-	if (gListenSocket == INVALID_SOCKET)
+	if (!IsListening())
 	{
 		return;
 	}
 
+	//Room Training
 	static float trainingTime = 0.f;
+
 	trainingTime += gDeltaTime;
-
-	if (mRoom.bTraining && trainingTime >= (1.f / 120.f))
+	if (trainingTime < INN_FRAME_DELTA_TIME)
 	{
-		//position broadcast
-		for (int i = 0; i < mRoom.clients.size(); ++i)
-		{
-			//broad cast
-			for (int j = 0; j < mRoom.clients.size(); ++j)
-			{
-				if (i == j)
-				{
-					continue;
-				}
+		return;
+	}
 
-				SendPos(mRoom.clients[i].ClientID, mRoom.poses[j]);
+	while (trainingTime > INN_FRAME_DELTA_TIME)
+	{
+		trainingTime -= INN_FRAME_DELTA_TIME;
+	}
+
+	if (!mRoom.bTraining)
+	{
+		return;
+	}
+
+	//BroadCast
+	for (int i = 0; i < mRoom.clients.size(); ++i)
+	{
+		for (int j = 0; j < mRoom.clients.size(); ++j)
+		{
+			if (i == j)
+			{
+				continue;
 			}
+
+			SendPos(mRoom.clients[i].ClientID, mRoom.curPoses[j]);
 		}
-		trainingTime = 0.f;
 	}
 }
 
@@ -227,7 +227,6 @@ int InnoOJTServer::Listen(const int port)
 		gLogListUI->WriteError("Bind failed.");
 		closesocket(gListenSocket);
 		WSACleanup();
-
 		return E_FAIL;
 	}
 
@@ -247,6 +246,7 @@ int InnoOJTServer::Listen(const int port)
 	std::thread accept(handleAccept);
 	accept.detach();
 
+	mServerState = eServerState::Listening;
 	return S_OK;
 }
 
@@ -352,14 +352,6 @@ void InnoOJTServer::SendStart(int clientID)
 	send_start(client.Socket);
 }
 
-void InnoOJTServer::SendPoses(int clientID, int size, const float* poses)
-{
-	std::lock_guard<std::mutex> guard(gClientsMutex);
-	tInnoClient client = GetInncoClient(clientID);
-
-	send_poses(client.Socket, size, poses);
-}
-
 void InnoOJTServer::ReciveLog(int clientID, const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
@@ -372,107 +364,12 @@ void InnoOJTServer::RecivePos(int clientID, const tPacketPos& outPacket)
 	{
 		if (clientID == mRoom.clients[i].ClientID)
 		{
-			mRoom.poses[i] = outPacket.Position;
+			mRoom.curPoses[i] = outPacket.Position;
 			break;
 		}
 	}
 }
 
-void InnoOJTServer::ReciveStop(int clientID, const tPacketStop& outPacket)
-{
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		if (clientID == mRoom.clients[i].ClientID)
-		{
-			mRoom.bStop[i] = true;
-			break;
-		}
-	}
-
-	//모두가 데이터 전송을 완료했다면
-	int bStopCount = 0;
-	for (int i = 0; i < mRoom.clients.size(); i++)
-	{
-		if (mRoom.bStop[i])
-		{
-			++bStopCount;
-		}
-	}
-	if (bStopCount != mRoom.clients.size())
-	{
-		return;
-	}
-
-	//각 위치정보를 BroadCast 해준다.
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		for (int j = 0; j < mRoom.clients.size(); ++j)
-		{
-			if (i == j)
-			{
-				continue;
-			}
-
-			//i번째 클라이언트의 데이터를 j종류만큼 브로드캐스트한다.
-			tInnoClient client = GetInncoClient(mRoom.clients[i].ClientID);
-
-			int count = mRoom.posesArray[i].size();
-			std::queue<float> vecPoses;
-
-			for (int k = 0; k < count; ++k)
-			{
-				vecPoses.push(mRoom.posesArray[i][k]);
-			}
-
-			//INNO_MAX_POS_SIZE 만큼 끊어서 보낸다.
-			while (!vecPoses.empty())
-			{
-				std::vector<float> tempPoses;
-				for (int j = 0; j < INNO_MAX_POS_SIZE; ++j)
-				{
-					if (vecPoses.empty())
-					{
-						break;
-					}
-
-					tempPoses.push_back(vecPoses.front());
-					vecPoses.pop();
-
-				}
-
-				if (vecPoses.empty())
-				{
-					break;
-				}
-
-				send_poses(client.Socket, tempPoses.size(), tempPoses.data());
-			}
-		}
-	}
-
-	//모든위치정보를 브로드캐스트했다. 최종 종료를알림
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		send_finish(mRoom.clients[i].Socket);
-	}
-
-	gLogListUI->WriteLine("Training Finish");
-}
-
-void InnoOJTServer::RecivePoses(int clientID, const tPacketPoses& outPacket)
-{
-	for (int i = 0; i < mRoom.clients.size(); ++i)
-	{
-		if (clientID == mRoom.clients[i].ClientID)
-		{
-			for (int j = 0; j < outPacket.Size; ++j)
-			{
-				mRoom.posesArray[i].push_back(outPacket.Poses[j]);
-			}
-			break;
-		}
-	}
-}
 
 std::string InnoOJTServer::GetClientIP(SOCKET clientSocket)
 {
@@ -583,4 +480,53 @@ bool InnoOJTServer::TryGetInncoClient(int clientID, tInnoClient* outInnoClient)
 	}
 
 	return bflag;
+}
+
+void InnoOJTServer::DisConnect()
+{
+	std::vector<SOCKET> clientSockets;
+
+	gClientsMutex.lock();
+
+	for (int i = 0; i < mClients.size(); i++)
+	{
+		clientSockets.push_back(mClients[i].Socket);
+	}
+
+	//mRoom.clients.clear();
+	RoomInit();
+
+	mChannel.clients.clear();
+	mClients.clear();
+
+	gClientsMutex.unlock();
+
+	for (int i = 0; i < clientSockets.size(); ++i)
+	{
+		closesocket(clientSockets[i]);
+		clientSockets[i] = INVALID_SOCKET;
+	}
+
+	for (int i = 0; i < INNO_MAX_THREAD_SIZE; ++i)
+	{
+		if (mClientThreads[i].joinable())
+		{
+			mClientThreads[i].join();
+		}
+	}
+
+	closesocket(gListenSocket);
+	gListenSocket = INVALID_SOCKET;
+	mServerState = eServerState::None;
+	serializeNumber = 0;
+}
+void InnoOJTServer::RoomInit()
+{
+	mRoom.bTraining = false;
+	mRoom.clients.clear();
+	for (int i = 0; i < INNO_MAX_ROOM_USER; ++i)
+	{
+		mRoom.curPoses[i] = 0.f;
+	}
+	mRoom.curTime = 0.f;
 }
