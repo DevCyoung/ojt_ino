@@ -2,6 +2,10 @@
 #include "InnoSimulator.h"
 #include "InnoDataManager.h"
 #include <TimeManager.h>
+#include <PanelUIManager.h>
+#include "LogListUI.h"
+
+#define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 InnoSimulator::InnoSimulator()
 	: mState(eInnoSimulatorState::None)
@@ -103,6 +107,9 @@ void InnoSimulator::Update()
 	}
 	else if (mState == eInnoSimulatorState::Start)
 	{						
+
+		gLogListUIClient->WriteLine("Training Start");
+
 		InnoDataManager::GetInstance()->Clear();
 
 		mPlayerBPos = 0.f;
@@ -125,13 +132,16 @@ void InnoSimulator::Update()
 		frameDeltatime = 0.f;
 	}
 	else if (mState == eInnoSimulatorState::Stop)
-	{		
-		mState = eInnoSimulatorState::Editing;
+	{	
+		gLogListUIClient->WriteLine("Training Stop");
+		mState = eInnoSimulatorState::Editing;		
 	}	
 	else if (mState == eInnoSimulatorState::Finish)
 	{
+		gLogListUIClient->WriteLine("Editing Stop");
+		gLogListUIClient->WriteLine("Training Finish");
 		finish();
-		mState = eInnoSimulatorState::None;
+		mState = eInnoSimulatorState::None;		
 	}
 }
 
