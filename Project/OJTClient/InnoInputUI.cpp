@@ -319,7 +319,7 @@ void InnoInputUI::drawForm()
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
 	}
 
-	if (ImGui::SliderFloat("##SlidePos", &slidePos, 0.f, slideMax))
+	if (ImGui::SliderFloat("##SlidePos", &slidePos, 0.f, slideMax, "%.2f"))
 	{
 		playMode = 0;
 	}
