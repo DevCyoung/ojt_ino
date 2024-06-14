@@ -329,12 +329,14 @@ void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
-	mbServerTraining = false;
 	InnoSimulator::GetInstance()->Stop();
+
+	mbServerTraining = false;
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)
 {
+	InnoSimulator::GetInstance()->ServerStart();
+
 	mbServerTraining = true;
-	InnoSimulator::GetInstance()->Play();
 }

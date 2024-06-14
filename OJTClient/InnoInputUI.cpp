@@ -196,22 +196,7 @@ void InnoInputUI::drawForm()
 	ImGui::PopItemWidth();
 	ImGui::Separator();
 
-
-	if (simulatorState == eInnoSimulatorState::None)
-	{
-		if (ImGui::Button("Start Training"))
-		{
-			innoSimulator->Play();
-		}
-	}	
-	else if (simulatorState == eInnoSimulatorState::Playing)
-	{
-		if (ImGui::Button("Stop Training"))
-		{
-			innoSimulator->Stop();
-		}		
-	}		
-	else if (simulatorState == eInnoSimulatorState::Editing)
+	if (simulatorState == eInnoSimulatorState::Editing)
 	{
 		if (ImGui::Button("Stop Editing"))
 		{
@@ -226,6 +211,24 @@ void InnoInputUI::drawForm()
 
 		ImGui::Button("<<");
 	}	
+	else if (InnoOJTClient::GetInstance()->mServerSocket != INVALID_SOCKET)
+	{
+		ImGui::Text("Server Trainig mode");
+	}
+	else if (simulatorState == eInnoSimulatorState::None)
+	{
+		if (ImGui::Button("Start Training"))
+		{
+			innoSimulator->Play();
+		}
+	}	
+	else if (simulatorState == eInnoSimulatorState::Playing)
+	{
+		if (ImGui::Button("Stop Training"))
+		{
+			innoSimulator->Stop();
+		}		
+	}		
 
 	ImGui::SameLine(600.f);
 

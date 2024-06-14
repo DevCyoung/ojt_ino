@@ -67,7 +67,13 @@ void InnoSimulator::Stop()
 	{
 		Assert(false, ASSERT_MSG_INVALID);
 	}
-}	
+}
+
+void InnoSimulator::ServerStart()
+{
+	mState = eInnoSimulatorState::Start;
+}
+
 
 void InnoSimulator::Finish()
 {	
@@ -88,9 +94,10 @@ void InnoSimulator::Update()
 		return;
 	}
 	else if (mState == eInnoSimulatorState::Start)
-	{
-		start();
-		//clear
+	{						
+		InnoDataManager::GetInstance()->Clear();
+
+		mPlayerBPos = 0.f;
 		mCurTime = 0.f;
 		mPrevPos = 0.f;
 		mState = eInnoSimulatorState::Playing;
@@ -112,11 +119,7 @@ void InnoSimulator::Update()
 	else if (mState == eInnoSimulatorState::Stop)
 	{		
 		mState = eInnoSimulatorState::Editing;
-	}
-	else if (mState == eInnoSimulatorState::Editing)
-	{
-			
-	}
+	}	
 	else if (mState == eInnoSimulatorState::Finish)
 	{
 		finish();

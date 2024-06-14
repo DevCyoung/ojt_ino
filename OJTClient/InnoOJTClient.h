@@ -34,13 +34,7 @@ public:
 	void ReciveStart(const tPacketStart& packet);
 
 	bool mbServerTraining;
-	bool mbServerTrainingFinish;
-	//bool mbConnect;
-	//float mCarDirection;
-	//float mCurPos[2];	
-	//std::vector<float> mBPosArray;
-	//InnoCarSimulation mSimulation;
-	//InnoSimulator* mSimulator;
+	bool mbServerTrainingFinish;	
 	SOCKET mServerSocket;
 	std::thread mRecive;
 	eClientState mClientState;
