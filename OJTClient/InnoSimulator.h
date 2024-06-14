@@ -46,6 +46,7 @@ public:
 
 	void Play();	// 시뮬레이션을 시작합니다 (None -> Start -> Playing)
 	void Stop();	// 시뮬레이션을 종료합니다. 에디터모드가 됩니다. (Playing -> Stop-> Editing)
+	void ServerStop();
 	void ServerStart();	// 시뮬레이션을 강제로 실행시킨다.
 	void Finish();  // 에디터모드를 종료합니다. (Edting -> Finish -> None)
 

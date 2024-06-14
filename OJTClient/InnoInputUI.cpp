@@ -454,7 +454,12 @@ void InnoInputUI::drawForm()
 	else if (simulatorState == eInnoSimulatorState::Editing)
 	{						
 		float cp = slidePos / slideMax;
-		dataPos = (vecTimes.size() - INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND) * cp;		
+		dataPos = (vecTimes.size() - INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND) * cp;
+	}
+
+	if (slideMax <= 0.f)
+	{
+		dataPos = 0;
 	}
 
 	ImGui::Begin("GraphUI1");

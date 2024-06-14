@@ -69,6 +69,14 @@ void InnoSimulator::Stop()
 	}
 }
 
+void InnoSimulator::ServerStop()
+{
+	if (mState != eInnoSimulatorState::None)
+	{
+		mState = eInnoSimulatorState::Stop;
+	}
+}
+
 void InnoSimulator::ServerStart()
 {
 	mState = eInnoSimulatorState::Start;

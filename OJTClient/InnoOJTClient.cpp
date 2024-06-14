@@ -165,14 +165,18 @@ static void ClientRecive(SOCKET serverSocket)
 		}		
 		else if (bytesReceived == 0)
 		{
+			InnoSimulator::GetInstance()->ServerStop();
+
 			gLogListUIClient->WriteLine("Connection closed by server.");
-			innoClient->mClientState = eClientState::None;
+			innoClient->mClientState = eClientState::None;			
 			closesocket(innoClient->mServerSocket);
 			innoClient->mServerSocket = INVALID_SOCKET;
 			break;
 		}
 		else
 		{
+			InnoSimulator::GetInstance()->ServerStop();
+
 			gLogListUIClient->WriteError("Connection closed by server.");
 			innoClient->mClientState = eClientState::None;
 			closesocket(innoClient->mServerSocket);
