@@ -24,6 +24,7 @@ InnoSimulator::InnoSimulator()
 	, mX{ 0.f }
 	, mXDot{ 0.f }
 	, mPlayerBPos(0.f)
+	, mFrameDeltaTime(0.f)
 {
 }
 
@@ -106,8 +107,7 @@ void InnoSimulator::Update()
 		return;
 	}
 	else if (mState == eInnoSimulatorState::Start)
-	{						
-
+	{
 		gLogListUIClient->WriteLine("Training Start");
 
 		InnoDataManager::GetInstance()->Clear();
@@ -115,21 +115,25 @@ void InnoSimulator::Update()
 		mPlayerBPos = 0.f;
 		mCurTime = 0.f;
 		mPrevPos = 0.f;
+		mFrameDeltaTime = 0.f;
+
+		ZeroMemory(mX, sizeof(mX));
+		ZeroMemory(mXDot, sizeof(mXDot));
+
 		mState = eInnoSimulatorState::Playing;
 	}
 	else if (mState == eInnoSimulatorState::Playing)
-	{
-		static float frameDeltatime = 0.f;
-		mCurTime += gDeltaTime;
-		frameDeltatime += gDeltaTime;
+	{		
+		mCurTime += gDeltaTime;	
+		mFrameDeltaTime += gDeltaTime;
 
-		if (frameDeltatime < INNO_FRAME_DELTA_TIME)
+		if (mFrameDeltaTime < INNO_FRAME_DELTA_TIME)
 		{
 			return;
 		}
-
-		InnoDataManager::GetInstance()->PushPlayerASampleData(CreateSampleData(mCurTime, frameDeltatime));
-		frameDeltatime = 0.f;
+	
+		InnoDataManager::GetInstance()->PushPlayerASampleData(CreateSampleData(mCurTime, mFrameDeltaTime));
+		mFrameDeltaTime = 0.f;
 	}
 	else if (mState == eInnoSimulatorState::Stop)
 	{	

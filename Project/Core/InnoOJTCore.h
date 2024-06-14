@@ -1,5 +1,7 @@
 #pragma once
 
+#define _WINSOCKAPI_
+
 #include <assert.h>
 #include <Windows.h>
 #include <string>
@@ -24,6 +26,9 @@
 #include <vector>
 #include <mutex>
 #include <string>
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
@@ -40,6 +45,8 @@ using namespace engine::math;
 
 #define DELETE_POINTER_NOT_NULL(p)  { Assert(p, ASSERT_MSG_NULL); DELETE_POINTER(p) }
 #define DELETE_ARRAY_NOT_NULL(p)	{ Assert(p, ASSERT_MSG_NULL); DELETE_ARRAY(p) }
+
+#pragma comment(lib, "ws2_32.lib")
 
 namespace mem
 {

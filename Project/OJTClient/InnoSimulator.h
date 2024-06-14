@@ -95,7 +95,7 @@ private:
 	float mBumpEnd;
 	float mBumpAmp;
 	float mSamplingTime;
-
+	float mFrameDeltaTime;
 	float mPrevPos;
 
 	float mX[4] = { 0, };

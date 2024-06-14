@@ -4,8 +4,6 @@
 #define INNO_AMX_PACKET_BUFFER_SIZE 1024
 #define INNO_DEFAULT_PORT 5400
 
-typedef UINT_PTR SOCKET;
-
 enum ePacketID
 {
 	Log,

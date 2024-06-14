@@ -28,9 +28,6 @@
     <Filter Include="Source\Engine\Resource">
       <UniqueIdentifier>{4fc91fa4-b144-4121-9506-f9019e3d95e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Scene">
-      <UniqueIdentifier>{76143b4e-8a39-4f2a-9221-98d37535e56d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\Component">
       <UniqueIdentifier>{493f88ae-1da5-4be9-8547-36eff33edaaf}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="Source\Heper\Protocal">
       <UniqueIdentifier>{fd9dd1d5-970b-4746-b636-480ea9f6e76f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine\Resource\Scene">
+      <UniqueIdentifier>{76143b4e-8a39-4f2a-9221-98d37535e56d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -205,7 +205,7 @@
       <Filter>Source\Heper\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="Layer.h">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>windows</Filter>
@@ -220,13 +220,13 @@
       <Filter>Source\Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GameSystem.h">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="cresource.h">
       <Filter>windows</Filter>
@@ -435,7 +435,7 @@
       <Filter>Source\Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Layer.cpp">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="StructuredBuffer.cpp">
       <Filter>Source\Engine\Graphics</Filter>
@@ -447,13 +447,13 @@
       <Filter>Source\Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="GameSystem.cpp">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Source\Engine\Scene</Filter>
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="EnumScriptComponent.cpp">
       <Filter>Source\Engine\Graphics\Enum</Filter>

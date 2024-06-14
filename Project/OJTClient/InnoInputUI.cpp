@@ -53,7 +53,7 @@ static void ShowGraph(const char* label, const float* values, const float* times
 
 	if (ImPlot::BeginPlot(key.c_str(), ImVec2(-1, axxSize)))
 	{
-		const float history = 10.f;
+		const float history = INNO_GRAPH_HISTORY_SECOND;
 		double max = 0.0001f;
 		double min = -0.0001f;
 
@@ -606,12 +606,20 @@ void InnoInputUI::drawForm()
 	if (slidePos >= slideMax)
 	{
 		slidePos = slideMax;
-		playMode = 0;
+		if (playMode > 0)
+		{
+			playMode = 0;
+
+		}		
 	}
 	if (slidePos < 0.f)
 	{
 		slidePos = 0.f;
-		playMode = 0;
+		if (playMode < 0)
+		{
+			playMode = 0;
+
+		}
 	}
 
 	if (simulatorState == eInnoSimulatorState::Playing)
