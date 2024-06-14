@@ -4,8 +4,6 @@
 #include "Resource.h"
 using namespace Microsoft::WRL;
 
-#include "FBXLoader.h"
-
 struct tIndexInfo
 {
 	ComPtr<ID3D11Buffer>    pIB;
@@ -54,16 +52,6 @@ public:
 	{
 		return static_cast<UINT>(mIndexBuffers.size());
 	}
-	bool IsAnimMesh() { return !m_vecAnimClip.empty(); }
-
-	StructuredBuffer* GetBoneFrameDataBuffer() { return m_pBoneFrameData; } // 전체 본 프레임 정보
-	StructuredBuffer* GetBoneOffsetBuffer() { return  m_pBoneOffset; }	   // 각 뼈의 offset 행렬
-
-	UINT GetBoneCount() { return (UINT)m_vecBones.size(); }
-
-	std::vector<tMTBone>* GetBones() { return &m_vecBones; }
-
-	std::vector<tMTAnimClip>* GetAnimClip() { return &m_vecAnimClip; }
 
 	void SetMeshName(const std::wstring& meshName) { mMeshName = meshName; }
 	const std::wstring& GetMeshName() { return mMeshName; }
@@ -88,10 +76,5 @@ private:
 
 
 public:
-	//FIXME
-	std::vector<tMTAnimClip>	m_vecAnimClip;
-	std::vector<tMTBone>		m_vecBones;
 	std::wstring				mMeshName;
-	StructuredBuffer*			m_pBoneFrameData;		// 전체 본 프레임 정보(크기, 이동, 회전) (프레임 개수만큼)
-	StructuredBuffer*			m_pBoneOffset;	    // 각 뼈의 offset 행렬(각 뼈의 위치를 되돌리는 행렬) (1행 짜리)
 };

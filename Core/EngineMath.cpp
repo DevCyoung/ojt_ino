@@ -6,11 +6,6 @@
 #include "InputManager.h"
 #include "GameObject.h"
 
-/*
-* 게임 에서 사용하는 UI 좌표계는 윈도우 좌표계와 동일하게 사용합니다.
-* 윈도우 좌표계는 왼쪽 상단이 (0, 0)이고 오른쪽 하단이 (width, height)입니다.
-*/
-#include "WindowManager.h"
 namespace helper
 {
 	Vector2 RenderTargetToWorldUI(const Vector2& renderTargetMousePos, const Vector2& renderTargetSize)
@@ -38,8 +33,8 @@ namespace helper
 	Vector3 WindowScreenMouseToWorld3D(const Camera* const camera)
 	{
 		//camera가속한 Scene에서 마우스 포지션을 가져오는 함수정의?
-		//const Vector2& WINDOW_MOUSE_2D_POS = gInput->GetWindowMousePos();
-		const Vector2& WINDOW_MOUSE_2D_POS = WindowManager::GetInstance()->GetWindowMousePos();
+		const Vector2& WINDOW_MOUSE_2D_POS = gInput->GetWindowMousePos();
+		//const Vector2& WINDOW_MOUSE_2D_POS = WindowManager::GetInstance()->GetWindowMousePos();
 		const Vector3& WINDOW_MOUSE_3D_POS = Vector3(WINDOW_MOUSE_2D_POS.x, WINDOW_MOUSE_2D_POS.y, 0.0f);
 
 		//FIXME

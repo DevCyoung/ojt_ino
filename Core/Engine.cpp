@@ -2,7 +2,6 @@
 #include "Engine.h"
 #include "GraphicDeviceDx11.h"
 #include "TimeManager.h"
-#include "WindowManager.h"
 #include "MessageManager.h"
 #include "InputManager.h"
 #include "PathManager.h"
@@ -10,10 +9,6 @@
 #include "SceneManager.h"
 #include "RenderTargetRenderer.h"
 #include "EngineResourceLoader.h"
-//#include "Fmod.h"
-//#include "FontManager.h"
-//#include "BuildSetting.h"
-#include "FBXLoadManager.h"
 Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderTargetHeight)
 	: mHwnd(hWnd)
 	, mRenderTargetWidth(renderTargetWidth)
@@ -22,11 +17,9 @@ Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderT
 	, mWindowScreenHeight(renderTargetHeight)
 	, mGraphicDevice(new GraphicDeviceDX11(mHwnd, mRenderTargetWidth, mRenderTargetHeight))
 {
-	setWindowSize(mRenderTargetWidth, mRenderTargetHeight);
-	FBXLoadManager::initialize();
+	setWindowSize(mRenderTargetWidth, mRenderTargetHeight);	
 	//Fmod::Initialize();	
 	TimeManager::initialize();
-	WindowManager::initialize();
 	MessageManager::initialize();
 	PathManager::initialize();
 	InputManager::initialize();
@@ -40,12 +33,8 @@ Engine::~Engine()
 	ResourceManager::deleteInstance();
 	InputManager::deleteInstance();
 	PathManager::deleteInstance();
-	MessageManager::deleteInstance();
-	WindowManager::deleteInstance();
+	MessageManager::deleteInstance();	
 	TimeManager::deleteInstance();	
-	//FontManager::deleteInstance();
-	//Fmod::Release();
-	FBXLoadManager::deleteInstance();
 	DELETE_POINTER_NOT_NULL(mGraphicDevice);	
 }
 

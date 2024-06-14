@@ -75,8 +75,8 @@ public:
 	void AddComponent(ScriptComponent* const component);
 	void AddComponent(Component* const component);
 
-	virtual void Save(FILE* const file);
-	virtual void Load(FILE* const file);
+	virtual void Save(FILE* const file) {};
+	virtual void Load(FILE* const file) {};
 
 private:
 	void initialize();	

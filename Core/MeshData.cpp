@@ -3,10 +3,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "PathManager.h"
-
-#include "FBXLoader.h"
 #include "PathManager.h"
-#include "FBXLoadManager.h"
 #include "StructVertex.h"
 #include "Engine.h"
 #include "GraphicDeviceDx11.h"
@@ -16,16 +13,12 @@
 #include "EnumRenderType.h"
 #include "Material.h"
 #include "GameObject.h"
-#include "MeshRenderer.h"
 #include "ResourceManager.h"
 #include "Texture.h"
 #include <Shlwapi.h>
 #include "StructuredBuffer.h"
-#include "Animator3D.h"
 #include "GameObject.h"
 #include "PathManager.h"
-//#include  <Helper\FileHelper.h>
-#include "Animation3DController.h"
 #include "Builder.h"
 
 MeshData::MeshData()
@@ -173,46 +166,5 @@ HRESULT MeshData::Save(const std::wstring& relativePath)
 
 GameObject* MeshData::Instantiate()
 {
-	GameObject* root = CreateGameObject();
-	{		
-	}
-	{
-		GameObject* meshRoot = CreateGameObject();
-		meshRoot->SetName(L"MeshRoot");
-
-		for (MeshData* childMeshData : mChildMeshDatas)
-		{
-			GameObject* childObj = CreateGameObject();
-			childObj->SetName(childMeshData->GetMeshDataName());
-			childObj->AddComponent<MeshRenderer>();
-
-			childObj->GetComponent<MeshRenderer>()->SetMesh(childMeshData->mMesh);
-			for (int i = 0; i < childMeshData->mMaterials.size(); ++i)
-			{
-				childObj->GetComponent<MeshRenderer>()->SetMaterial(childMeshData->mMaterials[i], i);
-			}
-
-			if (childMeshData->mMesh->IsAnimMesh())
-			{
-				if (!root->GetComponentOrNull<Animation3DController>())
-				{					
-					root->AddComponent<Animation3DController>();
-					root->GetComponent< Animation3DController>()->SetAnimClip(*childMeshData->mMesh->GetAnimClip());
-				}
-
-				childObj->AddComponent<Animator3D>();
-				childObj->GetComponent<Animator3D>()->SetBones(*childMeshData->mMesh->GetBones());
-				//childObj->GetComponent<Animator3D>()->SetAnimClip(childMeshData->mMesh->GetAnimClip());
-
-				root->GetComponent<Animation3DController>()->AddAnimator3D(childObj->GetComponent<Animator3D>());				
-			}
-
-			meshRoot->SetChild(childObj);
-		}
-
-		root->SetChild(meshRoot);
-	}
-
-
-	return root;
+	return nullptr;
 }

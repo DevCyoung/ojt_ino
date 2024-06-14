@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "GameSystem.h"
-#include "Physics2D.h"
 #include "RenderTargetRenderer.h"
 #include "Layer.h"
 #include "GameObject.h"
@@ -8,7 +7,6 @@
 
 GameSystem::GameSystem(Scene* const scene)
 	: mScene(scene)
-	, mPhysics2D(new Physics2D(scene))
 	, mRenderTargetRenderer(new RenderTargetRenderer())
 {
 }

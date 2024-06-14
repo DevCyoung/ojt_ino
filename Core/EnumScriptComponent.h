@@ -12,8 +12,3 @@ enum class eScriptComponentType
 	CarController,
 	End
 };
-
-const wchar_t* GetScriptComponentName(const eScriptComponentType type);
-ScriptComponent* CreateScriptComponentByName(const std::wstring& scriptcomponentName);
-ScriptComponent * CreateScriptComponentByEnum(const eScriptComponentType type);
-

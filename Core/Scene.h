@@ -37,7 +37,6 @@ public:
 
 	//RenderTargetRenderer* GetRenderTargetRenderer() const { return mRenderTargetRenderer; }
 	GameSystem* GetGameSystem() const { return mGameSystem; }
-	CollisionManagement2D* GetCollisionManagement2D() const { return mCollisionManagement2D; }
 
 	virtual HRESULT Save(const std::wstring& filePath);
 	virtual HRESULT Load(const std::wstring& filePath) override;
@@ -84,9 +83,6 @@ protected:
 
 	virtual void renderFlush();
 	virtual void eventUpdate();
-
-protected:
-	CollisionManagement2D* mCollisionManagement2D;	
 
 private:
 	GameSystem* mGameSystem;

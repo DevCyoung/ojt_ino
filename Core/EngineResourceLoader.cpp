@@ -24,14 +24,6 @@ void EngineResourceLoader::loadResource(int renderTargetWIdth, int renderTargetH
 
 void EngineResourceLoader::loadMaterial()
 {
-	{
-		Material* mat = new Material();
-		mat->SetShader(gResourceManager->Find<Shader>(L"Std3D"));		
-		gResourceManager->Insert(L"Std3DMat", mat);
-	}
-
-
-
 }
 
 void EngineResourceLoader::loadMesh()
@@ -616,20 +608,6 @@ void EngineResourceLoader::loadShader()
 
 #ifdef  USE2D
 #pragma region 2D SHader
-	//Animation2D
-	{
-		Shader* const animationShader =
-			new Shader(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-				L"\\Shader\\VSAnimation2D.hlsl", L"main",
-				L"\\Shader\\PSAnimation2D.hlsl", L"main",
-				eSMType::Default,
-				eRSType::CullNone,
-				eDSType::LessEqual,
-				eBSType::AlphaBlend);
-		gResourceManager->Insert(L"Animation2D", animationShader);
-	}
-	
-
 	//Fill2D Debug
 	{
 		Shader* const debugShader =
@@ -696,7 +674,6 @@ void EngineResourceLoader::loadShader()
 	}
 
 	//Light
-
 	//Light Sprite
 	{
 		Shader* const sprite2DShader =
@@ -708,48 +685,6 @@ void EngineResourceLoader::loadShader()
 				eDSType::LessEqual,
 				eBSType::AlphaBlend);
 		gResourceManager->Insert(L"LightSprite2D", sprite2DShader);
-	}
-
-	//Light Animation2D
-	{
-		Shader* const animationShader =
-			new Shader(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-				L"\\Shader\\VSLightAnimation2D.hlsl", L"main",
-				L"\\Shader\\PSLightAnimation2D.hlsl", L"main",
-				eSMType::Default,
-				eRSType::CullNone,
-				eDSType::LessEqual,
-				eBSType::AlphaBlend);
-
-		gResourceManager->Insert(L"LightAnimation2D", animationShader);
-	}
-
-	//AfterImage
-	{
-		Shader* const animationShader =
-			new Shader(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-				L"\\Shader\\VSAfterImage.hlsl", L"main",
-				L"\\Shader\\PSAfterImage.hlsl", L"main",
-				eSMType::Default,
-				eRSType::CullNone,
-				eDSType::LessEqual,
-				eBSType::AlphaBlend);
-
-		gResourceManager->Insert(L"AfterImage", animationShader);
-	}
-
-	//Next Scene
-	{
-		Shader* const animationShader =
-			new Shader(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-				L"\\Shader\\VSNextScene.hlsl", L"main",
-				L"\\Shader\\PSNextScene.hlsl", L"main",
-				eSMType::Default,
-				eRSType::CullNone,
-				eDSType::LessEqual,
-				eBSType::AlphaBlend);
-
-		gResourceManager->Insert(L"NextScene", animationShader);
 	}
 
 	//Post Process
@@ -780,50 +715,9 @@ void EngineResourceLoader::loadShader()
 	}
 #pragma endregion
 #endif
-	//std3D
-	{
-		Shader* const wavePostProcess =
-			new Shader(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-				L"\\Shader\\std3d.hlsl", L"VS_Std3D",
-				L"\\Shader\\std3d.hlsl", L"PS_Std3D",
-				eSMType::Std3D,
-				eRSType::CullBack,
-				eDSType::LessEqual,
-				eBSType::Default);
-
-		gResourceManager->Insert(L"Std3D", wavePostProcess);
-	}
-
-	//std3D Debug
-	{
-		Shader* const wavePostProcess =
-			new Shader(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
-				L"\\Shader\\std3d_debug.hlsl", L"VS_Std3D",
-				L"\\Shader\\std3d_debug.hlsl", L"PS_Std3D",
-				eSMType::Std3D,
-				eRSType::WireframeNone,
-				eDSType::LessEqual,
-				eBSType::Default);
-
-		gResourceManager->Insert(L"Std3DCubeDebug", wavePostProcess);
-	}
-
-	//shadow map
-	{
-		Shader* const shadowMap =
-			new Shader(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-				L"\\Shader\\ShadowMap.hlsl", L"VS_ShadowMap",
-				L"\\Shader\\ShadowMap.hlsl", L"PS_ShadowMap",
-				eSMType::Std3D,
-				eRSType::CullBack,
-				eDSType::Less,
-				eBSType::Default);
-
-		gResourceManager->Insert(L"ShadowMap", shadowMap);
-	}
 }
 
-#include "Anim3DBuuferCopyCS.h"
+
 void EngineResourceLoader::loadComputeShader()
 {
 	//stdCS
@@ -833,20 +727,4 @@ void EngineResourceLoader::loadComputeShader()
 
 		gResourceManager->Insert(L"StdCS", stdCS);
 	}
-
-	//Animation3D
-	{
-		Anim3DBuuferCopyCS* const anim3DCS =
-			new Anim3DBuuferCopyCS(L"\\Shader\\animation3d.hlsl", L"CS_Animation3D");
-		anim3DCS->SetGroupPerThread(256, 1, 1);
-		gResourceManager->Insert<ComputeShader>(L"Animation3DCS", anim3DCS);
-	}
-
-	//bone copy
-	//{
-	//	Anim3DBuuferCopyCS* const bone =
-	//		new Anim3DBuuferCopyCS(L"\\Shader\\animation3d.hlsl", L"CS_Animation3D");
-	//	bone->SetGroup(1024, 1, 1);
-	//	gResourceManager->Insert<ComputeShader>(L"Animation3DCS", anim3DCS);
-	//}
 }

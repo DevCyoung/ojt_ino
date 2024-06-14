@@ -3,14 +3,11 @@
 #include "GameObject.h"
 #include "MessageManager.h"
 #include "RenderTargetRenderer.h"
-#include "Physics2D.h"
-#include "CollisionManagement2D.h"
 #include "GameSystem.h"
 #include "PathManager.h"
 
 Scene::Scene()
-	: mCollisionManagement2D(new CollisionManagement2D())
-	, mGameSystem(new GameSystem(this))
+	: mGameSystem(new GameSystem(this))
 	, mLayers()
 	, mEventMessages()
 	, mGarbages()	
@@ -19,14 +16,11 @@ Scene::Scene()
 {
 	mEventMessages.reserve(100);
 	mGarbages.reserve(100);
-
-	mCollisionManagement2D->TurnOnAllCollisionLayer();
 }
 
 Scene::~Scene()
 {
 	DELETE_POINTER_NOT_NULL(mGameSystem);
-	DELETE_POINTER_NOT_NULL(mCollisionManagement2D);
 }
 
 void Scene::initialize()
@@ -72,9 +66,6 @@ void Scene::lateUpdate()
 		//swprintf_s(buff, WSTR_LEN, L"<GameObject Count : %zu>", gameObjectCount);
 		MessageManager::GetInstance()->AddTitleMessage(buff);
 	}
-
-	//面倒贸府
-	mCollisionManagement2D->phisicsUpdate(this);
 	
 	//面倒焊埃
 	for (Layer& layer : mLayers)

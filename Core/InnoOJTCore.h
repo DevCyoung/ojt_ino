@@ -20,17 +20,10 @@
 #include <wrl.h>
 #include <commdlg.h>
 #include <d3d11.h>
-
-
-//OJT Server
 #include <thread>
 #include <vector>
 #include <mutex>
 #include <string>
-
-
-//#include <iostream>
-//#include "BuildSetting.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
@@ -38,8 +31,6 @@
 #include "StringHelper.h"
 #include "DXMath.h"
 #include "DirectXTex.h"
-
-//Inno
 #include "Protocal.h"
 
 using namespace engine::math;

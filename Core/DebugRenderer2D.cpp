@@ -58,13 +58,6 @@ DebugRenderer2D::DebugRenderer2D()
 		debugMaterial.debugShader = gResourceManager->Find<Shader>(L"DebugGrid2D");
 		mDebugMaterial[static_cast<UINT>(eDebugDrawType::Grid2D)] = debugMaterial;
 	}
-
-	{
-		tDebugMaterial debugMaterial = {};
-		debugMaterial.debugMesh = gResourceManager->Find<Mesh>(L"DebugCube");
-		debugMaterial.debugShader = gResourceManager->Find<Shader>(L"Std3DCubeDebug");
-		mDebugMaterial[static_cast<UINT>(eDebugDrawType::Cube)] = debugMaterial;
-	}
 }
 
 DebugRenderer2D::~DebugRenderer2D()

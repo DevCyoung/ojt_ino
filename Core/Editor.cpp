@@ -1,19 +1,12 @@
 ﻿#include "pch.h"
 #include "Editor.h"
 #include "PanelUIManager.h"
-#include "EditorPanelInitialize.h"
 #include "DockSpace.h"
 #include "EditorResourceLoader.h"
 #include <d3d11.h>
 #include "Engine.h"
 #include "GraphicDeviceDx11.h"
 	
-//#ifdef _DEBUG
-//#pragma comment(lib, "ImGUI/Debug/ImGUI_d")
-//#else
-//#pragma comment(lib, "ImGUI/Release/ImGUI")
-//#endif
-
 void SimpleStyle1()
 {
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -160,7 +153,6 @@ Editor::Editor()
 	//initialize
 	EditorResourceLoader();
 	PanelUIManager::initialize();	
-	EditorPanelInitialize();	
 }
 
 Editor::~Editor()
