@@ -21,28 +21,11 @@
 #define offset 16.f
 
 InnoInputUI::InnoInputUI()
-{
-	//for (int i = ImGuiTheme::ImGuiTheme_ImGuiColorsClassic; i < ImGuiTheme::ImGuiTheme_Count; ++i)
-	//{
-	//	vecZsAcc.push_back(ImGuiTheme::ImGuiTheme_Name((ImGuiTheme::ImGuiTheme_)i));
-	//}
-	//
-	//if (ImGui::Combo("combo", &current_item, vecZsAcc))
-	//{
-	//
-	//}
-
-	static int current_item = 7;
-	ImGuiStyle newStyle = ImGuiTheme::ThemeToStyle(ImGuiTheme::ImGuiTheme_(current_item));
-	ImGuiStyle& style = ImGui::GetStyle();
-	style = newStyle;
-
-	ImPlot::CreateContext();
+{			
 }
 
 InnoInputUI::~InnoInputUI()
 {
-	ImPlot::DestroyContext();
 }
 
 static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize = 150)
