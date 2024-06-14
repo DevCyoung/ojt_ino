@@ -407,7 +407,7 @@ void InnoInputUI::drawForm()
 
 		editTime += gDeltaTime;
 
-		if (editTime <= INNO_FRAME_DELTA_TIME)
+		if (editTime >= INNO_FRAME_DELTA_TIME)
 		{
 			slidePos += editTime * moveFrame;
 			editTime = 0.f;
