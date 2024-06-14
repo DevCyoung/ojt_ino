@@ -74,12 +74,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDIr)lib\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)lib\InnoOJTCore\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)lib\Core\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDIr)lib\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)lib\InnoOJTCore\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)lib\Core\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

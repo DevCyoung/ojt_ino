@@ -17,7 +17,7 @@ Scene::Scene()
 	mEventMessages.reserve(100);
 	mGarbages.reserve(100);
 }
-
+	
 Scene::~Scene()
 {
 	DELETE_POINTER_NOT_NULL(mGameSystem);

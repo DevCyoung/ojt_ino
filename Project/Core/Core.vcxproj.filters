@@ -219,9 +219,6 @@
     <ClInclude Include="StructBuffer.h">
       <Filter>Source\Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="GameSystem.h">
-      <Filter>Source\Engine\Resource\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Source\Engine\Resource\Scene</Filter>
     </ClInclude>
@@ -329,6 +326,9 @@
     </ClInclude>
     <ClInclude Include="Builder.h">
       <Filter>Source\Heper</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSystem.h">
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -446,9 +446,6 @@
     <ClCompile Include="StructBuffer.cpp">
       <Filter>Source\Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="GameSystem.cpp">
-      <Filter>Source\Engine\Resource\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source\Engine\Resource\Scene</Filter>
     </ClCompile>
@@ -550,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="Builder.cpp">
       <Filter>Source\Heper</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSystem.cpp">
+      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

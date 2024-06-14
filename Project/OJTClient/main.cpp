@@ -5,9 +5,9 @@
 #include "InnoOJTClient.h"
 
 #ifdef _DEBUG
-#pragma comment(lib, "\\InnoOJTCore\\Debug\\InooOJTCore.lib")
+#pragma comment(lib, "\\Core\\Debug\\Core.lib")
 #else
-#pragma comment(lib, "\\InnoOJTCore\\Release\\InooOJTCore.lib")
+#pragma comment(lib, "\\Core\\Release\\Core.lib")
 #endif
 
 #include <Engine.h>
