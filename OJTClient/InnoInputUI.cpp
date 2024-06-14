@@ -90,6 +90,99 @@ static void ShowGraph(const char* label, const float* values, const float* times
 	}
 }
 
+static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag )
+{
+	ImGui::Text(name);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
+	ImGui::SameLine(100.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::PushItemWidth(100.0f);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 비활성화된 스타일 적용
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));						
+	}
+
+	ImGui::InputFloat(label, pValue, 0.f, 0.f, "%.3f", flag);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 스타일 복원
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
+	}
+
+
+	ImGui::PopItemWidth();
+	ImGui::Spacing();
+}
+
+static void ShowInputText(const char* label, const char* name, char* pValue, int buffsize, ImGuiInputTextFlags flag)
+{
+	ImGui::Text(name);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
+	ImGui::SameLine(100.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::PushItemWidth(100.0f);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 비활성화된 스타일 적용
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+	}
+
+	ImGui::InputText(label, pValue, buffsize, flag);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 스타일 복원
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
+	}
+
+
+	ImGui::PopItemWidth();
+	ImGui::Spacing();
+}
+
+static void ShowInputInt(const char* label, const char* name, int* pValue, ImGuiInputTextFlags flag)
+{
+	ImGui::Text(name);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
+	ImGui::SameLine(100.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::PushItemWidth(100.0f);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 비활성화된 스타일 적용
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+	}
+
+	ImGui::InputInt(label, pValue, 0.f, 0.f, flag);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 스타일 복원
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
+	}
+
+
+	ImGui::PopItemWidth();
+	ImGui::Spacing();
+}
+
 void IndeterminateProgressBar(const ImVec2& size_arg)
 {
 	using namespace ImGui;
@@ -173,10 +266,35 @@ void InnoInputUI::drawForm()
 	const float GRAPH_HEIGHT = 100.f;
 
 	static float slidePos = 0.f;
-	static float slideMax = 1.f;	
+	static float slideMax = 1.f;
+	static float editTime = 0.f;
+	static int playMode = 0;
+
+	if (simulatorState == eInnoSimulatorState::None)
+	{
+		slidePos = 0.f;
+		editTime = 0.f;
+		slideMax = 1.f;
+	}
 
 	int dataSize = min(INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND, vecTimes.size());
 	int dataPos = 0;
+
+	const bool bConnecting = InnoOJTClient::GetInstance()->IsConnecting();
+	const bool bConnected = InnoOJTClient::GetInstance()->IsConnected();
+
+	static char IPBuffer[256] = "127.0.0.1";
+	static int portNumber = INNO_DEFAULT_PORT;
+
+	ImGuiInputTextFlags inputTextFlag = 0;
+	if (simulatorState != eInnoSimulatorState::None)
+	{
+		inputTextFlag = ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly;
+	}
+	if (bConnecting)
+	{
+		inputTextFlag = ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly;
+	}
 
 
 #pragma region InputScreen
@@ -192,9 +310,31 @@ void InnoInputUI::drawForm()
 
 	ImGui::Separator();
 	ImGui::PushItemWidth(800.f);
-	ImGui::SliderFloat("##testFloat", &slidePos, 0.f, slideMax);
+
+	if (simulatorState != eInnoSimulatorState::Editing)
+	{
+		// 비활성화된 스타일 적용
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+	}
+
+	if (ImGui::SliderFloat("##SlidePos", &slidePos, 0.f, slideMax))
+	{
+		playMode = 0;
+	}
+
+	if (simulatorState != eInnoSimulatorState::Editing)
+	{
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
+	}	
+
 	ImGui::PopItemWidth();
 	ImGui::Separator();
+
+	
 
 	if (simulatorState == eInnoSimulatorState::Editing)
 	{
@@ -205,11 +345,73 @@ void InnoInputUI::drawForm()
 
 		ImGui::SameLine();
 
-		ImGui::Button(">>");
+		if (ImGui::Button(">>"))
+		{
+			++playMode;
+		}
 
 		ImGui::SameLine();
 
-		ImGui::Button("<<");
+		if (ImGui::Button("<<"))
+		{
+			--playMode;
+		}
+
+		if (playMode > 4)
+		{
+			playMode = 4;
+		}
+		if (playMode < -4)
+		{
+			playMode = -4;
+		}
+
+		int moveFrame = 0;
+
+		if (playMode == -4)
+		{
+			moveFrame = -8;
+		}
+		else if (playMode == -3)
+		{
+			moveFrame = -4;
+		}
+		else if (playMode == -2)
+		{
+			moveFrame = -2;
+		}
+		else if (playMode == -1)
+		{
+			moveFrame = -1;
+		}
+		else if (playMode == 0)
+		{
+			moveFrame = 0;
+		}
+		else if (playMode == 1)
+		{
+			moveFrame = 1;
+		}
+		else if (playMode == 2)
+		{
+			moveFrame = 2;
+		}
+		else if (playMode == 3)
+		{
+			moveFrame = 4;
+		}
+		else if (playMode == 4)
+		{
+			moveFrame = 8;
+		}
+
+		editTime += gDeltaTime;
+
+		if (editTime <= INNO_FRAME_DELTA_TIME)
+		{
+			slidePos += editTime * moveFrame;
+			editTime = 0.f;
+		}		
 	}	
 	else if (InnoOJTClient::GetInstance()->mServerSocket != INVALID_SOCKET)
 	{
@@ -225,14 +427,56 @@ void InnoInputUI::drawForm()
 	else if (simulatorState == eInnoSimulatorState::Playing)
 	{
 		if (ImGui::Button("Stop Training"))
-		{
+		{	
 			innoSimulator->Stop();
-		}		
-	}		
+		}
+
+		slidePos = slideMax;
+	}
+	if (simulatorState == eInnoSimulatorState::Editing)
+	{
+		ImGui::SameLine(400.f);
+		if (0 == playMode)
+		{
+			ImGui::Text("Play Stop");
+		}
+		else if (1 == playMode)
+		{
+			ImGui::Text("Play");
+		}
+		else if (2 == playMode)
+		{
+			ImGui::Text("Play x 2");
+		}
+		else if (3 == playMode)
+		{
+			ImGui::Text("Play x 4");
+		}
+		else if (4 == playMode)
+		{
+			ImGui::Text("Play x 8");
+		}
+		else if (-1 == playMode)
+		{
+			ImGui::Text("Rewind");
+		}
+		else if (-2 == playMode)
+		{
+			ImGui::Text("Rewind x 2");
+		}
+		else if (-3 == playMode)
+		{
+			ImGui::Text("Rewind x 4");
+		}
+		else if (-4 == playMode)
+		{
+			ImGui::Text("Rewind x 8");
+		}
+	}
+
 
 	ImGui::SameLine(600.f);
-
-	ImGui::Text("Play Time : %.2f / %.2f", vecTimes.back(), vecTimes.back());
+	ImGui::Text("Time : %.2f / %.2f", (slidePos / slideMax) * vecTimes.back(), vecTimes.back());
 
 	//ImGui::Separator();
 
@@ -241,7 +485,6 @@ void InnoInputUI::drawForm()
 #pragma endregion InputScreen
 
 #pragma region InputUI1
-
 	float MS = innoSimulator->GetMS();
 	float MU = innoSimulator->GetMU();
 	float KS = innoSimulator->GetKS();
@@ -252,128 +495,34 @@ void InnoInputUI::drawForm()
 	float BumpEnd = innoSimulator->GetBumpEnd();
 	float BumpAmp = innoSimulator->GetBumpAmp();
 	float SamplingTime = innoSimulator->GetSamplintTIme();
-
 	static char buff[256] = {};
 
 	ImGui::Begin("InputUI1");
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
-
-	ImGui::Text("MS");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##MS", &MS, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("MU");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##MU", &MU, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("KS");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##KS", &KS, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("CS");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##CS", &CS, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("KT");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##KT", &KT, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
+	ShowInputFloat("##MS", "MS", &MS, inputTextFlag);
+	ShowInputFloat("##MU", "MU", &MU, inputTextFlag);
+	ShowInputFloat("##KS", "KS", &KS, inputTextFlag);
+	ShowInputFloat("##CS", "CS", &CS, inputTextFlag);
+	ShowInputFloat("##KT", "KT", &KT, inputTextFlag);	
 	ImGui::End();
 #pragma endregion InputUI1
 
 #pragma region InputUI2
 	ImGui::Begin("InputUI2");
-
-	ImGui::Text("Speed");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##Speed:InputUI2", &Speed, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("Bump Start");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##BumpStart:InputUI2", &BumpStart, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("Bump End");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##BumpEnd:InputUI2", &BumpEnd, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("Bump Amp");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##BumpAmp:InputUI2", &BumpAmp, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
-	ImGui::Text("Sampling Time");
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputFloat("##SamplingTime", &SamplingTime, 0.f, 0.f);
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-
+	ShowInputFloat("##Speed:InputUI2", "Speed", &Speed, inputTextFlag);
+	ShowInputFloat("##BumpStart:InputUI2", "Bump Start", &BumpStart, inputTextFlag);
+	ShowInputFloat("##BumpEnd:InputUI2", "Bump End", &BumpEnd, inputTextFlag);
+	ShowInputFloat("##BumpAmp:InputUI2", "Bump Amp", &BumpAmp, inputTextFlag);
+	ShowInputFloat("##SamplingTime", "Sampling Time", &SamplingTime, inputTextFlag);
 	ImGui::End();
-
 #pragma endregion InputUI2
 
 #pragma region InputUI3	
 	ImGui::Begin("InputUI3");
 
-	bool bConnecting = InnoOJTClient::GetInstance()->IsConnecting();
-	bool bConnected = InnoOJTClient::GetInstance()->IsConnected();
-
-	static char ipBuff[256] = "127.0.0.1";
-	static int portNumber = INNO_DEFAULT_PORT;
-
 	if (false == bConnected)
-	{		
-		ImGui::Text("ServerIP");
-		ImGui::SameLine(100.0f);
-		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-		ImGui::PushItemWidth(100.0f);
-		ImGui::InputText("##ServerIP", ipBuff, 16);
-		ImGui::PopItemWidth();
-		ImGui::Spacing();
-
-		ImGui::Text("Port");
-		ImGui::SameLine(100.0f);
-		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-		ImGui::PushItemWidth(100.0f);
-		ImGui::InputInt("##PortNumber", &portNumber, 0, 0);
-		ImGui::PopItemWidth();
-		ImGui::Spacing();
+	{
+		ShowInputText("##ServerIP", "ServerIP", IPBuffer, 16, inputTextFlag);
+		ShowInputInt("##PortNumber", "Port", &portNumber, inputTextFlag);		
 	}
 
 	if (bConnecting)
@@ -427,13 +576,23 @@ void InnoInputUI::drawForm()
 		}
 	}
 	else
-	{		
-		if (ImGui::Button("Connect", ImVec2(196, 20.f)))
+	{	
+		if (simulatorState == eInnoSimulatorState::Editing )
+		{
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+			ImGui::Text("Please Stop Editing");
+		}
+		else if (simulatorState == eInnoSimulatorState::Playing)
+		{
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+			ImGui::Text("Please Stop Training");
+		}
+		else if (ImGui::Button("Connect", ImVec2(196, 20.f)))
 		{
 			char connectBuffer[256] = { 0, };
-			sprintf_s(connectBuffer, "Connecting...\nIP : %s\nPort : %d", ipBuff, portNumber);
+			sprintf_s(connectBuffer, "Connecting...\nIP : %s\nPort : %d", IPBuffer, portNumber);
 			gLogListUIClient->WriteLine(connectBuffer);
-			InnoOJTClient::GetInstance()->Connect(ipBuff, portNumber);
+			InnoOJTClient::GetInstance()->Connect(IPBuffer, portNumber);
 		}
 	}		
 
@@ -443,6 +602,17 @@ void InnoInputUI::drawForm()
 #pragma region GraphUI1
 	
 	slideMax = vecTimes.back();
+
+	if (slidePos >= slideMax)
+	{
+		slidePos = slideMax;
+		playMode = 0;
+	}
+	if (slidePos < 0.f)
+	{
+		slidePos = 0.f;
+		playMode = 0;
+	}
 
 	if (simulatorState == eInnoSimulatorState::Playing)
 	{
@@ -459,7 +629,12 @@ void InnoInputUI::drawForm()
 
 	if (slideMax <= 0.f)
 	{
-		dataPos = 0;
+		dataPos = 0;		
+	}	
+
+	if (dataPos < 0.f)
+	{
+		dataPos = 0;		
 	}
 
 	ImGui::Begin("GraphUI1");
@@ -470,7 +645,7 @@ void InnoInputUI::drawForm()
 		ShowGraph("ZsPos", &vecZsPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
 		ShowGraph("ZsSpeed", &vecZsSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
 		ShowGraph("ZsAcc", &vecZsAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("ZuPos", &vecZsPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph("ZuPos", &vecZuPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
 		ShowGraph("ZuSpeed", &vecZuSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
 		ShowGraph("ZuAcc", &vecZuAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
 		ShowGraph("Zr", &vecZr[dataPos], &vecTimes[dataPos], dataSize, axxSize);
