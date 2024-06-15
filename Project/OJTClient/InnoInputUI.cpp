@@ -353,46 +353,54 @@ void InnoInputUI::drawForm()
 
 		if (playMode == -4)
 		{
-			moveFrame = -8;
+			editTime += gDeltaTime * 8;
 		}
 		else if (playMode == -3)
 		{
-			moveFrame = -4;
+			editTime += gDeltaTime * 4;
 		}
 		else if (playMode == -2)
 		{
-			moveFrame = -2;
+			editTime += gDeltaTime * 2;
 		}
 		else if (playMode == -1)
 		{
-			moveFrame = -1;
+			editTime += gDeltaTime;
 		}
 		else if (playMode == 0)
 		{
-			moveFrame = 0;
+			//editTime += gDeltaTime;
 		}
 		else if (playMode == 1)
 		{
-			moveFrame = 1;
+			editTime += gDeltaTime;
 		}
 		else if (playMode == 2)
 		{
-			moveFrame = 2;
+			editTime += gDeltaTime * 2;
 		}
 		else if (playMode == 3)
 		{
-			moveFrame = 4;
+			editTime += gDeltaTime * 4;
 		}
 		else if (playMode == 4)
 		{
-			moveFrame = 8;
+			editTime += gDeltaTime * 8;
 		}
 
-		editTime += gDeltaTime;
+		//editTime += gDeltaTime * moveFrame;
 
 		if (editTime >= INNO_FRAME_DELTA_TIME)
 		{
-			slidePos += editTime * moveFrame;
+			if (playMode < 0)
+			{
+				slidePos -= editTime;
+			}			
+			else if (playMode > 0)
+			{
+				slidePos += editTime;
+			}
+
 			editTime = 0.f;
 		}		
 	}	
