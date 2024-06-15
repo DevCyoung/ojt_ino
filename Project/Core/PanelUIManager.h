@@ -12,7 +12,7 @@ public:
 	PanelUI* FindPanelUIOrNull(const std::string& title);
 	void update();
 
-private:
+public:
 	void finalUpdate();
 	void render();
 

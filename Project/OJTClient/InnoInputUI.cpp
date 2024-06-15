@@ -586,16 +586,6 @@ void InnoInputUI::drawForm()
 			InnoOJTClient::GetInstance()->Connect(IPBuffer, portNumber);
 		}
 	}		
-
-
-	//TODO
-	if (ImGui::Button("Save"))
-	{
-		InnnoSave save;
-
-		save.Save();
-	}
-
 	ImGui::End();
 #pragma endregion InputUI3
 
@@ -648,7 +638,10 @@ void InnoInputUI::drawForm()
 	ImGui::Begin("GraphUI1");
 	{
 		static int axxSize = 150;
-		ImGui::SliderInt("##AXXSize", &axxSize, 50, 600);
+		ImGui::PushItemWidth(441);
+		ImGui::SliderInt("##AXXSize", &axxSize, 70, 600);
+		ImGui::PopItemWidth();
+
 		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
 		ShowGraph("ZsPos", &vecZsPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
 		ShowGraph("ZsSpeed", &vecZsSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);

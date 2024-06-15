@@ -182,26 +182,12 @@ void Editor::run()
 	{
 		ShowExampleAppDockSpace(&show_app_dockspace);
 	}
-
-	{
-		//bool show = true;
-		//ImGui::ShowComboAutoSelectDemo(&show);
-		//ImGui::ShowComboFilterDemo(&show);
-
-
-
-	}
 	
 	PanelUIManager::GetInstance()->finalUpdate();
 	PanelUIManager::GetInstance()->render();
 
-	// Rendering
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-	//PanelUIManager::GetInstance()->update();
-
-	// Update and Render additional Platform Windows
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		ImGui::UpdatePlatformWindows();

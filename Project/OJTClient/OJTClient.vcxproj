@@ -156,6 +156,7 @@
     <ClInclude Include="PanelLoader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ShowDockSpace.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ClientTestUI.h" />
   </ItemGroup>
@@ -174,6 +175,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ClientTestUI.cpp" />
+    <ClCompile Include="ShowDockSpace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OJTClient.rc" />

@@ -54,7 +54,12 @@
     <ClInclude Include="GameManager.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="InnnoSave.h" />
+    <ClInclude Include="ShowDockSpace.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="InnnoSave.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTClient.ico">
@@ -100,6 +105,11 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="InnnoSave.cpp" />
+    <ClCompile Include="ShowDockSpace.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="InnnoSave.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

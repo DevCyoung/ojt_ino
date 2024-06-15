@@ -23,6 +23,10 @@
 #include <Transform.h>
 #include "GameManager.h"
 #include "CarController.h"
+#include <PanelUIManager.h>
+#include "DockSpace.h"
+#include "ShowDockSpace.h"
+
 #define MAX_LOADSTRING 100
 
 static GameObject* CreateSpriteGameObject(const wchar_t* path)
@@ -103,9 +107,40 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             Engine::GetInstance()->run();
-            Editor::GetInstance()->run();
-            InnoOJTClient::GetInstance()->run();
 
+#pragma region Editor::GetInstance()->run();            
+            //Editor::GetInstance()->run();
+            PanelUIManager::GetInstance()->update();
+
+            // Start the Dear ImGui frame
+            ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+            ImGui_ImplDX11_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+
+            ImGui::NewFrame();
+
+            bool show_app_dockspace = true;
+            if (show_app_dockspace)
+            {
+                //ShowExampleAppDockSpace(&show_app_dockspace);
+                ShowDockSpace();
+            }
+
+            PanelUIManager::GetInstance()->finalUpdate();
+            PanelUIManager::GetInstance()->render();
+
+            ImGui::Render();
+            ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+            if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+            {
+                ImGui::UpdatePlatformWindows();
+                ImGui::RenderPlatformWindowsDefault();
+            }
+            //Editor::GetInstance()->run();
+#pragma endregion Editor::GetInstance()->run();
+
+            InnoOJTClient::GetInstance()->run();
             Engine::GetInstance()->present();
         }
     }
