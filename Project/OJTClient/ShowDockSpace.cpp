@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ShowDockSpace.h"
 #include "InnnoSave.h"
+#include "InnoSimulator.h"
+
 void ShowDockSpace()
 {
     // READ THIS !!!
@@ -81,7 +83,8 @@ void ShowDockSpace()
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Save", NULL))
+            const eInnoSimulatorState state = InnoSimulator::GetInstance()->GetSimulatorState();
+            if (ImGui::MenuItem("Save", NULL, nullptr, state == eInnoSimulatorState::Editing))
             {
                 InnnoSave save;
                 save.Save();
