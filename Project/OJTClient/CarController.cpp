@@ -50,7 +50,7 @@ void CarController::update()
 		if (!InnoDataManager::GetInstance()->GetTimes().empty())
 		{
 			pA.x = InnoDataManager::GetInstance()->GetXPoses().back();
-			pB.x = InnoDataManager::GetInstance()->GetOtherPoses().back();
+			pB.x = InnoDataManager::GetInstance()->GetXOtherPoses().back();
 
 			gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(pA, Vector2(50.f, 50.f), 0.f, Vector4(1.f, 0.f, 0.f, 1.f));
 			gCurrentSceneRenderer->GetDebugRenderer2D()->DrawFillRect2D(pB, Vector2(50.f, 50.f), 0.f, Vector4(0.f, 0.f, 1.f, 1.f));

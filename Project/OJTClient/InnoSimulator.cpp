@@ -108,8 +108,7 @@ void InnoSimulator::Update()
 	}
 	else if (mState == eInnoSimulatorState::Start)
 	{
-		gLogListUIClient->WriteLine("Training Start");
-
+		gLogListUIClient->WriteLine("Training Start");		
 		InnoDataManager::GetInstance()->Clear();
 
 		mPlayerBPos = 0.f;

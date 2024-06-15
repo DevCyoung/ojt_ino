@@ -4,7 +4,7 @@
 #include "GameManager.h"
 #include "InnoSimulator.h"
 #include "InnoDataManager.h"
-
+#include "InnnoSave.h"
 #include <RenderTargetRenderer.h>
 #include <GameSystem.h>
 #include <SceneManager.h>
@@ -485,7 +485,7 @@ void InnoInputUI::drawForm()
 	float BumpStart = innoSimulator->GetBumpStart();
 	float BumpEnd = innoSimulator->GetBumpEnd();
 	float BumpAmp = innoSimulator->GetBumpAmp();
-	float SamplingTime = innoSimulator->GetSamplintTIme();
+	float SamplingTime = innoSimulator->GetSamplingTime();
 	static char buff[256] = {};
 
 	ImGui::Begin("InputUI1");
@@ -586,6 +586,15 @@ void InnoInputUI::drawForm()
 			InnoOJTClient::GetInstance()->Connect(IPBuffer, portNumber);
 		}
 	}		
+
+
+	//TODO
+	if (ImGui::Button("Save"))
+	{
+		InnnoSave save;
+
+		save.Save();
+	}
 
 	ImGui::End();
 #pragma endregion InputUI3

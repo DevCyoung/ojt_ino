@@ -24,7 +24,7 @@ public:
 	const std::vector<float>& GetZrs() { return mZrs; }
 	const std::vector<float>& GetXPoses() { return mXPoses; }
 	const std::vector<float>& GetXSpeeds() { return mXSpeeds; }
-	const std::vector<float>& GetOtherPoses() { return mPlayerBSamplePostions; }
+	const std::vector<float>& GetXOtherPoses() { return mPlayerBSamplePostions; }
 
 	void Clear();
 

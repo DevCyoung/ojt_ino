@@ -75,7 +75,7 @@ public:
 	float GetBumpStart() const { return mBumpStart; }
 	float GetBumpEnd() const { return mBumpEnd; }
 	float GetBumpAmp() const { return mBumpAmp; }
-	float GetSamplintTIme() { return mSamplingTime; }
+	float GetSamplingTime() { return mSamplingTime; }
 
 	tInnoSampleData CreateSampleData(float sampleTime, float deltaTime);
 
