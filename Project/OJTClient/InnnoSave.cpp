@@ -44,20 +44,6 @@ void InnnoSave::Save()
 
 	while (curSamplingTime < vecTimes.back())
 	{
-		//현재 샘플링보다 큰 프레임을찾는다.
-
-		float time = vecTimes[t2];
-		if (curSamplingTime > time)
-		{
-			t1 = t2;
-			t2 = ++t2;
-		}
-
-		if (idx >= vecTimes.size())
-		{
-			break;
-		}
-
 		//t1과 t2를 Lerp
 		//이것으로 샘플링을한다.
 		float t1Time = vecTimes[t1];
@@ -90,7 +76,19 @@ void InnnoSave::Save()
 				 << XOtherPos		<< "\n";
 
 			curSamplingTime += samplingTime;
-		}		
+		}	
+
+		//현재 샘플링보다 큰 프레임을찾는다.
+		int tempT = t2;
+		for (; t2 < vecTimes.size(); ++t2)
+		{
+			float time = vecTimes[t2];
+			if (curSamplingTime < time)
+			{
+				t1 = tempT;
+				break;
+			}
+		}
 	}
 
 	file.close();
