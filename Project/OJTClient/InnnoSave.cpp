@@ -43,52 +43,50 @@ void InnnoSave::Save()
 	int t2 = idx + 1;
 
 	while (curSamplingTime < vecTimes.back())
-	{
+	{	
+		if (vecTimes.size() <= t2)
+		{
+			break;
+		}	
+		else if (curSamplingTime > vecTimes[t2]) //현재 샘플링보다 큰 프레임을찾는다.
+		{
+			t1 = t2;
+			++t2;
+			continue;
+		}
+
 		//t1과 t2를 Lerp
 		//이것으로 샘플링을한다.
 		float t1Time = vecTimes[t1];
 		float t2Time = vecTimes[t2];
-		while (curSamplingTime <= t2Time)
-		{			
-			float per = (curSamplingTime - vecTimes[t1]) / (vecTimes[t2] - vecTimes[t1]);
 
-			float ZsPos = vecZsPos[t1] + ((vecZsPos[t2] - vecZsPos[t1]) * per);
-			float ZsSpeed = vecZsSpeed[t1] + ((vecZsSpeed[t2] - vecZsSpeed[t1]) * per);
-			float ZsAcc = vecZsAcc[t1] + ((vecZsAcc[t2] - vecZsAcc[t1]) * per);
-			float ZuPos = vecZuPos[t1] + ((vecZuPos[t2] - vecZuPos[t1]) * per);
-			float ZuSpeed = vecZuSpeed[t1] + ((vecZuSpeed[t2] - vecZuSpeed[t1]) * per);
-			float ZuAcc = vecZuAcc[t1] + ((vecZuAcc[t2] - vecZuAcc[t1]) * per);
-			float Zr = vecZr[t1] + ((vecZr[t2] - vecZr[t1]) * per);
-			float xPos = vecxPos[t1] + ((vecxPos[t2] - vecxPos[t1]) * per);
-			float XSpeed = vecXSpeed[t1] + ((vecXSpeed[t2] - vecXSpeed[t1]) * per);
-			float XOtherPos = vecXOtherPos[t1] + ((vecXOtherPos[t2] - vecXOtherPos[t1])* per);
-			// 데이터 작성
-			file << curSamplingTime << "\t"
-				 << ZsPos			<< "\t"
-				 << ZsSpeed			<< "\t"
-				 << ZsAcc			<< "\t"
-				 << ZuPos			<< "\t"
-				 << ZuSpeed			<< "\t"
-				 << ZuAcc			<< "\t"
-				 << Zr				<< "\t"
-				 << xPos			<< "\t"
-				 << XSpeed			<< "\t"
-				 << XOtherPos		<< "\n";
+		float per = (curSamplingTime - vecTimes[t1]) / (vecTimes[t2] - vecTimes[t1]);
 
-			curSamplingTime += samplingTime;
-		}	
+		float ZsPos = vecZsPos[t1] + ((vecZsPos[t2] - vecZsPos[t1]) * per);
+		float ZsSpeed = vecZsSpeed[t1] + ((vecZsSpeed[t2] - vecZsSpeed[t1]) * per);
+		float ZsAcc = vecZsAcc[t1] + ((vecZsAcc[t2] - vecZsAcc[t1]) * per);
+		float ZuPos = vecZuPos[t1] + ((vecZuPos[t2] - vecZuPos[t1]) * per);
+		float ZuSpeed = vecZuSpeed[t1] + ((vecZuSpeed[t2] - vecZuSpeed[t1]) * per);
+		float ZuAcc = vecZuAcc[t1] + ((vecZuAcc[t2] - vecZuAcc[t1]) * per);
+		float Zr = vecZr[t1] + ((vecZr[t2] - vecZr[t1]) * per);
+		float xPos = vecxPos[t1] + ((vecxPos[t2] - vecxPos[t1]) * per);
+		float XSpeed = vecXSpeed[t1] + ((vecXSpeed[t2] - vecXSpeed[t1]) * per);
+		float XOtherPos = vecXOtherPos[t1] + ((vecXOtherPos[t2] - vecXOtherPos[t1]) * per);
 
-		//현재 샘플링보다 큰 프레임을찾는다.
-		int tempT = t2;
-		for (; t2 < vecTimes.size(); ++t2)
-		{
-			float time = vecTimes[t2];
-			if (curSamplingTime < time)
-			{
-				t1 = tempT;
-				break;
-			}
-		}
+		// 데이터 작성
+		file << curSamplingTime << "\t"
+			<< ZsPos << "\t"
+			<< ZsSpeed << "\t"
+			<< ZsAcc << "\t"
+			<< ZuPos << "\t"
+			<< ZuSpeed << "\t"
+			<< ZuAcc << "\t"
+			<< Zr << "\t"
+			<< xPos << "\t"
+			<< XSpeed << "\t"
+			<< XOtherPos << "\n";
+
+		curSamplingTime += samplingTime;
 	}
 
 	file.close();
