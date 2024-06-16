@@ -283,12 +283,12 @@ void InnoInputUI::drawForm()
 #pragma region InputScreen
 	ImGui::Begin("ScreenUI");
 
-	if (ImGui::IsWindowFocused())
-	{
-		GameManager::GetInstance()->mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
-	}
+	//if (ImGui::IsWindowFocused())
+	//{
+	//	GameManager::GetInstance()->mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
+	//}
 
-	ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
+	//ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
 	//ImGui::Image((void*)renderTexB->GetSRV(), renderTargetSizeB);
 
 	ImGui::Separator();
