@@ -84,7 +84,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
 
-    Engine::initialize(gHwnd, 1280, 720);
+    Engine::initialize(gHwnd, 1280, 740);
     Editor::initialize();
     PanelLoader::initialize();
     InnoOJTClient::initialize();

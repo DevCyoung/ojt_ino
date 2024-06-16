@@ -25,6 +25,8 @@ InnoSimulator::InnoSimulator()
 	, mXDot{ 0.f }
 	, mPlayerBPos(0.f)
 	, mFrameDeltaTime(0.f)
+	, mBumps()
+	, mBumpsCopy()
 {
 }
 
@@ -115,7 +117,7 @@ void InnoSimulator::Update()
 		mCurTime = 0.f;
 		mPrevPos = 0.f;
 		mFrameDeltaTime = 0.f;
-
+		mBumpsCopy = mBumps;
 		ZeroMemory(mX, sizeof(mX));
 		ZeroMemory(mXDot, sizeof(mXDot));
 
@@ -152,15 +154,27 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 {
 	//mSamplingTime 이전프레임과 지금프레임의 거리
 	//도로의 높이
-	float zr = 0.f;
+	float zr = 0.f;	
 
-	float t1 = mBumpStart / mSpeed;
-	float t2 = mBumpEnd / mSpeed;
-
-	if (t1 <= sampleTime && sampleTime < t2)
+	if (!mBumpsCopy.empty())
 	{
-		zr = -mBumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
-	}
+		float bumpStart = mBumpsCopy[0][0];
+		float bumpEnd = mBumpsCopy[0][1];
+		float bumpAmp = mBumpsCopy[0][2];
+
+		float t1 = bumpStart / mSpeed;
+		float t2 = bumpEnd / mSpeed;
+
+		if (t1 <= sampleTime && sampleTime < t2)
+		{
+			zr = -bumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
+		}
+
+		if (sampleTime >= t2)
+		{
+			mBumpsCopy.erase(mBumpsCopy.begin());
+		}
+	}		
 
 	mXDot[0] = mX[1];
 	mXDot[1] = (-mKS * (mX[0] - mX[2]) - mCS * (mX[1] - mX[3])) / mMS;
@@ -189,4 +203,14 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 
 	mPrevPos = sampleData.xPos;
 	return sampleData;
+}
+
+void InnoSimulator::PushBump(Vector3 bump)
+{
+	mBumps.push_back(bump);
+}
+
+void InnoSimulator::RemoveBump(int idx)
+{
+	mBumps.erase(mBumps.begin() + idx);
 }

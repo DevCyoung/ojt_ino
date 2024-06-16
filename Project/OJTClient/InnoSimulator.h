@@ -79,6 +79,11 @@ public:
 
 	tInnoSampleData CreateSampleData(float sampleTime, float deltaTime);
 
+	const std::vector< Vector3>& GetBumps() { return mBumps; }
+	void PushBump(Vector3 bump);
+	void RemoveBump(int idx);
+	void SetBump(int idx, Vector3 bump) { mBumps[idx] = bump; }
+
 	bool IsPlaying() { return mState == eInnoSimulatorState::Playing; }
 
 private:
@@ -100,6 +105,9 @@ private:
 
 	float mX[4] = { 0, };
 	float mXDot[4] = { 0, };
+
+	std::vector<Vector3> mBumpsCopy;
+	std::vector<Vector3> mBumps;
 };
 
 
