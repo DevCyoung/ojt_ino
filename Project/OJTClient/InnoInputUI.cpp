@@ -12,7 +12,9 @@
 #define offset 16.f
 
 InnoInputUI::InnoInputUI()
+	:mbSaveClicked(false)
 {
+	SetTitle("InnoInputUI");
 }
 
 InnoInputUI::~InnoInputUI()
@@ -826,8 +828,72 @@ void InnoInputUI::drawForm()
 			InnoOJTClient::GetInstance()->Connect(IPBuffer, portNumber);
 		}
 	}
+
+	if (ImGui::BeginPopupModal("Client::File", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Select save data");
+		static InnnoSave save;
+		ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
+			
+		float of = 103;
+		ImGui::Checkbox(ZS_POS, &save.mbZsPos);
+		ImGui::SameLine(of);
+		ImGui::Checkbox(ZU_POS, &save.mbZuPos);
+			
+		ImGui::Checkbox(ZS_SPEED, &save.mbZsSpeed);
+		ImGui::SameLine(of);
+		ImGui::Checkbox(ZU_SPEED, &save.mbZuSpeed);
+
+		ImGui::Checkbox(ZS_ACC, &save.mbZsAcc);
+		ImGui::SameLine(of);
+		ImGui::Checkbox(ZU_ACC, &save.mbZuAcc);
+		
+		ImGui::Checkbox(ZR, &save.mbZr);
+		ImGui::SameLine(of);
+		ImGui::Checkbox(X_POS, &save.mbXPos);
+
+		ImGui::Checkbox(X_SPEED, &save.mbXSpeed);
+		ImGui::SameLine(of);
+		ImGui::Checkbox(X_POS_OTHER, &save.mbXPosOther);
+
+				
+
+
+		//
+		//if (ImGui::Button("Yes", button_size))
+		//{
+		//    InnoOJTClient::GetInstance()->DisConnect();
+		//    ImGui::CloseCurrentPopup();
+		//}
+		//ImGui::SameLine();
+
+		if (ImGui::Button("Save", button_size))
+		{			
+			save.Save();
+		}
+
+		ImGui::SameLine(0);
+
+		if (ImGui::Button("No", button_size))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+	//InnoInputUI* inputUi = static_cast<InnoInputUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("InnoInputUI"));
+	if (mbSaveClicked)
+	{
+		if (!ImGui::IsPopupOpen("Client::File"))
+		{
+			ImGui::OpenPopup("Client::File");
+			mbSaveClicked = false;
+		}
+	}
 	ImGui::End();
 #pragma endregion InputUI3
+
+
 
 #pragma region GraphUI1
 	ImGui::Begin("GraphUI1");

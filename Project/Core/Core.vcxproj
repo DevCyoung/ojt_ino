@@ -174,8 +174,6 @@
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="InnoMessageQueue.h" />
     <ClInclude Include="InnoOJTCore.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="ItemUI.h" />
     <ClInclude Include="LogListUI.h" />
     <ClInclude Include="MessageManager.h" />
     <ClInclude Include="PanelUI.h" />
@@ -239,8 +237,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="InnoMessageQueue.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="ItemUI.cpp" />
     <ClCompile Include="LogListUI.cpp" />
     <ClCompile Include="MessageManager.cpp" />
     <ClCompile Include="PanelUI.cpp" />

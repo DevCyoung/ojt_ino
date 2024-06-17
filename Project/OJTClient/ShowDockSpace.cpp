@@ -2,6 +2,7 @@
 #include "ShowDockSpace.h"
 #include "InnnoSave.h"
 #include "InnoSimulator.h"
+#include "InnoInputUI.h"
 
 void ShowDockSpace()
 {
@@ -84,13 +85,30 @@ void ShowDockSpace()
 
     if (ImGui::BeginMenuBar())
     {
+        
+
         if (ImGui::BeginMenu("File"))
-        {
+        {            
             const eInnoSimulatorState state = InnoSimulator::GetInstance()->GetSimulatorState();
             if (ImGui::MenuItem("Save", NULL, nullptr, state == eInnoSimulatorState::Editing))
             {
-                InnnoSave save;
-                save.Save();
+                InnoInputUI* inputUi = static_cast<InnoInputUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("InnoInputUI"));
+                inputUi->mbSaveClicked = true;
+
+                //InnnoSave save;
+                //save.Save();
+                
+                //if (!ImGui::IsPopupOpen("Client::File"))
+                //{
+                //    ImGui::OpenPopup("Client::File");
+                //}
+
+
+                //if (ImGui::Button("DisConnect", ImVec2(196, 20.f)))
+                //{
+                //    
+                //}
+
             }
             //if (ImGui::MenuItem("SlideBar", NULL))
             //{

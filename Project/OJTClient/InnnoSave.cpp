@@ -5,8 +5,17 @@
 #include "EngineFile.h"
 
 InnnoSave::InnnoSave()
+	: mbZsPos(true)
+	, mbZsSpeed(true)
+	, mbZsAcc(true)
+	, mbZuPos(true)
+	, mbZuSpeed(true)
+	, mbZuAcc(true)
+	, mbZr(true)
+	, mbXPos(true)
+	, mbXSpeed(true)
+	, mbXPosOther(true)
 {
-
 }
 
 InnnoSave::~InnnoSave()
@@ -36,7 +45,51 @@ void InnnoSave::Save()
 
 	helper::DialogPath path = helper::SaveDialog();
 	std::ofstream file(path.path);
-	file << "Time\tZsPos\tZsSpeed\tZsAcc\tZuPos\tZuSpeed\tZuAcc\tZr\txPos\txSpeed\txPosOther\n";
+
+	//file << "Time\tZsPos\tZsSpeed\tZsAcc\tZuPos\tZuSpeed\tZuAcc\tZr\txPos\txSpeed\txPosOther\n";
+	file << "Time\t";	
+	if (mbZsPos)
+	{
+		file << ZS_POS << "\t";
+	}
+	if (mbZsSpeed)
+	{
+		file << ZS_SPEED << "\t";
+	}
+	if (mbZsAcc)
+	{
+		file << ZS_ACC << "\t";
+	}
+	if (mbZuPos)
+	{
+		file << ZU_POS << "\t";
+	}
+	if (mbZuSpeed)
+	{
+		file << ZU_SPEED << "\t";
+	}
+	if (mbZuAcc)
+	{
+		file << ZU_ACC << "\t";
+	}
+	if (mbZr)
+	{
+		file << ZR << "\t";
+	}
+	if (mbXPos)
+	{
+		file << X_POS << "\t";
+	}
+	if (mbXSpeed)
+	{
+		file << X_SPEED << "\t";
+	}
+	if  (mbXPosOther)
+	{
+		file << X_POS_OTHER << "\t";
+	}
+
+	file << "\n";
 
 	int t1 = idx;
 	int t2 = idx + 1;
@@ -73,18 +126,51 @@ void InnnoSave::Save()
 		float XOtherPos = vecXOtherPos[t1] + ((vecXOtherPos[t2] - vecXOtherPos[t1]) * per);
 
 		// 데이터 작성
-		file << curSamplingTime << "\t"
-			<< ZsPos << "\t"
-			<< ZsSpeed << "\t"
-			<< ZsAcc << "\t"
-			<< ZuPos << "\t"
-			<< ZuSpeed << "\t"
-			<< ZuAcc << "\t"
-			<< Zr << "\t"
-			<< xPos << "\t"
-			<< XSpeed << "\t"
-			<< XOtherPos << "\n";
+		file << curSamplingTime << "\t";
 
+		if (mbZsPos)
+		{
+			file << ZsPos << "\t";
+		}
+		if (mbZsSpeed)
+		{
+			file << ZsSpeed << "\t";
+		}
+		if (mbZsAcc)
+		{
+			file << ZsAcc << "\t";
+		}
+		if (mbZuPos)
+		{
+			file << ZuPos << "\t";
+		}
+		if (mbZuSpeed)
+		{
+			file << ZuSpeed << "\t";
+		}
+		if (mbZuAcc)
+		{
+			file << ZuAcc << "\t";
+		}
+		if (mbZr)
+		{
+			file << Zr << "\t";
+		}
+		if (mbXPos)
+		{
+			file << xPos << "\t";
+		}
+		if (mbXSpeed)
+		{
+			file << XSpeed << "\t";
+		}
+		if (mbXPosOther)
+		{
+			file << XOtherPos << "\t";
+		}
+
+		file << "\n";
+	
 		curSamplingTime += samplingTime;
 	}
 

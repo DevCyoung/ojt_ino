@@ -75,9 +75,6 @@
     <ClInclude Include="Editor.h">
       <Filter>Source\Engine\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Source\Engine\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="MessageManager.h">
       <Filter>Source\Engine\Manager</Filter>
     </ClInclude>
@@ -123,9 +120,6 @@
     <ClInclude Include="imgui_theme.h">
       <Filter>Source\Heper\ImGUI\theme</Filter>
     </ClInclude>
-    <ClInclude Include="ItemUI.h">
-      <Filter>Source\Engine\Editor\Panel</Filter>
-    </ClInclude>
     <ClInclude Include="DockSpace.h">
       <Filter>Source\Heper\ImGUI\Dock</Filter>
     </ClInclude>
@@ -157,9 +151,6 @@
     </ClCompile>
     <ClCompile Include="DXMath.cpp">
       <Filter>Source\Heper</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source\Engine\Manager</Filter>
     </ClCompile>
     <ClCompile Include="MessageManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
@@ -211,9 +202,6 @@
     </ClCompile>
     <ClCompile Include="imgui_theme.cpp">
       <Filter>Source\Heper\ImGUI\theme</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemUI.cpp">
-      <Filter>Source\Engine\Editor\Panel</Filter>
     </ClCompile>
     <ClCompile Include="DockSpace.cpp">
       <Filter>Source\Heper\ImGUI\Dock</Filter>
