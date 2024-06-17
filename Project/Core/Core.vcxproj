@@ -154,7 +154,6 @@
   <ItemGroup>
     <ClInclude Include="Casting.h" />
     <ClInclude Include="cresource.h" />
-    <ClInclude Include="DirectXTex.h" />
     <ClInclude Include="DockSpace.h" />
     <ClInclude Include="DXMath.h" />
     <ClInclude Include="Editor.h" />
@@ -258,7 +257,6 @@
     <ClCompile Include="TimeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DirectXTex.inl" />
     <None Include="DXMath.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

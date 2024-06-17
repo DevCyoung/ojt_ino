@@ -2,8 +2,8 @@
 #include "PanelUIManager.h"
 #include "ChannelUI.h"
 #include "ListenUI.h"
-#include "LogListUI.h"
-#include "PanelUIManager.h"
+#include <LogListUI.h>
+#include <PanelUIManager.h>
 
 #define INNO_MAX_ROOM_USER 8
 #define INNO_MAX_THREAD_SIZE 2048

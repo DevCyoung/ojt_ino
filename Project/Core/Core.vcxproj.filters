@@ -69,9 +69,6 @@
     <ClInclude Include="PanelUIManager.h">
       <Filter>Source\Engine\Editor\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXTex.h">
-      <Filter>Source\Heper</Filter>
-    </ClInclude>
     <ClInclude Include="DXMath.h">
       <Filter>Source\Heper</Filter>
     </ClInclude>
@@ -82,9 +79,6 @@
       <Filter>Source\Engine\Manager</Filter>
     </ClInclude>
     <ClInclude Include="MessageManager.h">
-      <Filter>Source\Engine\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="PathManager.h">
       <Filter>Source\Engine\Manager</Filter>
     </ClInclude>
     <ClInclude Include="TimeManager.h">
@@ -144,6 +138,9 @@
     <ClInclude Include="Engine.h">
       <Filter>Source\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="PathManager.h">
+      <Filter>Source\Engine\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -165,9 +162,6 @@
       <Filter>Source\Engine\Manager</Filter>
     </ClCompile>
     <ClCompile Include="MessageManager.cpp">
-      <Filter>Source\Engine\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="PathManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
@@ -233,11 +227,11 @@
     <ClCompile Include="Engine.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="PathManager.cpp">
+      <Filter>Source\Engine\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DirectXTex.inl">
-      <Filter>Source\Heper</Filter>
-    </None>
     <None Include="DXMath.inl">
       <Filter>Source\Heper</Filter>
     </None>

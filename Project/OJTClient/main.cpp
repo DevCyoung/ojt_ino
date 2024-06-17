@@ -3,20 +3,17 @@
 #include "framework.h"
 #include "OJTClient.h"
 #include "InnoOJTClient.h"
+#include "PanelLoader.h"
+#include "DockSpace.h"
+#include "ShowDockSpace.h"
+#include <Engine.h>
+#include <Editor.h>
 
 #ifdef _DEBUG
 #pragma comment(lib, "\\Core\\Debug\\Core.lib")
 #else
 #pragma comment(lib, "\\Core\\Release\\Core.lib")
 #endif
-
-#include <Engine.h>
-#include <Editor.h>
-
-#include "PanelLoader.h"
-#include <PanelUIManager.h>
-#include "DockSpace.h"
-#include "ShowDockSpace.h"
 
 #define MAX_LOADSTRING 100
 
@@ -89,8 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             Engine::GetInstance()->run();
             InnoOJTClient::GetInstance()->run();
             Editor::GetInstance()->run();
-            Editor::GetInstance()->present();
-            //Engine::GetInstance()->present();
+            Editor::GetInstance()->present();            
         }
     }
 

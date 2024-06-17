@@ -2,15 +2,12 @@
 #include "Editor.h"
 #include "PanelUIManager.h"
 #include "DockSpace.h"
-#include <d3d11.h>
 #include "Engine.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_dx11.h"
-	
 #include <d3d11.h>
-
 #pragma comment(lib, "d3dcompiler")
 #pragma comment(lib, "d3d11")
 

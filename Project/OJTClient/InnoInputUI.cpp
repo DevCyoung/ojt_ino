@@ -4,12 +4,9 @@
 #include "InnoSimulator.h"
 #include "InnoDataManager.h"
 #include "InnnoSave.h"
-#include <TimeManager.h>
 #include <implot.h>
-#include <InputManager.h>
-#include <LogListUI.h>
-#include <PanelUIManager.h>
 #include <imgui_internal.h>
+#include <imgui_theme.h>
 
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 #define offset 16.f

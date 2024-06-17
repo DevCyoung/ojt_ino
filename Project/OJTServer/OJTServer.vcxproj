@@ -147,7 +147,6 @@
     <ClInclude Include="ChannelRoomMoveUI.h" />
     <ClInclude Include="ChannelUI.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="GraphUI.h" />
     <ClInclude Include="ListenUI.h" />
     <ClInclude Include="OJTServer.h" />
     <ClInclude Include="PanelLoader.h" />
@@ -164,10 +163,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ChannelUI.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="GraphUI.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>

@@ -20,7 +20,7 @@ void MessageManager::eventUpdate(const HWND hWnd)
 		std::wstring showTitleMessage = L"";
 
 		showTitleMessage.reserve(SHOW_TITLE_MESSAGE_MAX_LEN);
-		//showTitleMessage = L"Katana Zero";
+		showTitleMessage = L"Inno";
 
 		for (const std::wstring& titleMessage : mTitleMessages)
 		{

@@ -33,9 +33,6 @@
     <ClInclude Include="InnoOJTClient.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="ClientTestUI.h">
-      <Filter>Source\Panel</Filter>
-    </ClInclude>
     <ClInclude Include="InnoInputUI.h">
       <Filter>Source\Panel</Filter>
     </ClInclude>
@@ -77,9 +74,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientTestUI.cpp">
-      <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="InnoInputUI.cpp">
       <Filter>Source\Panel</Filter>

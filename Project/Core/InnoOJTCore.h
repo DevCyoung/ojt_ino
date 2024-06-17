@@ -26,6 +26,8 @@
 #include <vector>
 #include <mutex>
 #include <string>
+#include <iostream>
+#include <fstream>
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -33,9 +35,7 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "imgui_helper.h"
-#include "StringHelper.h"
 #include "DXMath.h"
-#include "DirectXTex.h"
 #include "Protocal.h"
 
 using namespace engine::math;

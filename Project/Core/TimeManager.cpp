@@ -2,11 +2,9 @@
 #include "TimeManager.h"
 #include "MessageManager.h"
 
-#include "InputManager.h"
 TimeManager::TimeManager()
 	: mDeltaTime(0.0f)
-	, mGlobalTime(0.0f)
-	, mRealDeltaTime(0.0f)
+	, mGlobalTime(0.0f)	
 	, mSecond(0.0f)
 	, mTimeScale(1.0f)
 	, mCpuFrequency{}
@@ -28,14 +26,7 @@ void TimeManager::update()
 
 	const float DIFERENCE_FREQUENCY = static_cast<float>(mCurFrequency.QuadPart - mPrevFrequency.QuadPart);
 
-	mDeltaTime = DIFERENCE_FREQUENCY / static_cast<float>(mCpuFrequency.QuadPart);
-
-	//if (mDeltaTime >= 0.026f)
-	//{
-	//	mDeltaTime = 0.016f;
-	//}
-
-	mRealDeltaTime = mDeltaTime;
+	mDeltaTime = DIFERENCE_FREQUENCY / static_cast<float>(mCpuFrequency.QuadPart);	
 
 	mDeltaTime *= mTimeScale;
 	mGlobalTime += mDeltaTime;
@@ -74,8 +65,7 @@ void TimeManager::ResetTime()
 	mbReset = true;	
 
 	mGlobalTime = 0.0f;
-	mDeltaTime = 0.0f;
-	mRealDeltaTime = 0.0f;
+	mDeltaTime = 0.0f;	
 	mSecond = 0.0f;
 	mTimeScale = 1.0f;
 }

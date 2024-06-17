@@ -35,8 +35,6 @@ private:
 	void run();
 	void updateWindowInfo();
 	void update();
-	void lateUpdate();
-	void render();
 	void eventUpdate();
 
 private:

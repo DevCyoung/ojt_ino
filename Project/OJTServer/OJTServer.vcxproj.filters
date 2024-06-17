@@ -30,9 +30,6 @@
     <ClInclude Include="PanelLoader.h">
       <Filter>Source\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="GraphUI.h">
-      <Filter>Source\Panel</Filter>
-    </ClInclude>
     <ClInclude Include="TrainingUI.h">
       <Filter>Source\Panel</Filter>
     </ClInclude>
@@ -68,9 +65,6 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="PanelLoader.cpp">
-      <Filter>Source\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphUI.cpp">
       <Filter>Source\Panel</Filter>
     </ClCompile>
     <ClCompile Include="ChannelRoomMoveUI.cpp">

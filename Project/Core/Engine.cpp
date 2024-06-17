@@ -14,18 +14,15 @@ Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderT
 {
 	setWindowSize(mRenderTargetWidth, mRenderTargetHeight);		
 	TimeManager::initialize();
-	MessageManager::initialize();
-	PathManager::initialize();
+	MessageManager::initialize();	
 	InputManager::initialize();
 }
 
 Engine::~Engine()
 {
-	InputManager::deleteInstance();
-	PathManager::deleteInstance();
+	InputManager::deleteInstance();	
 	MessageManager::deleteInstance();	
-	TimeManager::deleteInstance();	
-	DELETE_POINTER_NOT_NULL(mGraphicDevice);	
+	TimeManager::deleteInstance();		
 }
 
 void Engine::initialize(const HWND hWnd, const UINT renderTargetWidth, const UINT renderTargetHeight)
@@ -41,10 +38,6 @@ void Engine::run()
 	updateWindowInfo();	
 
 	update();
-
-	lateUpdate();
-
-	render();
 
 	eventUpdate();
 }
@@ -64,14 +57,6 @@ void Engine::update()
 {
 	TimeManager::GetInstance()->update();
 	InputManager::GetInstance()->update(mHwnd);	
-}
-
-void Engine::lateUpdate()
-{
-}
-
-void Engine::render()
-{	
 }
 
 void Engine::eventUpdate()

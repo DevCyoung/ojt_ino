@@ -1,9 +1,5 @@
 #include "pch.h"		
 #include "InnoOJTClient.h"
-#include <iostream>
-#include <LogListUI.h>
-#include <PanelUIManager.h>
-#include <TimeManager.h>
 #include "InnoDataManager.h"
 #include <InnoMessageQueue.h>	//메세지큐 헤더추가
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))

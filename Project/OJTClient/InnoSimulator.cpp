@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "InnoSimulator.h"
 #include "InnoDataManager.h"
-#include <TimeManager.h>
-#include <PanelUIManager.h>
-#include "LogListUI.h"
 
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 

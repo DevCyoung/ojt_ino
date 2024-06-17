@@ -14,7 +14,6 @@ private:
 public:
 	float GetDeltaTime() const { return mDeltaTime; }
 	float GetGlobalTime() const { return mGlobalTime; }
-	float GetRealDeltaTime() const { return mRealDeltaTime; }
 
 	void StartTime(LARGE_INTEGER* const starTime);
 	float EndTime(LARGE_INTEGER* const starTime);
@@ -25,8 +24,7 @@ public:
 	void ResetTime();
 
 private:
-	float mDeltaTime;
-	float mRealDeltaTime;
+	float mDeltaTime;	
 	float mGlobalTime;
 	float mSecond;
 	float mTimeScale;
@@ -40,4 +38,3 @@ private:
 
 #define gDeltaTime TimeManager::GetInstance()->GetDeltaTime()
 #define gGlobalTime TimeManager::GetInstance()->GetGlobalTime()
-#define gRealDeltaTime TimeManager::GetInstance()->GetRealDeltaTime()
