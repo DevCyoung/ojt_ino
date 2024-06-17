@@ -176,7 +176,7 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 
 		if (t1 <= sampleTime && sampleTime < t2)
 		{
-			zr = -bumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
+			zr = bumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
 		}
 
 		if (sampleTime >= t2)

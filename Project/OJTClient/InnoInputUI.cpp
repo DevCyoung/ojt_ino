@@ -724,7 +724,7 @@ void InnoInputUI::drawForm()
 
 		if (inputTextFlag == 0 && ImGui::Button("Remove Bump"))
 		{
-			if (!bumpItems.empty())
+			if (bumpItems.size() > current_bump_item)
 			{
 				InnoSimulator::GetInstance()->RemoveBump(current_bump_item);
 				changeFlag = true;
