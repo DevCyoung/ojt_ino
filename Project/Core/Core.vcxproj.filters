@@ -13,32 +13,14 @@
     <Filter Include="Source\Engine">
       <UniqueIdentifier>{287053a2-fda9-4b54-81cc-d30ead80e7ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Graphics">
-      <UniqueIdentifier>{7c860524-b90f-4042-8415-8327c2dfd70b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Graphics\Enum">
-      <UniqueIdentifier>{6d022c75-d982-48bc-b7de-107d3d4c58b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\Editor">
       <UniqueIdentifier>{5ba8e89d-1f3d-4154-a69b-a646fd98567a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Engine\Editor\Panel">
       <UniqueIdentifier>{f1d40353-6d47-4276-ae71-c49e61728b68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Engine\Resource">
-      <UniqueIdentifier>{4fc91fa4-b144-4121-9506-f9019e3d95e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Component">
-      <UniqueIdentifier>{493f88ae-1da5-4be9-8547-36eff33edaaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Load">
-      <UniqueIdentifier>{b2131637-0c2a-4460-84bc-348828bddfdf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Engine\Manager">
       <UniqueIdentifier>{5a4900f3-5da1-412a-bba2-31eaad4fe95e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Build">
-      <UniqueIdentifier>{d98f8ba5-958d-430a-9717-27af94eb90e8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Heper\ImGUI">
       <UniqueIdentifier>{878c40dd-20d0-4492-b46e-144c07d146a4}</UniqueIdentifier>
@@ -54,9 +36,6 @@
     </Filter>
     <Filter Include="Source\Heper\Protocal">
       <UniqueIdentifier>{fd9dd1d5-970b-4746-b636-480ea9f6e76f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Engine\Resource\Scene">
-      <UniqueIdentifier>{76143b4e-8a39-4f2a-9221-98d37535e56d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -84,65 +63,11 @@
     <ClInclude Include="imgui_internal.h">
       <Filter>Source\Heper\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Light2D.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptComponent.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderComponent.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraInputMoveMent.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
     <ClInclude Include="PanelUI.h">
       <Filter>Source\Engine\Editor\Panel</Filter>
     </ClInclude>
     <ClInclude Include="PanelUIManager.h">
       <Filter>Source\Engine\Editor\Panel</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentTrait.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="ComputeShader.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="CBCollection.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstantBuffer.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugRenderer2D.h">
-      <Filter>Source\Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="DirectXTex.h">
       <Filter>Source\Heper</Filter>
@@ -153,15 +78,6 @@
     <ClInclude Include="Editor.h">
       <Filter>Source\Engine\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="DSCollection.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>Source\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Source\Engine\Manager</Filter>
     </ClInclude>
@@ -171,26 +87,8 @@
     <ClInclude Include="PathManager.h">
       <Filter>Source\Engine\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Source\Engine\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Source\Engine\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>Source\Engine\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="BSCollection.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="RSCollection.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="SBCollection.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="SMCollection.h">
-      <Filter>Source\Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="imstb_truetype.h">
       <Filter>Source\Heper\ImGUI</Filter>
@@ -204,26 +102,8 @@
     <ClInclude Include="imconfig.h">
       <Filter>Source\Heper\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Source\Engine\Resource\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>windows</Filter>
-    </ClInclude>
-    <ClInclude Include="StructVertex.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="StructuredBuffer.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="StructBuffer.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Source\Engine\Resource\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Source\Engine\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="cresource.h">
       <Filter>windows</Filter>
@@ -231,68 +111,11 @@
     <ClInclude Include="Casting.h">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="EnumSRV.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumShaderBindStage.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumScriptComponent.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumResource.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumRenderType.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumLayer.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumFlag.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="EnumComponent.h">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicDeviceDx11.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="StringHelper.h">
       <Filter>Source\Heper</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteRenderer.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptType.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptComponentTrait.h">
-      <Filter>Source\Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceTypeTrait.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTargetRenderer.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshData.h">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineResourceLoader.h">
-      <Filter>Source\Engine\Load</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorResourceLoader.h">
-      <Filter>Source\Engine\Load</Filter>
-    </ClInclude>
     <ClInclude Include="EngineFile.h">
       <Filter>Source\Heper</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineMath.h">
-      <Filter>Source\Heper</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineComponentTrait.h">
-      <Filter>Source\Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Protocal.h">
       <Filter>Source\Heper\Protocal</Filter>
@@ -312,64 +135,19 @@
     <ClInclude Include="DockSpace.h">
       <Filter>Source\Heper\ImGUI\Dock</Filter>
     </ClInclude>
-    <ClInclude Include="AlphaHelper.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneRenderHelper.h">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="InnoMessageQueue.h">
       <Filter>Source\Heper\Protocal</Filter>
     </ClInclude>
     <ClInclude Include="LogListUI.h">
       <Filter>Source\Engine\Editor\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Builder.h">
-      <Filter>Source\Heper</Filter>
-    </ClInclude>
-    <ClInclude Include="GameSystem.h">
-      <Filter>Source\Engine\Resource\Scene</Filter>
+    <ClInclude Include="Engine.h">
+      <Filter>Source\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source\Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Light2D.cpp">
-      <Filter>Source\Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>Source\Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source\Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptComponent.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderComponent.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraInputMoveMent.cpp">
-      <Filter>Source\Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="PanelUI.cpp">
       <Filter>Source\Engine\Editor\Panel</Filter>
@@ -377,32 +155,11 @@
     <ClCompile Include="PanelUIManager.cpp">
       <Filter>Source\Engine\Editor\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="ComputeShader.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="CBCollection.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugRenderer2D.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Editor.cpp">
       <Filter>Source\Engine\Editor</Filter>
     </ClCompile>
     <ClCompile Include="DXMath.cpp">
       <Filter>Source\Heper</Filter>
-    </ClCompile>
-    <ClCompile Include="DSCollection.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>Source\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source\Engine\Resource</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
@@ -413,79 +170,13 @@
     <ClCompile Include="PathManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Source\Engine\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Source\Engine\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="BSCollection.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="RSCollection.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SBCollection.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SMCollection.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Layer.cpp">
-      <Filter>Source\Engine\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="StructuredBuffer.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="StructVertex.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="StructBuffer.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source\Engine\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source\Engine\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="EnumScriptComponent.cpp">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClCompile>
-    <ClCompile Include="EnumComponent.cpp">
-      <Filter>Source\Engine\Graphics\Enum</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicDeviceDx11.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="StringHelper.cpp">
       <Filter>Source\Heper</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteRenderer.cpp">
-      <Filter>Source\Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptType.cpp">
-      <Filter>Source\Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderTargetRenderer.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshData.cpp">
-      <Filter>Source\Engine\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="EngineResourceLoader.cpp">
-      <Filter>Source\Engine\Load</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorResourceLoader.cpp">
-      <Filter>Source\Engine\Load</Filter>
-    </ClCompile>
     <ClCompile Include="EngineFile.cpp">
-      <Filter>Source\Heper</Filter>
-    </ClCompile>
-    <ClCompile Include="EngineMath.cpp">
       <Filter>Source\Heper</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
@@ -533,23 +224,14 @@
     <ClCompile Include="DockSpace.cpp">
       <Filter>Source\Heper\ImGUI\Dock</Filter>
     </ClCompile>
-    <ClCompile Include="AlphaHelper.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneRenderHelper.cpp">
-      <Filter>Source\Engine\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="InnoMessageQueue.cpp">
       <Filter>Source\Heper\Protocal</Filter>
     </ClCompile>
     <ClCompile Include="LogListUI.cpp">
       <Filter>Source\Engine\Editor\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="Builder.cpp">
-      <Filter>Source\Heper</Filter>
-    </ClCompile>
-    <ClCompile Include="GameSystem.cpp">
-      <Filter>Source\Engine\Resource\Scene</Filter>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

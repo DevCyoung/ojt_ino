@@ -136,8 +136,6 @@ namespace mem::del
 	}
 }
 
-#include "EnumFlag.h"
-
 #define ASSERT_MSG_SWITCH_DEFAULT "switch default"
 #define ASSERT_MSG_NULL "value is nullptr"
 #define ASSERT_MSG_NOT_NULL "value is not nullptr"

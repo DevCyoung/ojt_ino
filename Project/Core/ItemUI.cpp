@@ -1,14 +1,6 @@
 #include "pch.h"
 #include "ItemUI.h"
 #include "PanelUIManager.h"
-#include "GameObject.h"
-#include "ResourceManager.h"
-#include "Texture.h"
-#include "Material.h"
-#include "Mesh.h"
-#include "Shader.h"
-#include "ComputeShader.h"
-#include "Resource.h"
 
 ItemUI::ItemUI()
 	:mResource(nullptr)

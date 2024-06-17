@@ -2,6 +2,10 @@
 #include "pch.h"
 #include "framework.h"
 #include "OJTServer.h"
+#include "PanelLoader.h"
+#include "InnoOJTServer.h"
+#include <Engine.h>
+#include <Editor.h>
 
 #ifdef _DEBUG
 #pragma comment(lib, "\\Core\\Debug\\Core.lib")
@@ -9,11 +13,6 @@
 #pragma comment(lib, "\\Core\\Release\\Core.lib")
 #endif
 
-#include <Engine.h>
-#include <Editor.h>
-#include <SceneManager.h>
-#include "PanelLoader.h"
-#include "InnoOJTServer.h"
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -60,9 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Engine::initialize(gHwnd, 800, 400);
     Editor::initialize();
     PanelLoader::initialize();
-    InnoOJTServer::initialize();
-    Scene* scene = new Scene();
-    SceneManager::GetInstance()->LoadScene(scene);
+    InnoOJTServer::initialize();    
 
     while (true)
     {
@@ -81,11 +78,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             Engine::GetInstance()->run();
-
             InnoOJTServer::GetInstance()->run();
-
             Editor::GetInstance()->run();
-            Engine::GetInstance()->present();
+            Editor::GetInstance()->present();            
         }
     }
 

@@ -1,15 +1,9 @@
 #include "pch.h"
 #include "InnoInputUI.h"
 #include "InnoOJTClient.h"
-#include "GameManager.h"
 #include "InnoSimulator.h"
 #include "InnoDataManager.h"
 #include "InnnoSave.h"
-#include <RenderTargetRenderer.h>
-#include <GameSystem.h>
-#include <SceneManager.h>
-#include <AlphaHelper.h>
-#include <Texture.h>
 #include <TimeManager.h>
 #include <implot.h>
 #include <InputManager.h>
@@ -237,16 +231,7 @@ void InnoInputUI::drawForm()
 	const std::vector<float>& vecZr = InnoDataManager::GetInstance()->GetZrs();
 	const std::vector<float>& vecxPos = InnoDataManager::GetInstance()->GetXPoses();
 	const std::vector<float>& vecXSpeed = InnoDataManager::GetInstance()->GetXSpeeds();
-	const std::vector<float>& vecxOtehrPos = InnoDataManager::GetInstance()->GetXOtherPoses();
-
-	GameManager::GetInstance()->mSceneRenderHelperA->Draw(gCurrentScene);
-	GameManager::GetInstance()->mSceneRenderHelperB->Draw(gCurrentScene);
-
-	Texture* renderTexA = GameManager::GetInstance()->mSceneRenderHelperA->GetRenderTexture();
-	Texture* renderTexB = GameManager::GetInstance()->mSceneRenderHelperB->GetRenderTexture();
-
-	ImVec2 renderTargetSizeA = ImVec2(renderTexA->GetWidth(), renderTexA->GetHeight());
-	ImVec2 renderTargetSizeB = ImVec2(renderTexB->GetWidth(), renderTexB->GetHeight());
+	const std::vector<float>& vecxOtehrPos = InnoDataManager::GetInstance()->GetXOtherPoses();		
 
 	std::string button1Name = "Play";
 
