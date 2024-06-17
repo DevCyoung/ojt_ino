@@ -16,10 +16,12 @@ Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderT
 	TimeManager::initialize();
 	MessageManager::initialize();	
 	InputManager::initialize();
+	PathManager::initialize();
 }
 
 Engine::~Engine()
 {
+	PathManager::initialize();
 	InputManager::deleteInstance();	
 	MessageManager::deleteInstance();	
 	TimeManager::deleteInstance();		
