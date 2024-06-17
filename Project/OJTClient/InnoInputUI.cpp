@@ -904,15 +904,21 @@ void InnoInputUI::drawForm()
 		ImGui::PopItemWidth();
 
 		static ImPlotAxisFlags flags = ImPlotAxisFlags_NoTickLabels;
-		ShowGraph("ZsPos", &vecZsPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("ZsSpeed", &vecZsSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("ZsAcc", &vecZsAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("ZuPos", &vecZuPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("ZuSpeed", &vecZuSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("ZuAcc", &vecZuAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("Zr", &vecZr[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("xPos", &vecxPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
-		ShowGraph("XSpeed", &vecXSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(ZS_POS, &vecZsPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(ZS_SPEED, &vecZsSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(ZS_ACC, &vecZsAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(ZU_POS, &vecZuPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(ZU_SPEED, &vecZuSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(ZU_ACC, &vecZuAcc[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(ZR, &vecZr[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(X_POS, &vecxPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		ShowGraph(X_SPEED, &vecXSpeed[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+
+		if (bConnected)
+		{
+			ShowGraph(X_POS_OTHER, &vecxOtehrPos[dataPos], &vecTimes[dataPos], dataSize, axxSize);
+		}
+
 	}
 	ImGui::End();
 #pragma endregion GraphUI1
