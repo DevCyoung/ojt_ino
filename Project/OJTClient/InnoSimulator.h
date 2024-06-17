@@ -66,6 +66,9 @@ public:
 	void SetBumpAmp(float bmpAmp) { mBumpAmp = bmpAmp; }
 	void SetSamplintTIme(float samplingTime) { mSamplingTime = samplingTime; }
 
+	void SetStartPos(float startPos) { mStartPos = startPos; }
+
+	float GetStartPos() { return mStartPos; }
 	float GetMS() const { return mMS; }
 	float GetMU() const { return mMU; }
 	float GetKS() const { return mKS; }
@@ -105,7 +108,7 @@ private:
 	float mSamplingTime;
 	float mFrameDeltaTime;
 	float mPrevPos;
-
+	float mStartPos;
 	float mX[4] = { 0, };
 	float mXDot[4] = { 0, };
 

@@ -70,19 +70,19 @@ void InnoDataManager::Clear()
 	mXPoses.clear();
 	mXSpeeds.clear();
 	mPlayerBSamplePostions.clear();
-
+	float startPos = InnoSimulator::GetInstance()->GetStartPos();
 	for (int i = 0; i < INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND; ++i)
 	{
-		mTimes.push_back(0.f);
-		mZsPoses.push_back(0.f);
-		mZsSpeeds.push_back(0.f);
-		mZsAccs.push_back(0.f);
-		mZuPoses.push_back(0.f);
-		mZuSpeeds.push_back(0.f);
-		mZuAccs.push_back(0.f);
-		mZrs.push_back(0.f);
-		mXPoses.push_back(0.f);
-		mXSpeeds.push_back(0.f);
-		mPlayerBSamplePostions.push_back(0.f);
+		mTimes.push_back(startPos);
+		mZsPoses.push_back(startPos);
+		mZsSpeeds.push_back(startPos);
+		mZsAccs.push_back(startPos);
+		mZuPoses.push_back(startPos);
+		mZuSpeeds.push_back(startPos);
+		mZuAccs.push_back(startPos);
+		mZrs.push_back(startPos);
+		mXPoses.push_back(startPos);
+		mXSpeeds.push_back(startPos);
+		mPlayerBSamplePostions.push_back(startPos);
 	}
 }

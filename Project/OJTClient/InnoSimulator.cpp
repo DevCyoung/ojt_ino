@@ -27,6 +27,7 @@ InnoSimulator::InnoSimulator()
 	, mX{ 0.f }
 	, mXDot{ 0.f }
 	, mPlayerBPos(0.f)
+	, mStartPos(0.f)
 	, mFrameDeltaTime(0.f)
 	, mBumps()
 	, mBumpsCopy()
@@ -118,7 +119,7 @@ void InnoSimulator::Update()
 
 		mPlayerBPos = 0.f;
 		mCurTime = 0.f;
-		mPrevPos = 0.f;
+		mPrevPos = mStartPos;
 		mFrameDeltaTime = 0.f;
 
 		//Start, End 앞뒤조정 범프정렬

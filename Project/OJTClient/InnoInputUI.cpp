@@ -666,6 +666,7 @@ void InnoInputUI::drawForm()
 	float BumpEnd = innoSimulator->GetBumpEnd();
 	float BumpAmp = innoSimulator->GetBumpAmp();
 	float SamplingTime = innoSimulator->GetSamplingTime();
+	float StartPos = innoSimulator->GetStartPos();
 	static char buff[256] = {};
 
 	ImGui::Begin("InputUI1");
@@ -674,6 +675,7 @@ void InnoInputUI::drawForm()
 	ShowInputFloat("##KS", "KS", &KS, inputTextFlag);
 	ShowInputFloat("##CS", "CS", &CS, inputTextFlag);
 	ShowInputFloat("##KT", "KT", &KT, inputTextFlag);
+	//ShowInputFloat("##Start Pos:InputUI2", "Start Pos", &StartPos, inputTextFlag);
 	ShowInputFloat("##Speed:InputUI2", "Speed", &Speed, inputTextFlag);
 	ShowInputFloat("##SamplingTime", "Sampling Time", &SamplingTime, inputTextFlag);
 	ImGui::End();
@@ -933,4 +935,5 @@ void InnoInputUI::drawForm()
 	innoSimulator->SetBumpEnd(BumpEnd);
 	innoSimulator->SetBumpAmp(BumpAmp);
 	innoSimulator->SetSamplintTIme(SamplingTime);
+	innoSimulator->SetStartPos(StartPos);
 }
