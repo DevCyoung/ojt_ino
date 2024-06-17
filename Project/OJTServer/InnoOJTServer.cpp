@@ -69,34 +69,6 @@ InnoOJTServer::~InnoOJTServer()
 	DisConnect();
 	InnoMessageQueue::deleteInstance();
 }
-//
-//ePacketID packetID = (ePacketID)getPacketId(recvbuf, recvbuflen);
-//int clientID = innoServer->GetInncoClient(clientSocket).ClientID;
-//
-//switch (packetID)
-//{
-//case Log:
-//{
-//	tPacketLog log;
-//	deserializeData(recvbuf, sizeof(tPacketLog), &log);
-//	innoServer->ReciveLog(clientID, log);
-//}
-//break;
-//case Pos:
-//{
-//	tPacketPos pos;
-//	deserializeData(recvbuf, sizeof(tPacketPos), &pos);
-//	innoServer->RecivePos(clientID, pos);
-//}
-//break;
-//default:
-//{
-//	char errorBuff[256] = {};
-//	sprintf_s(errorBuff, "ID:%d , Invalid Packet %d", clientID, packetID);
-//	gLogListUI->WriteLine(errorBuff);
-//}
-//break;
-//}
 
 // 클라이언트 핸들링 함수
 static void handleClient(SOCKET clientSocket)
@@ -422,16 +394,14 @@ std::string InnoOJTServer::GetClientIP(SOCKET clientSocket)
 
 	// 클라이언트 소켓 주소 정보 가져오기
 	if (getpeername(clientSocket, (sockaddr*)&clientAddr, &addrLen) == SOCKET_ERROR)
-	{
-		//std::cerr << "getpeername failed: " << WSAGetLastError() << std::endl;
-		return "";
+	{		
+		return "NULL";
 	}
 
 	char ipStr[INET_ADDRSTRLEN];
 	if (inet_ntop(AF_INET, &(clientAddr.sin_addr), ipStr, INET_ADDRSTRLEN) == NULL)
-	{
-		//std::cerr << "inet_ntop failed: " << WSAGetLastError() << std::endl;
-		return "";
+	{		
+		return "v";
 	}
 
 	return std::string(ipStr);

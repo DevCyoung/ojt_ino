@@ -11,6 +11,13 @@
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 #define offset 16.f
 
+static void ShowBump(int idx, const float yPos, const float bumpStart, const float bumpEnd, ImVec4 bumpColor = ImVec4(255, 0, 0, 255));
+static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize = 150);
+static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine = 100, int itemWidth = 100, float cursorOffset = 5.0f);
+static void ShowInputText(const char* label, const char* name, char* pValue, int buffsize, ImGuiInputTextFlags flag);
+static void ShowInputInt(const char* label, const char* name, int* pValue, ImGuiInputTextFlags flag);
+static void ShowLoadingProgressBar(const ImVec2& size_arg);
+
 InnoInputUI::InnoInputUI()
 	:mbSaveClicked(false)
 {
@@ -21,204 +28,12 @@ InnoInputUI::~InnoInputUI()
 {
 }
 
-static void ShowBump(int idx, const float yPos, const float bumpStart, const float bumpEnd,
-	ImVec4 bumpColor = ImVec4(255, 0, 0, 255))
-{
-	//Bump	
-	const float  bumpwidth = 3;
-	float bumpX[2] = { bumpStart , bumpEnd };
-	float bumpY[2] = { yPos, yPos };
-	ImPlot::SetNextLineStyle(bumpColor, bumpwidth);
-	ImPlot::PlotLine("##BumpSart-End", bumpX, bumpY, 2, 10);
-
-	//Bump Text Line
-	const float textLineOffset = 4.f;
-
-	float bumpStartTextLineX[2] = { bumpStart, bumpStart };
-	float bumpStartTextLineY[2] = { yPos, yPos + textLineOffset + (idx % 3) };
-	char bumpStartBuffer[256] = { 0, };
-	sprintf_s(bumpStartBuffer, "Bump Start %d (%.2f)", idx, bumpStart);
-	ImPlot::PlotLine("##BumpStartTextLine", bumpStartTextLineX, bumpStartTextLineY, 2);
-	ImPlot::PlotText(bumpStartBuffer, bumpStart, yPos + textLineOffset + 0.5f + (idx % 3));
-
-	float bumpEndTextLineX[2] = { bumpEnd, bumpEnd };
-	float bumpEndTextLineY[2] = { yPos, yPos - textLineOffset - (idx % 3) };
-	char bumpEndtBuffer[256] = { 0, };
-	sprintf_s(bumpEndtBuffer, "Bump End %d (%.2f)", idx, bumpEnd);
-	ImPlot::PlotLine("##BumpStartTextLine", bumpEndTextLineX, bumpEndTextLineY, 2);
-	ImPlot::PlotText(bumpEndtBuffer, bumpEnd, yPos - textLineOffset - 0.5f - (idx % 3));
-}
-
-static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize = 150)
-{
-	std::string key = "##";
-
-	key += label;
-
-	if (ImPlot::BeginPlot(key.c_str(), ImVec2(-1, axxSize)))
-	{
-		const float history = INNO_GRAPH_HISTORY_SECOND;
-		double max = 0.0001f;
-		double min = -0.0001f;
-
-		for (int i = 0; i < dataCount; ++i)
-		{
-			if (times[i] < times[dataCount - 1] - history || times[i] > times[dataCount - 1])
-			{
-				continue;
-			}
-
-			if (max < values[i])
-			{
-				max = values[i];
-			}
-
-			if (min > values[i])
-			{
-				min = values[i];
-			}
-		}
-
-		double size = abs(max) - abs(min);
-		size = abs(size);
-
-		max += size * 0.15;
-		min -= size * 0.15;
-
-		//invert
-		//ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_Invert, 0);
-		ImPlot::SetupAxisLinks(ImAxis_Y1, &min, &max);
-		ImPlot::SetupAxisLimits(ImAxis_X1, times[dataCount - 1] - history, times[dataCount - 1], ImGuiCond_Always);
-		ImPlot::PlotLine(label, times, values, dataCount, ImPlotFlags_NoFrame);
-		ImPlot::EndPlot();
-	}
-}
-
-static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine = 100, int itemWidth = 100, float cursorOffset = 5.0f)
-{
-	ImGui::Text(name);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + cursorOffset);
-	ImGui::SameLine(sameLine);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(itemWidth);
-
-	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
-	{
-		// 비활성화된 스타일 적용
-		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-	}
-
-	ImGui::InputFloat(label, pValue, 0.f, 0.f, "%.3f", flag);
-
-	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
-	{
-		// 스타일 복원
-		ImGui::PopStyleColor();
-		ImGui::PopStyleVar();
-		ImGui::PopItemFlag();
-	}
-
-
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-}
-
-static void ShowInputText(const char* label, const char* name, char* pValue, int buffsize, ImGuiInputTextFlags flag)
-{
-	ImGui::Text(name);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-
-	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
-	{
-		// 비활성화된 스타일 적용
-		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-	}
-
-	ImGui::InputText(label, pValue, buffsize, flag);
-
-	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
-	{
-		// 스타일 복원
-		ImGui::PopStyleColor();
-		ImGui::PopStyleVar();
-		ImGui::PopItemFlag();
-	}
-
-
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-}
-
-static void ShowInputInt(const char* label, const char* name, int* pValue, ImGuiInputTextFlags flag)
-{
-	ImGui::Text(name);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
-	ImGui::SameLine(100.0f);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
-
-	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
-	{
-		// 비활성화된 스타일 적용
-		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-	}
-
-	ImGui::InputInt(label, pValue, 0.f, 0.f, flag);
-
-	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
-	{
-		// 스타일 복원
-		ImGui::PopStyleColor();
-		ImGui::PopStyleVar();
-		ImGui::PopItemFlag();
-	}
-
-
-	ImGui::PopItemWidth();
-	ImGui::Spacing();
-}
-
-void IndeterminateProgressBar(const ImVec2& size_arg)
-{
-	using namespace ImGui;
-
-	ImGuiContext& g = *GImGui;
-	ImGuiWindow* window = GetCurrentWindow();
-	if (window->SkipItems)
-		return;
-
-	ImGuiStyle& style = g.Style;
-	ImVec2 size = CalcItemSize(size_arg, CalcItemWidth(), g.FontSize + style.FramePadding.y * 2.0f);
-	ImVec2 pos = window->DC.CursorPos;
-	ImRect bb(pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-	ItemSize(size);
-	if (!ItemAdd(bb, 0))
-		return;
-
-	const float speed = g.FontSize * 0.05f;
-	const float phase = ImFmod((float)g.Time * speed, 1.0f);
-	const float width_normalized = 0.2f;
-	float t0 = phase * (1.0f + width_normalized) - width_normalized;
-	float t1 = t0 + width_normalized;
-
-	RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
-	bb.Expand(ImVec2(-style.FrameBorderSize, -style.FrameBorderSize));
-	RenderRectFilledRangeH(window->DrawList, bb, GetColorU32(ImGuiCol_PlotHistogram), t0, t1, style.FrameRounding);
-}
-
 void InnoInputUI::drawForm()
 {
-	//ImPlot::ShowDemoWindow();
-	InnoSimulator* innoSimulator = InnoSimulator::GetInstance();
+#pragma region Data
+
+
+	InnoSimulator* const innoSimulator = InnoSimulator::GetInstance();
 
 	const std::vector<float>& vecTimes = InnoDataManager::GetInstance()->GetTimes();
 	const std::vector<float>& vecZsPos = InnoDataManager::GetInstance()->GetZsPoses();
@@ -338,28 +153,31 @@ void InnoInputUI::drawForm()
 	}
 
 	static int current_bump_item = 0;
+#pragma endregion Data
+
 #pragma region InputScreen
 	ImGui::Begin("ScreenUI");
-	//ImPlot::ShowDemoWindow();
 
 	const double xHistoryScale = 10.f;
 	const float xPos = vecxPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 	const float xOtherPos = vecxOtehrPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 	float yPos = 0.f;
 
+	double xHistoryMax = xHistoryScale + xPos;
+	double xHistoryMin = -xHistoryScale + xPos;
+	double yHistoryMax = xHistoryScale;
+	double yHistoryMin = -xHistoryScale;
+
 	if (bConnected)
 	{
 		yPos = 3.f;
 	}
-	double xHistoryMax = xHistoryScale + xPos;
-	double xHistoryMin = -xHistoryScale + xPos;
 
-	if (ImPlot::BeginPlot("##testlabel", ImVec2(-1, 420)))
+	if (ImPlot::BeginPlot("##ScreenUI", ImVec2(-1, 420)))
 	{
-		double yHistoryMax = xHistoryScale;
-		double yHistoryMin = -xHistoryScale;
 		float xPosStart = vecxPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 
+		//X스케일 고정
 		if (simulatorState != eInnoSimulatorState::None)
 		{
 			ImPlot::SetupAxisLinks(ImAxis_X1, &xHistoryMin, &xHistoryMax);
@@ -381,12 +199,12 @@ void InnoInputUI::drawForm()
 		sprintf_s(xPosStartBuffer, "Start (%.2f)", xPosStart);
 		ImPlot::PlotText(xPosStartBuffer, xPosStart, yPos - 1.f);
 
-		//Car move line 자동차 이동흔적
+		//Car move 궤적 자동차 이동흔적
 		float xline[2] = { vecxPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1], xPos };
 		float yline[2] = { yPos, yPos };
 		ImPlot::PlotLine("##CarLine", xline, yline, 2);
 
-		//범프
+		//범프 그리기
 		const std::vector<Vector3>& bumpers = InnoSimulator::GetInstance()->GetBumps();
 		int itemIdx = current_bump_item;
 		for (int i = 0; i < bumpers.size(); ++i)
@@ -408,7 +226,7 @@ void InnoInputUI::drawForm()
 
 		}
 
-		//End&
+		//End 위치 그리기
 		if (simulatorState == eInnoSimulatorState::Editing)
 		{
 			ImGui::PushID(2);
@@ -422,7 +240,7 @@ void InnoInputUI::drawForm()
 			ImGui::PopID();
 		}
 
-		//My Car
+		//내차 그리기
 		ImGui::PushID(2);
 		ImPlot::SetNextMarkerStyle(2, 10.f, ImVec4(255, 0, 255, 255));
 		float x = xPos;
@@ -434,7 +252,7 @@ void InnoInputUI::drawForm()
 		ImPlot::PlotText(buffMyCar, xPos, y + 1.f);
 
 
-		//OtherCar
+		//OtherCar그리기
 		if (bConnected)
 		{
 			ImGui::PushID(2);
@@ -448,7 +266,7 @@ void InnoInputUI::drawForm()
 			ImPlot::PlotText(buffMyCar, x, y - 1.f);
 		}
 
-		//화면 밖으로 나갈때 그리기
+		//OtherCar가 화면 밖으로 나갈때 그리기
 		if (bConnected)
 		{
 			float x = xOtherPos;
@@ -470,8 +288,8 @@ void InnoInputUI::drawForm()
 	}
 
 	ImGui::Separator();
-	ImGui::PushItemWidth(800.f);
 
+	ImGui::PushItemWidth(800.f);
 	if (simulatorState != eInnoSimulatorState::Editing)
 	{
 		// 비활성화된 스타일 적용
@@ -480,13 +298,16 @@ void InnoInputUI::drawForm()
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
 	}
 
+	//Editing 중일때만 Slide 활성화
 	if (ImGui::SliderFloat("##SlidePos", &slidePos, 0.f, slideMax, "%.2f"))
 	{
+		//클릭하면 정지상태로 바꿈
 		playMode = 0;
 	}
 
 	if (simulatorState != eInnoSimulatorState::Editing)
 	{
+		// 비활성화된 스타일 적용
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
 		ImGui::PopItemFlag();
@@ -683,8 +504,9 @@ void InnoInputUI::drawForm()
 
 #pragma region InputUI2
 	ImGui::Begin("InputUI2");
-	const std::vector<Vector3> bumps = InnoSimulator::GetInstance()->GetBumps();
 
+	//Bump들 Item으로 만들기
+	const std::vector<Vector3> bumps = InnoSimulator::GetInstance()->GetBumps();
 	std::vector<std::string> bumpItems;
 	for (int i = 0; i < bumps.size(); ++i)
 	{
@@ -697,16 +519,14 @@ void InnoInputUI::drawForm()
 	for (int i = 0; i < bumpItems.size(); ++i)
 	{
 		listBox[i] = bumpItems[i].data();
-	}
-	
+	}	
 	ImGui::PushItemWidth(196.f);
 	if (ImGui::ListBox("##listbox", &current_bump_item, listBox, bumpItems.size(), 4))
-	{
-
-	
+	{	
 	}
 	ImGui::PopItemWidth();
 
+	//Bump를 삭제하거나 추가한다.
 	bool changeFlag = false;
 	if (simulatorState == eInnoSimulatorState::None)
 	{
@@ -731,6 +551,8 @@ void InnoInputUI::drawForm()
 			}			
 		}
 	}
+
+	//선택한 Bump정보 변경
 	if (false == changeFlag && bumps.size() > current_bump_item)
 	{
 
@@ -751,7 +573,7 @@ void InnoInputUI::drawForm()
 	ImGui::End();
 #pragma endregion InputUI2
 
-#pragma region InputUI3	
+#pragma region InputUI3
 	ImGui::Begin("InputUI3");
 
 	if (false == bConnected)
@@ -762,7 +584,7 @@ void InnoInputUI::drawForm()
 
 	if (bConnecting)
 	{
-		IndeterminateProgressBar(ImVec2(196.f, 20.f));
+		ShowLoadingProgressBar(ImVec2(196.f, 20.f));
 	}
 	else if (bConnected)
 	{
@@ -780,10 +602,7 @@ void InnoInputUI::drawForm()
 		ImGui::Text("Server Port : %d", serverPort);
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 		ImGui::Spacing();
-
-		// 메시지 박스를 표시합니다.
-
-
+		
 		if (ImGui::BeginPopupModal("Client::DisConnect", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text("Are you sure disconnect?");
@@ -831,6 +650,7 @@ void InnoInputUI::drawForm()
 		}
 	}
 
+//PopupModalSave
 	if (ImGui::BeginPopupModal("Client::File", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		ImGui::Text("Select save data");
@@ -858,17 +678,6 @@ void InnoInputUI::drawForm()
 		ImGui::SameLine(of);
 		ImGui::Checkbox(X_POS_OTHER, &save.mbXPosOther);
 
-				
-
-
-		//
-		//if (ImGui::Button("Yes", button_size))
-		//{
-		//    InnoOJTClient::GetInstance()->DisConnect();
-		//    ImGui::CloseCurrentPopup();
-		//}
-		//ImGui::SameLine();
-
 		if (ImGui::Button("Save", button_size))
 		{			
 			save.Save();
@@ -883,7 +692,7 @@ void InnoInputUI::drawForm()
 
 		ImGui::EndPopup();
 	}
-	//InnoInputUI* inputUi = static_cast<InnoInputUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("InnoInputUI"));
+
 	if (mbSaveClicked)
 	{
 		if (!ImGui::IsPopupOpen("Client::File"))
@@ -894,8 +703,6 @@ void InnoInputUI::drawForm()
 	}
 	ImGui::End();
 #pragma endregion InputUI3
-
-
 
 #pragma region GraphUI1
 	ImGui::Begin("GraphUI1");
@@ -925,6 +732,7 @@ void InnoInputUI::drawForm()
 	ImGui::End();
 #pragma endregion GraphUI1
 
+#pragma region Set
 	innoSimulator->SetMS(MS);
 	innoSimulator->SetMU(MU);
 	innoSimulator->SetKS(KS);
@@ -936,4 +744,196 @@ void InnoInputUI::drawForm()
 	innoSimulator->SetBumpAmp(BumpAmp);
 	innoSimulator->SetSamplintTIme(SamplingTime);
 	innoSimulator->SetStartPos(StartPos);
+#pragma endregion Set
+}
+
+static void ShowBump(int idx, const float yPos, const float bumpStart, const float bumpEnd, ImVec4 bumpColor)
+{
+	//Bump	
+	const float  bumpwidth = 3;
+	float bumpX[2] = { bumpStart , bumpEnd };
+	float bumpY[2] = { yPos, yPos };
+	ImPlot::SetNextLineStyle(bumpColor, bumpwidth);
+	ImPlot::PlotLine("##BumpSart-End", bumpX, bumpY, 2, 10);
+
+	//Bump Text Line
+	const float textLineOffset = 4.f;
+
+	float bumpStartTextLineX[2] = { bumpStart, bumpStart };
+	float bumpStartTextLineY[2] = { yPos, yPos + textLineOffset + (idx % 3) };
+	char bumpStartBuffer[256] = { 0, };
+	sprintf_s(bumpStartBuffer, "Bump Start %d (%.2f)", idx, bumpStart);
+	ImPlot::PlotLine("##BumpStartTextLine", bumpStartTextLineX, bumpStartTextLineY, 2);
+	ImPlot::PlotText(bumpStartBuffer, bumpStart, yPos + textLineOffset + 0.5f + (idx % 3));
+
+	float bumpEndTextLineX[2] = { bumpEnd, bumpEnd };
+	float bumpEndTextLineY[2] = { yPos, yPos - textLineOffset - (idx % 3) };
+	char bumpEndtBuffer[256] = { 0, };
+	sprintf_s(bumpEndtBuffer, "Bump End %d (%.2f)", idx, bumpEnd);
+	ImPlot::PlotLine("##BumpStartTextLine", bumpEndTextLineX, bumpEndTextLineY, 2);
+	ImPlot::PlotText(bumpEndtBuffer, bumpEnd, yPos - textLineOffset - 0.5f - (idx % 3));
+}
+
+static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize)
+{
+	std::string key = "##";
+
+	key += label;
+
+	if (ImPlot::BeginPlot(key.c_str(), ImVec2(-1, axxSize)))
+	{
+		const float history = INNO_GRAPH_HISTORY_SECOND;
+		double max = 0.0001f;
+		double min = -0.0001f;
+
+		for (int i = 0; i < dataCount; ++i)
+		{
+			if (times[i] < times[dataCount - 1] - history || times[i] > times[dataCount - 1])
+			{
+				continue;
+			}
+
+			if (max < values[i])
+			{
+				max = values[i];
+			}
+
+			if (min > values[i])
+			{
+				min = values[i];
+			}
+		}
+
+		double size = abs(max) - abs(min);
+		size = abs(size);
+
+		max += size * 0.15;
+		min -= size * 0.15;
+
+		ImPlot::SetupAxisLinks(ImAxis_Y1, &min, &max);
+		ImPlot::SetupAxisLimits(ImAxis_X1, times[dataCount - 1] - history, times[dataCount - 1], ImGuiCond_Always);
+		ImPlot::PlotLine(label, times, values, dataCount, ImPlotFlags_NoFrame);
+		ImPlot::EndPlot();
+	}
+}
+
+static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine, int itemWidth, float cursorOffset)
+{
+	ImGui::Text(name);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + cursorOffset);
+	ImGui::SameLine(sameLine);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::PushItemWidth(itemWidth);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 비활성화된 스타일 적용
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+	}
+
+	ImGui::InputFloat(label, pValue, 0.f, 0.f, "%.3f", flag);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 스타일 복원
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
+	}
+
+
+	ImGui::PopItemWidth();
+	ImGui::Spacing();
+}
+
+static void ShowInputText(const char* label, const char* name, char* pValue, int buffsize, ImGuiInputTextFlags flag)
+{
+	ImGui::Text(name);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
+	ImGui::SameLine(100.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::PushItemWidth(100.0f);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 비활성화된 스타일 적용
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+	}
+
+	ImGui::InputText(label, pValue, buffsize, flag);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 스타일 복원
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
+	}
+
+
+	ImGui::PopItemWidth();
+	ImGui::Spacing();
+}
+
+static void ShowInputInt(const char* label, const char* name, int* pValue, ImGuiInputTextFlags flag)
+{
+	ImGui::Text(name);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
+	ImGui::SameLine(100.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
+	ImGui::PushItemWidth(100.0f);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 비활성화된 스타일 적용
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+	}
+
+	ImGui::InputInt(label, pValue, 0.f, 0.f, flag);
+
+	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
+	{
+		// 스타일 복원
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
+		ImGui::PopItemFlag();
+	}
+
+
+	ImGui::PopItemWidth();
+	ImGui::Spacing();
+}
+
+void ShowLoadingProgressBar(const ImVec2& size_arg)
+{
+	using namespace ImGui;
+
+	ImGuiContext& g = *GImGui;
+	ImGuiWindow* window = GetCurrentWindow();
+	if (window->SkipItems)
+		return;
+
+	ImGuiStyle& style = g.Style;
+	ImVec2 size = CalcItemSize(size_arg, CalcItemWidth(), g.FontSize + style.FramePadding.y * 2.0f);
+	ImVec2 pos = window->DC.CursorPos;
+	ImRect bb(pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+	ItemSize(size);
+	if (!ItemAdd(bb, 0))
+		return;
+
+	const float speed = g.FontSize * 0.05f;
+	const float phase = ImFmod((float)g.Time * speed, 1.0f);
+	const float width_normalized = 0.2f;
+	float t0 = phase * (1.0f + width_normalized) - width_normalized;
+	float t1 = t0 + width_normalized;
+
+	RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
+	bb.Expand(ImVec2(-style.FrameBorderSize, -style.FrameBorderSize));
+	RenderRectFilledRangeH(window->DrawList, bb, GetColorU32(ImGuiCol_PlotHistogram), t0, t1, style.FrameRounding);
 }
