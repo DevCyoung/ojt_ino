@@ -92,13 +92,13 @@ static void ShowGraph(const char* label, const float* values, const float* times
 	}
 }
 
-static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag)
+static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine = 100, int itemWidth = 100, float cursorOffset = 5.0f)
 {
 	ImGui::Text(name);
-	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5.0f);
-	ImGui::SameLine(100.0f);
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + cursorOffset);
+	ImGui::SameLine(sameLine);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
-	ImGui::PushItemWidth(100.0f);
+	ImGui::PushItemWidth(itemWidth);
 
 	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
 	{
@@ -386,16 +386,24 @@ void InnoInputUI::drawForm()
 
 		//นüวม
 		const std::vector<Vector3>& bumpers = InnoSimulator::GetInstance()->GetBumps();
+		int itemIdx = current_bump_item;
 		for (int i = 0; i < bumpers.size(); ++i)
 		{
 			if (simulatorState == eInnoSimulatorState::None && current_bump_item == i)
 			{
-				ShowBump(i, yPos, bumpers[i][0], bumpers[i][1], ImVec4(255, 255, 0, 255));
+				itemIdx = i;
+				continue;
 			}
 			else
 			{
 				ShowBump(i, yPos, bumpers[i][0], bumpers[i][1]);
 			}			
+		}
+
+		if (simulatorState == eInnoSimulatorState::None && current_bump_item < bumpers.size())
+		{
+			ShowBump(itemIdx, yPos, bumpers[current_bump_item][0], bumpers[current_bump_item][1], ImVec4(255, 255, 0, 255));
+
 		}
 
 		//End&
@@ -574,6 +582,7 @@ void InnoInputUI::drawForm()
 	}
 	else if (InnoOJTClient::GetInstance()->mServerSocket != INVALID_SOCKET)
 	{
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 4.f);
 		ImGui::Text("Server Trainig mode");
 	}
 	else if (simulatorState == eInnoSimulatorState::None)
@@ -639,10 +648,7 @@ void InnoInputUI::drawForm()
 	{
 		curTime = slideMax;
 	}
-	ImGui::Text("Time : %.2f / %.2f", curTime, vecTimes.back());
-
-	//ImGui::Separator();
-
+	ImGui::Text("Time : %.2f / %.2f", curTime, vecTimes.back());	
 	ImGui::End();
 
 #pragma endregion InputScreen
@@ -689,10 +695,14 @@ void InnoInputUI::drawForm()
 		listBox[i] = bumpItems[i].data();
 	}
 	
-	if (bumpItems.size() > 0 && ImGui::ListBox("##listbox", &current_bump_item, listBox, bumpItems.size()))
+	ImGui::PushItemWidth(196.f);
+	if (ImGui::ListBox("##listbox", &current_bump_item, listBox, bumpItems.size(), 4))
 	{
 
+	
 	}
+	ImGui::PopItemWidth();
+
 	bool changeFlag = false;
 	if (simulatorState == eInnoSimulatorState::None)
 	{
@@ -700,18 +710,21 @@ void InnoInputUI::drawForm()
 		float bumpEnd = InnoSimulator::GetInstance()->GetBumpEnd();
 		float bumpAmp = InnoSimulator::GetInstance()->GetBumpAmp();
 
-		if (ImGui::Button("Add Bump"))
+		if (inputTextFlag == 0 && ImGui::Button("Add Bump"))
 		{
 			InnoSimulator::GetInstance()->PushBump({ bumpStart , bumpEnd, bumpAmp });
 			changeFlag = true;
 		}
 
-		ImGui::SameLine();
+		ImGui::SameLine(107);
 
-		if (bumpItems.size() > 0 && ImGui::Button("Remove Bump"))
+		if (inputTextFlag == 0 && ImGui::Button("Remove Bump"))
 		{
-			InnoSimulator::GetInstance()->RemoveBump(current_bump_item);
-			changeFlag = true;
+			if (!bumpItems.empty())
+			{
+				InnoSimulator::GetInstance()->RemoveBump(current_bump_item);
+				changeFlag = true;
+			}			
 		}
 	}
 	if (false == changeFlag && bumps.size() > current_bump_item)
@@ -719,16 +732,15 @@ void InnoInputUI::drawForm()
 
 		float ShowBumpStart = bumps[current_bump_item][0];
 		float ShowBumpEnd = bumps[current_bump_item][1];
-		float ShowBumpAmp = bumps[current_bump_item][2];
+		float ShowBumpAmp = bumps[current_bump_item][2];		
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.f);
+		ShowInputFloat("##ShowBumpStart", "BumpStart", &ShowBumpStart, inputTextFlag, 107, 93);
+		ShowInputFloat("##ShowBumpEnd", "BumpEnd", &ShowBumpEnd, inputTextFlag, 107, 93);
+		ShowInputFloat("##ShowBumpAmp", "BumpAmp", &ShowBumpAmp, inputTextFlag, 107, 93);
 
-		
-
-		ShowInputFloat("##ShowBumpStart", "BumpStart", &ShowBumpStart, inputTextFlag);
-		ShowInputFloat("##ShowBumpEnd", "BumpEnd", &ShowBumpEnd, inputTextFlag);
-		ShowInputFloat("##ShowBumpAmp", "BumpAmp", &ShowBumpAmp, inputTextFlag);
 		InnoSimulator::GetInstance()->SetBump(current_bump_item, Vector3{ ShowBumpStart ,ShowBumpEnd, ShowBumpAmp });
 		if (ShowBumpStart < ShowBumpEnd )
-		{
+		{	
 			InnoSimulator::GetInstance()->SetBump(current_bump_item, Vector3{ ShowBumpStart ,ShowBumpEnd, ShowBumpAmp });
 		}		
 	}

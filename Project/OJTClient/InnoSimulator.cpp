@@ -121,8 +121,8 @@ void InnoSimulator::Update()
 		mPrevPos = 0.f;
 		mFrameDeltaTime = 0.f;
 
-		std::sort(mBumps.begin(), mBumps.end(), compare);
-
+		//Start, End 앞뒤조정 범프정렬
+		sort();
 
 		mBumpsCopy = mBumps;
 
@@ -226,4 +226,19 @@ void InnoSimulator::RemoveBump(int idx)
 void InnoSimulator::SetBump(int idx, Vector3 bump)
 {
 	mBumps[idx] = bump;
+}
+
+void InnoSimulator::sort()
+{
+	for (int i = 0; i < mBumps.size(); ++i)
+	{
+		if (mBumps[i][0] > mBumps[i][1])
+		{
+			float temp = mBumps[i][1];
+			mBumps[i][1] = mBumps[i][0];
+			mBumps[i][0] = temp;
+		}
+	}
+
+	std::sort(mBumps.begin(), mBumps.end(), compare);
 }

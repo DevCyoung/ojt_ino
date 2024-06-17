@@ -87,6 +87,9 @@ public:
 	bool IsPlaying() { return mState == eInnoSimulatorState::Playing; }
 
 private:
+	void sort();
+
+private:
 	eInnoSimulatorState mState;
 	float mCurTime;
 	float mPlayerBPos;
