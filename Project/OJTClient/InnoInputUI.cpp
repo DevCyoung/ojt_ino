@@ -33,18 +33,18 @@ static void ShowBump(int idx, const float yPos, const float bumpStart, const flo
 	const float textLineOffset = 4.f;
 
 	float bumpStartTextLineX[2] = { bumpStart, bumpStart };
-	float bumpStartTextLineY[2] = { yPos, yPos + textLineOffset };
+	float bumpStartTextLineY[2] = { yPos, yPos + textLineOffset + (idx % 3) };
 	char bumpStartBuffer[256] = { 0, };
 	sprintf_s(bumpStartBuffer, "Bump Start %d (%.2f)", idx, bumpStart);
 	ImPlot::PlotLine("##BumpStartTextLine", bumpStartTextLineX, bumpStartTextLineY, 2);
-	ImPlot::PlotText(bumpStartBuffer, bumpStart, yPos + textLineOffset + 0.5f);
+	ImPlot::PlotText(bumpStartBuffer, bumpStart, yPos + textLineOffset + 0.5f + (idx % 3));
 
 	float bumpEndTextLineX[2] = { bumpEnd, bumpEnd };
-	float bumpEndTextLineY[2] = { yPos, yPos - textLineOffset };
+	float bumpEndTextLineY[2] = { yPos, yPos - textLineOffset - (idx % 3) };
 	char bumpEndtBuffer[256] = { 0, };
 	sprintf_s(bumpEndtBuffer, "Bump End %d (%.2f)", idx, bumpEnd);
 	ImPlot::PlotLine("##BumpStartTextLine", bumpEndTextLineX, bumpEndTextLineY, 2);
-	ImPlot::PlotText(bumpEndtBuffer, bumpEnd, yPos - textLineOffset - 0.5f);	
+	ImPlot::PlotText(bumpEndtBuffer, bumpEnd, yPos - textLineOffset - 0.5f - (idx % 3));
 }
 
 static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize = 150)
@@ -430,7 +430,7 @@ void InnoInputUI::drawForm()
 			ImGui::PushID(2);
 			ImPlot::SetNextMarkerStyle(2, 10.f, ImVec4(0, 255, 0, 255));
 			float x = xOtherPos;
-			float y = -yPos;
+			float y = -yPos - 3;
 			ImPlot::PlotLine("##Other CarA", &x, &y, 1);
 			ImGui::PopID();
 			char buffMyCar[256] = { 0, };
@@ -729,7 +729,7 @@ void InnoInputUI::drawForm()
 		InnoSimulator::GetInstance()->SetBump(current_bump_item, Vector3{ ShowBumpStart ,ShowBumpEnd, ShowBumpAmp });
 		if (ShowBumpStart < ShowBumpEnd )
 		{
-			//InnoSimulator::GetInstance()->SetBump(current_bump_item, Vector3{ ShowBumpStart ,ShowBumpEnd, ShowBumpAmp });
+			InnoSimulator::GetInstance()->SetBump(current_bump_item, Vector3{ ShowBumpStart ,ShowBumpEnd, ShowBumpAmp });
 		}		
 	}
 	ImGui::End();

@@ -4,6 +4,12 @@
 
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
+
+static bool compare(const Vector3& a, const Vector3& b)
+{
+	return a[0] < b[0];
+}
+
 InnoSimulator::InnoSimulator()
 	: mState(eInnoSimulatorState::None)
 	, mCurTime(0.f)
@@ -114,7 +120,12 @@ void InnoSimulator::Update()
 		mCurTime = 0.f;
 		mPrevPos = 0.f;
 		mFrameDeltaTime = 0.f;
+
+		std::sort(mBumps.begin(), mBumps.end(), compare);
+
+
 		mBumpsCopy = mBumps;
+
 		ZeroMemory(mX, sizeof(mX));
 		ZeroMemory(mXDot, sizeof(mXDot));
 
@@ -210,4 +221,9 @@ void InnoSimulator::PushBump(Vector3 bump)
 void InnoSimulator::RemoveBump(int idx)
 {
 	mBumps.erase(mBumps.begin() + idx);
+}
+
+void InnoSimulator::SetBump(int idx, Vector3 bump)
+{
+	mBumps[idx] = bump;
 }

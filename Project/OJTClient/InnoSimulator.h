@@ -82,7 +82,7 @@ public:
 	const std::vector< Vector3>& GetBumps() { return mBumps; }
 	void PushBump(Vector3 bump);
 	void RemoveBump(int idx);
-	void SetBump(int idx, Vector3 bump) { mBumps[idx] = bump; }
+	void SetBump(int idx, Vector3 bump);
 
 	bool IsPlaying() { return mState == eInnoSimulatorState::Playing; }
 
