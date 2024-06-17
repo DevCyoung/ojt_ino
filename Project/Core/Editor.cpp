@@ -19,7 +19,6 @@ static bool                     g_SwapChainOccluded = false;
 static UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
 static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
 
-
 // Forward declarations of helper functions
 bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
@@ -34,9 +33,7 @@ Editor::Editor()
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(hwnd))
 	{
-		Assert(false, ASSERT_MSG_INVALID);
-		CleanupDeviceD3D();		
-		return;
+		Assert(false, ASSERT_MSG_INVALID);		
 	}    
 	
 	// Setup Dear ImGui context
@@ -52,7 +49,6 @@ Editor::Editor()
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
-		
 	PanelUIManager::initialize();	
 }
 
@@ -81,7 +77,7 @@ void Editor::run()
 	bool show_app_dockspace = true;
 	if (show_app_dockspace)
 	{
-		ShowExampleAppDockSpace(&show_app_dockspace);
+		ShowDockSpace();
 	}
 	
 	PanelUIManager::GetInstance()->finalUpdate();
@@ -179,8 +175,6 @@ LRESULT WINAPI WndProcImGUI(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DPICHANGED:
 		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DpiEnableScaleViewports)
 		{
-			//const int dpi = HIWORD(wParam);
-			//printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
 			const RECT* suggested_rect = (RECT*)lParam;
 			::SetWindowPos(hWnd, nullptr, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
 		}

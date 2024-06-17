@@ -48,6 +48,7 @@
     <ClInclude Include="InnoOJTServer.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="ShowDockSpace.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OJTServer.ico">
@@ -85,6 +86,7 @@
     <ClCompile Include="InnoOJTServer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="ShowDockSpace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OJTServer.rc">

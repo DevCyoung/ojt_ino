@@ -1,8 +1,5 @@
 #pragma once
-
-//#include <Helper/>
-
-//class PanelUI;
+void ShowDockSpace();
 
 class Editor
 {

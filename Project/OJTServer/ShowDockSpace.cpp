@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "ShowDockSpace.h"
-#include "InnnoSave.h"
-#include "InnoSimulator.h"
 
 void ShowDockSpace()
 {
@@ -27,10 +25,8 @@ void ShowDockSpace()
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
     //setting
-   dockspace_flags = ImGuiDockNodeFlags_NoResize;
-   dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoSplit;
-   dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoUndocking;
-   dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_AutoHideTabBar;
+    dockspace_flags = ImGuiDockNodeFlags_NoResize;
+    dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoSplit;
 
     // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
     // because it would be confusing to have two docking targets within each others.
@@ -82,41 +78,16 @@ void ShowDockSpace()
         //ShowDockingDisabledMessage();
     }
 
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("File"))
-        {
-            const eInnoSimulatorState state = InnoSimulator::GetInstance()->GetSimulatorState();
-            if (ImGui::MenuItem("Save", NULL, nullptr, state == eInnoSimulatorState::Editing))
-            {
-                InnnoSave save;
-                save.Save();
-            }
-            //if (ImGui::MenuItem("SlideBar", NULL))
-            //{
-            //    int aaa;
-            //    ImGui::SliderInt("##sAXXSize", &aaa, 50, 600);
-            //}
-            // Disabling fullscreen would allow the window to be moved to the front of other windows,
-            // which we can't undo at the moment without finer window depth/z control.
-            //ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            //ImGui::MenuItem("Padding", NULL, &opt_padding);
-            //ImGui::Separator();
-            //
-            //if (ImGui::MenuItem("Flag: NoDockingOverCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingOverCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingOverCentralNode; }
-            //if (ImGui::MenuItem("Flag: NoDockingSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingSplit; }
-            //if (ImGui::MenuItem("Flag: NoUndocking", "", (dockspace_flags & ImGuiDockNodeFlags_NoUndocking) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoUndocking; }
-            //if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-            //if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-            //if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-            //ImGui::Separator();
-            //
-            //if (ImGui::MenuItem("Close", NULL, false, p_open != NULL))
-            //    *p_open = false;
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-    }
+    //if (ImGui::BeginMenuBar())
+    //{
+    //    //if (ImGui::BeginMenu("File"))
+    //    //{
+    //    //
+    //    //    ImGui::EndMenu();
+    //    //}
+    //
+    //    ImGui::EndMenuBar();
+    //}
 
     ImGui::End();
 }

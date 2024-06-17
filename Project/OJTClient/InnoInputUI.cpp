@@ -338,15 +338,7 @@ void InnoInputUI::drawForm()
 	static int current_bump_item = 0;
 #pragma region InputScreen
 	ImGui::Begin("ScreenUI");
-
-	//if (ImGui::IsWindowFocused())
-	//{
-	//	GameManager::GetInstance()->mSceneRenderHelperA->GetCamera()->GetComponent<CameraInputMoveMent>()->MoveCamera();
-	//}
-
-	//ImGui::Image((void*)renderTexA->GetSRV(), renderTargetSizeA);
-	//ImGui::Image((void*)renderTexB->GetSRV(), renderTargetSizeB);
-	ImPlot::ShowDemoWindow();
+	//ImPlot::ShowDemoWindow();
 
 	const double xHistoryScale = 10.f;
 	const float xPos = vecxPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
@@ -362,18 +354,9 @@ void InnoInputUI::drawForm()
 
 	if (ImPlot::BeginPlot("##testlabel", ImVec2(-1, 420)))
 	{
-
-
-		//static float timetime = 0.f;
-
-
 		double yHistoryMax = xHistoryScale;
 		double yHistoryMin = -xHistoryScale;
-
-
-
 		float xPosStart = vecxPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
-
 
 		if (simulatorState != eInnoSimulatorState::None)
 		{
@@ -396,8 +379,6 @@ void InnoInputUI::drawForm()
 		sprintf_s(xPosStartBuffer, "Start (%.2f)", xPosStart);
 		ImPlot::PlotText(xPosStartBuffer, xPosStart, yPos - 1.f);
 
-
-
 		//Car move line 자동차 이동흔적
 		float xline[2] = { vecxPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1], xPos };
 		float yline[2] = { yPos, yPos };
@@ -414,11 +395,8 @@ void InnoInputUI::drawForm()
 			else
 			{
 				ShowBump(i, yPos, bumpers[i][0], bumpers[i][1]);
-			}
-			
+			}			
 		}
-
-
 
 		//End&
 		if (simulatorState == eInnoSimulatorState::Editing)
@@ -460,7 +438,6 @@ void InnoInputUI::drawForm()
 			ImPlot::PlotText(buffMyCar, x, y - 1.f);
 		}
 
-
 		//화면 밖으로 나갈때 그리기
 		if (bConnected)
 		{
@@ -481,7 +458,6 @@ void InnoInputUI::drawForm()
 
 		ImPlot::EndPlot();
 	}
-
 
 	ImGui::Separator();
 	ImGui::PushItemWidth(800.f);
@@ -618,7 +594,7 @@ void InnoInputUI::drawForm()
 	}
 	if (simulatorState == eInnoSimulatorState::Editing)
 	{
-		ImGui::SameLine(400.f);
+		ImGui::SameLine(350.f);
 		if (0 == playMode)
 		{
 			ImGui::Text("Play Stop");
@@ -657,9 +633,13 @@ void InnoInputUI::drawForm()
 		}
 	}
 
-
 	ImGui::SameLine(600.f);
-	ImGui::Text("Time : %.2f / %.2f", (slidePos / slideMax) * vecTimes.back(), vecTimes.back());
+	float curTime = (slidePos / slideMax) * vecTimes.back();
+	if (slideMax <= 0.f)
+	{
+		curTime = slideMax;
+	}
+	ImGui::Text("Time : %.2f / %.2f", curTime, vecTimes.back());
 
 	//ImGui::Separator();
 
