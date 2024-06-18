@@ -156,6 +156,9 @@ void InnoInputUI::drawForm()
 #pragma endregion Data
 
 #pragma region InputScreen
+	ImGuiWindowClass window_InputScreen;
+	window_InputScreen.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_InputScreen);
 	ImGui::Begin("ScreenUI");
 
 	const double xHistoryScale = 10.f;
@@ -490,6 +493,9 @@ void InnoInputUI::drawForm()
 	float StartPos = innoSimulator->GetStartPos();
 	static char buff[256] = {};
 
+	ImGuiWindowClass window_InputUI1;
+	window_InputUI1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_InputUI1);
 	ImGui::Begin("InputUI1");
 	ShowInputFloat("##MS", "MS", &MS, inputTextFlag);
 	ShowInputFloat("##MU", "MU", &MU, inputTextFlag);
@@ -503,6 +509,9 @@ void InnoInputUI::drawForm()
 #pragma endregion InputUI1
 
 #pragma region InputUI2
+	ImGuiWindowClass window_InputUI2;
+	window_InputUI2.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_InputUI2);
 	ImGui::Begin("InputUI2");
 
 	//Bump들 Item으로 만들기
@@ -574,6 +583,9 @@ void InnoInputUI::drawForm()
 #pragma endregion InputUI2
 
 #pragma region InputUI3
+	ImGuiWindowClass window_InputUI3;
+	window_InputUI3.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_InputUI3);
 	ImGui::Begin("InputUI3");
 
 	if (false == bConnected)
@@ -705,6 +717,9 @@ void InnoInputUI::drawForm()
 #pragma endregion InputUI3
 
 #pragma region GraphUI1
+	ImGuiWindowClass window_GraphUI1;
+	window_GraphUI1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_GraphUI1);
 	ImGui::Begin("GraphUI1");
 	{
 		static int axxSize = 150;

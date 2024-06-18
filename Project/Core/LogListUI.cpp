@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "LogListUI.h"
-
+#include "imgui_internal.h"
 std::mutex WriteMutex;
 
 LogListUI::LogListUI()
@@ -16,6 +16,9 @@ LogListUI::~LogListUI()
 
 void LogListUI::drawForm()
 {
+	ImGuiWindowClass window_LogListUI;
+	window_LogListUI.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_LogListUI);
 	ImGui::Begin(GetTitle().c_str());
 	std::lock_guard guard(WriteMutex);
 
