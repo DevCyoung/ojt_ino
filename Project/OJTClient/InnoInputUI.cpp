@@ -236,7 +236,7 @@ void InnoInputUI::drawForm()
 			float xEnd = vecxPos.back();
 			float yEnd = yPos;
 			ImPlot::SetNextMarkerStyle(2, 10.f, ImVec4(0, 255, 255, 255));
-			char endBuffer[25 ^ 6];
+			char endBuffer[256];
 			sprintf_s(endBuffer, "End (%.2f)", xEnd);
 			ImPlot::PlotLine("##End (%.2f)", &xEnd, &yEnd, 1);
 			ImPlot::PlotText(endBuffer, xEnd, yEnd - 1.f);
@@ -255,19 +255,55 @@ void InnoInputUI::drawForm()
 		ImPlot::PlotText(buffMyCar, xPos, y + 1.f);
 
 
+		//OtherCar시작위치
 		//OtherCar그리기
 		if (bConnected)
 		{
+			const float xPosOtherStart = vecxOtehrPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
+			const float x = xOtherPos;
+			const float y = -yPos - 3;
+
+			//Other Strat Marker
 			ImGui::PushID(2);
-			ImPlot::SetNextMarkerStyle(2, 10.f, ImVec4(0, 255, 0, 255));
-			float x = xOtherPos;
-			float y = -yPos - 3;
+			ImPlot::SetNextMarkerStyle(2, 10.f, ImVec4(255, 255, 0, 255));
+			ImPlot::PlotLine("##OtherStartCarA", &xPosOtherStart, &y, 1);
+			ImGui::PopID();
+
+			//Start Text
+			char xPosOtherStartBuffer[256] = { 0, };
+			sprintf_s(xPosOtherStartBuffer, "Start (%.2f)", xPosOtherStart);
+			ImPlot::PlotText(xPosOtherStartBuffer, xPosOtherStart, y - 1.f);
+
+			//Car 궤적			
+			float xline[2] = { vecxOtehrPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1], x };
+			float yline[2] = { y, y };
+			ImPlot::PlotLine("##CarLine", xline, yline, 2);
+
+			//End Marker
+			if (simulatorState == eInnoSimulatorState::Editing)
+			{
+				ImGui::PushID(2);
+				float xEnd = vecxOtehrPos.back();
+				float yEnd = y;
+				ImPlot::SetNextMarkerStyle(2, 10.f, ImVec4(0, 255, 255, 255));
+				char endBuffer[256];
+				sprintf_s(endBuffer, "End (%.2f)", xEnd);
+				ImPlot::PlotLine("##End (%.2f)", &xEnd, &yEnd, 1);
+				ImPlot::PlotText(endBuffer, xEnd, yEnd - 1.f);
+				ImGui::PopID();
+			}
+
+			//Other Marker
+			ImGui::PushID(2);
+			ImPlot::SetNextMarkerStyle(2, 10.f, ImVec4(0, 255, 0, 255));			
 			ImPlot::PlotLine("##Other CarA", &x, &y, 1);
 			ImGui::PopID();
 			char buffMyCar[256] = { 0, };
 			sprintf_s(buffMyCar, "Other Car (%.2f)", x);
-			ImPlot::PlotText(buffMyCar, x, y - 1.f);
+			ImPlot::PlotText(buffMyCar, x, y + 1.f);
 		}
+
+		
 
 		//OtherCar가 화면 밖으로 나갈때 그리기
 		if (bConnected)
@@ -615,6 +651,10 @@ void InnoInputUI::drawForm()
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
 		ImGui::Spacing();
 		
+		// Always center this window when appearing
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+
 		if (ImGui::BeginPopupModal("Client::DisConnect", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text("Are you sure disconnect?");
@@ -663,8 +703,18 @@ void InnoInputUI::drawForm()
 	}
 
 //PopupModalSave
+	
+	// Always center this window when appearing
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+
 	if (ImGui::BeginPopupModal("Client::File", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 	{
+		//ImGui::SetNextWindowPos(ImVec2(300, 300));
+
+		ImVec2 ws = ImGui::GetWindowSize();		
+		
+		
 		ImGui::Text("Select save data");
 		static InnnoSave save;
 		ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
