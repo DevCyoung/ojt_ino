@@ -13,7 +13,7 @@
 
 static void ShowBump(int idx, const float yPos, const float bumpStart, const float bumpEnd, ImVec4 bumpColor = ImVec4(255, 0, 0, 255));
 static void ShowGraph(const char* label, const float* values, const float* times, int dataCount, int axxSize = 150);
-static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine = 100, int itemWidth = 100, float cursorOffset = 5.0f);
+static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine = 100, int itemWidth = 100, float cursorOffset = 5.0f, const char* tooltipMessage = nullptr);
 static void ShowInputText(const char* label, const char* name, char* pValue, int buffsize, ImGuiInputTextFlags flag);
 static void ShowInputInt(const char* label, const char* name, int* pValue, ImGuiInputTextFlags flag);
 static void ShowLoadingProgressBar(const ImVec2& size_arg);
@@ -533,14 +533,14 @@ void InnoInputUI::drawForm()
 	window_InputUI1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
 	ImGui::SetNextWindowClass(&window_InputUI1);
 	ImGui::Begin("InputUI1");
-	ShowInputFloat("##MS", "MS", &MS, inputTextFlag);
-	ShowInputFloat("##MU", "MU", &MU, inputTextFlag);
-	ShowInputFloat("##KS", "KS", &KS, inputTextFlag);
-	ShowInputFloat("##CS", "CS", &CS, inputTextFlag);
-	ShowInputFloat("##KT", "KT", &KT, inputTextFlag);
+	ShowInputFloat("##MS", INNO_MS, &MS, inputTextFlag, 100, 100, 5.0f, INNO_MS_TOOLTIP);
+	ShowInputFloat("##MU", INNO_MU, &MU, inputTextFlag, 100, 100, 5.0f, INNO_MU_TOOLTIP);
+	ShowInputFloat("##CS", INNO_CS, &CS, inputTextFlag, 100, 100, 5.0f, INNO_CS_TOOLTIP);
+	ShowInputFloat("##KS", INNO_KS, &KS, inputTextFlag, 100, 100, 5.0f, INNO_KS_TOOLTIP);
+	ShowInputFloat("##KT", INNO_KT, &KT, inputTextFlag, 100, 100, 5.0f, INNO_KT_TOOLTIP);
 	//ShowInputFloat("##Start Pos:InputUI2", "Start Pos", &StartPos, inputTextFlag);
-	ShowInputFloat("##Speed:InputUI2", "Speed", &Speed, inputTextFlag);
-	ShowInputFloat("##SamplingTime", "Sampling Time", &SamplingTime, inputTextFlag);
+	ShowInputFloat("##Speed:InputUI2", INNO_SPEED, &Speed, inputTextFlag, 100, 100, 5.0f, INNO_SPEED_TOOLTIP);
+	ShowInputFloat("##SamplingTime", INNO_SAMPLINT_TIME, &SamplingTime, inputTextFlag, 100, 100, 5.0f, INNO_SAMPLING_TIME_TOOLTOP);
 	ImGui::End();
 #pragma endregion InputUI1
 
@@ -605,9 +605,9 @@ void InnoInputUI::drawForm()
 		float ShowBumpEnd = bumps[current_bump_item][1];
 		float ShowBumpAmp = bumps[current_bump_item][2];		
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.f);
-		ShowInputFloat("##ShowBumpStart", "BumpStart", &ShowBumpStart, inputTextFlag, 107, 93);
-		ShowInputFloat("##ShowBumpEnd", "BumpEnd", &ShowBumpEnd, inputTextFlag, 107, 93);
-		ShowInputFloat("##ShowBumpAmp", "BumpAmp", &ShowBumpAmp, inputTextFlag, 107, 93);
+		ShowInputFloat("##ShowBumpStart", INNO_BUMP_START, &ShowBumpStart, inputTextFlag, 107, 93, 5.0f, INNO_BUMP_START_TOOLTIP);
+		ShowInputFloat("##ShowBumpEnd", INNO_BUMP_END, &ShowBumpEnd, inputTextFlag, 107, 93, 5.0f, INNO_BUMP_END_TOOLTIP);
+		ShowInputFloat("##ShowBumpAmp", INNO_BUMP_AMP, &ShowBumpAmp, inputTextFlag, 107, 93, 5.0f, INNO_BUMP_AMP_TOOLTIP);
 
 		InnoSimulator::GetInstance()->SetBump(current_bump_item, Vector3{ ShowBumpStart ,ShowBumpEnd, ShowBumpAmp });
 		if (ShowBumpStart < ShowBumpEnd )
@@ -626,7 +626,7 @@ void InnoInputUI::drawForm()
 
 	if (false == bConnected)
 	{
-		ShowInputText("##ServerIP", "ServerIP", IPBuffer, 16, inputTextFlag);
+		ShowInputText("##Server IP", "Server IP", IPBuffer, 16, inputTextFlag);
 		ShowInputInt("##PortNumber", "Port", &portNumber, inputTextFlag);
 	}
 
@@ -882,9 +882,14 @@ static void ShowGraph(const char* label, const float* values, const float* times
 	}
 }
 
-static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine, int itemWidth, float cursorOffset)
+static void ShowInputFloat(const char* label, const char* name, float* pValue, ImGuiInputTextFlags flag, int sameLine, int itemWidth, float cursorOffset, const char* tooltipMessage)
 {
 	ImGui::Text(name);
+	if (nullptr != tooltipMessage && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+	{
+		ImGui::SetTooltip(tooltipMessage);
+	}
+
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + cursorOffset);
 	ImGui::SameLine(sameLine);
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetFontSize() - offset);
@@ -898,7 +903,7 @@ static void ShowInputFloat(const char* label, const char* name, float* pValue, I
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
 	}
 
-	ImGui::InputFloat(label, pValue, 0.f, 0.f, "%.3f", flag);
+	ImGui::InputFloat(label, pValue, 0.f, 0.f, "%.3f", flag);	
 
 	if (flag == ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly)
 	{
