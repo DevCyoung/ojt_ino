@@ -25,8 +25,8 @@ void ShowDockSpace()
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
     //setting
-    dockspace_flags = ImGuiDockNodeFlags_NoResize;
-    dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoSplit;
+    //dockspace_flags = ImGuiDockNodeFlags_NoResize;
+    //dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoSplit;
 
     // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
     // because it would be confusing to have two docking targets within each others.

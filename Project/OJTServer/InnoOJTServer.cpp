@@ -269,7 +269,7 @@ int InnoOJTServer::Listen(const int port)
 int InnoOJTServer::Accept(SOCKET clientSocket)
 {	
 	char buff[256] = { 0, };
-	sprintf_s(buff, "%s %s", GetClientIP(clientSocket).c_str(), "Enter");
+	sprintf_s(buff, "%s", GetClientIP(clientSocket).c_str());
 	gLogListUI->WriteLine(buff);
 	std::string ip(buff);
 
