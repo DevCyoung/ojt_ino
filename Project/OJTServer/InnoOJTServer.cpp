@@ -269,9 +269,9 @@ int InnoOJTServer::Listen(const int port)
 int InnoOJTServer::Accept(SOCKET clientSocket)
 {	
 	char buff[256] = { 0, };
-	sprintf_s(buff, "%s", GetClientIP(clientSocket).c_str());
+	sprintf_s(buff, "Accept: %s", GetClientIP(clientSocket).c_str());
 	gLogListUI->WriteLine(buff);
-	std::string ip(buff);
+	std::string ip(GetClientIP(clientSocket).c_str());
 
 	tInnoClient innoClient = {};
 	innoClient.ClientID = InnoOJTServer::serializeNumber++;

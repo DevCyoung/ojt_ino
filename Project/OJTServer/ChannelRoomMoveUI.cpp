@@ -49,7 +49,7 @@ void ChannelRoomMoveUI::drawForm()
 	if (false == room.bTraining) // »∆∑√Ω√¿€
 	{
 
-		if (ImGui::Button("Traing Start"))
+		if (ImGui::Button("Training Start"))
 		{
 			if (room.clients.size() < 2)
 			{
