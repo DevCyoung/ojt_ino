@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "RoomUI.h"
 #include "InnoOJTServer.h"
+#include <imgui_internal.h>
 
 RoomUI::RoomUI()
 {
@@ -13,6 +14,9 @@ RoomUI::~RoomUI()
 
 void RoomUI::drawForm()
 {
+	ImGuiWindowClass window_GraphUI1;
+	window_GraphUI1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_GraphUI1);
 	ImGui::Begin("RoomUI");
 			
 	const std::vector<tInnoClient>& channel_clients = InnoOJTServer::GetInstance()->mRoom.clients;

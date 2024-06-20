@@ -540,7 +540,14 @@ void InnoInputUI::drawForm()
 	ShowInputFloat("##KT", INNO_KT, &KT, inputTextFlag, 100, 100, 5.0f, INNO_KT_TOOLTIP);
 	//ShowInputFloat("##Start Pos:InputUI2", "Start Pos", &StartPos, inputTextFlag);
 	ShowInputFloat("##Speed:InputUI2", INNO_SPEED, &Speed, inputTextFlag, 100, 100, 5.0f, INNO_SPEED_TOOLTIP);
-	ShowInputFloat("##SamplingTime", INNO_SAMPLINT_TIME, &SamplingTime, inputTextFlag, 100, 100, 5.0f, INNO_SAMPLING_TIME_TOOLTOP);
+	if (simulatorState == eInnoSimulatorState::Editing)
+	{
+		ShowInputFloat("##SamplingTime", INNO_SAMPLINT_TIME, &SamplingTime, 0, 100, 100, 5.0f, INNO_SAMPLING_TIME_TOOLTOP);
+	}
+	else
+	{
+		ShowInputFloat("##SamplingTime", INNO_SAMPLINT_TIME, &SamplingTime, ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly, 100, 100, 5.0f, INNO_SAMPLING_TIME_TOOLTOP);
+	}
 	ImGui::End();
 #pragma endregion InputUI1
 

@@ -4,6 +4,7 @@
 
 #include "TrainingUI.h"
 #include "InnoOJTServer.h"
+#include <imgui_internal.h>
 
 #define gLogListUI (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI")))
 
@@ -18,6 +19,9 @@ ChannelRoomMoveUI::~ChannelRoomMoveUI()
 
 void ChannelRoomMoveUI::drawForm()
 {
+	ImGuiWindowClass window_GraphUI1;
+	window_GraphUI1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_GraphUI1);
 	ImGui::Begin("ChannelRoomMoveUI");
 	//ImGui::Text("hello ChannelRoomMoveUI");
 

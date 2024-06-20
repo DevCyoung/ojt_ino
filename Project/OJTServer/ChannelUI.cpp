@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ChannelUI.h"
 #include "InnoOJTServer.h"
-
+#include <imgui_internal.h>
 ChannelUI::ChannelUI()
 {
 	SetTitle("ChannelUI");
@@ -13,6 +13,9 @@ ChannelUI::~ChannelUI()
 
 void ChannelUI::drawForm()
 {
+	ImGuiWindowClass window_GraphUI1;
+	window_GraphUI1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_GraphUI1);
 	ImGui::Begin("ChannelUI");
 	//ImGui::Text("hello ChannelUI");
 	

@@ -4,7 +4,7 @@
 #include "InnoOJTServer.h"
 #include <PanelUIManager.h>
 #include <imgui_theme.h>
-
+#include <imgui_internal.h>
 ListenUI::ListenUI()
 {
 	SetTitle("ListenUI");
@@ -28,7 +28,9 @@ void ListenUI::drawForm()
 	std::string ip = InnoOJTServer::GetInstance()->GetServerIP();
 	bool bServerListening = InnoOJTServer::GetInstance()->IsListening();
 
-
+	ImGuiWindowClass window_GraphUI1;
+	window_GraphUI1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_GraphUI1);
 	ImGui::Begin("ListenUI");
 
 	if (bServerListening)
