@@ -2,11 +2,95 @@
 #include "InnoOJTServer.h"
 #include <TimeManager.h>
 #include <InnoMessageQueue.h>
+#include <iphlpapi.h>
+#include <ws2tcpip.h>
+#include <string>
+
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Iphlpapi.lib")
 
 #define gLogListUI (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI")))
 
 static std::mutex gClientsMutex;
 static SOCKET gListenSocket = INVALID_SOCKET;
+
+std::string GetLocalIPAddress(SOCKET listenSocket)
+{
+	// Get the local IP address from the socket
+	sockaddr_in addr;
+	int addrLen = sizeof(addr);
+
+	if (getsockname(listenSocket, (struct sockaddr*)&addr, &addrLen) == -1)
+	{
+		Assert(false, ASSERT_MSG_INVALID);
+		return "NULL";
+	}
+
+	if (addr.sin_addr.s_addr == INADDR_ANY)
+	{
+		// If INADDR_ANY, we need to find the actual local address
+		ULONG family = AF_INET;
+		ULONG flags = GAA_FLAG_INCLUDE_PREFIX;
+		PIP_ADAPTER_ADDRESSES pAddresses = NULL;
+		ULONG outBufLen = 0;
+		DWORD dwRetVal = 0;
+
+		dwRetVal = GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen);
+		if (dwRetVal == ERROR_BUFFER_OVERFLOW)
+		{
+			pAddresses = (IP_ADAPTER_ADDRESSES*)malloc(outBufLen);
+			if (pAddresses == NULL)
+			{
+				Assert(false, ASSERT_MSG_INVALID);
+				return "";
+			}
+		}
+
+		dwRetVal = GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen);
+		if (dwRetVal == NO_ERROR)
+		{
+			for (PIP_ADAPTER_ADDRESSES pCurrAddresses = pAddresses; pCurrAddresses != NULL; pCurrAddresses = pCurrAddresses->Next)
+			{
+				for (PIP_ADAPTER_UNICAST_ADDRESS pUnicast = pCurrAddresses->FirstUnicastAddress; pUnicast != NULL; pUnicast = pUnicast->Next) {
+					char ipAddressString[INET_ADDRSTRLEN] = { 0 };
+					struct sockaddr_in* sa_in = (struct sockaddr_in*)pUnicast->Address.lpSockaddr;
+					inet_ntop(AF_INET, &(sa_in->sin_addr), ipAddressString, INET_ADDRSTRLEN);
+
+					// Skip loopback addresses
+					if (strcmp(ipAddressString, "127.0.0.1") != 0)
+					{
+						free(pAddresses);
+						return std::string(ipAddressString);
+					}
+				}
+			}
+		}
+		else
+		{
+			Assert(false, ASSERT_MSG_INVALID);
+		}
+
+		if (pAddresses)
+		{
+			free(pAddresses);
+		}
+	}
+	else
+	{
+		// Convert the address to a string
+		char ipStr[INET_ADDRSTRLEN];
+		if (inet_ntop(AF_INET, &(addr.sin_addr), ipStr, INET_ADDRSTRLEN) == NULL)
+		{
+			Assert(false, ASSERT_MSG_INVALID);
+			return "NULL";
+		}
+		return std::string(ipStr);
+	}
+
+	return "NULL";
+}
+
+
 
 InnoOJTServer::InnoOJTServer()
 	: mPanelManager(nullptr)
@@ -258,6 +342,10 @@ int InnoOJTServer::Listen(const int port)
 	char buf[256] = { 0, };
 	sprintf_s(buf, "Server is listening on port %d", port);
 	gLogListUI->WriteLine(buf);
+
+	// Listen 상태일때 ip 해당하는 소켓 ip로 변경
+	mIP = GetLocalIPAddress(gListenSocket);
+	Assert(mIP != "NULL", ASSERT_MSG_INVALID);
 
 	std::thread accept(handleAccept);
 	accept.detach();
