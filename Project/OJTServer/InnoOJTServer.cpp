@@ -103,7 +103,10 @@ InnoOJTServer::InnoOJTServer()
 	WSACleanup();
 
 	mIP = GetLocalIP();
-	Assert(mIP != "NULL", ASSERT_MSG_INVALID);
+	if (mIP == "NULL")
+	{
+		mIP = ip;
+	}
 
 	InnoMessageQueue::initialize();
 
