@@ -726,7 +726,7 @@ void InnoInputUI::drawForm()
 		static InnnoSave save;
 		ImVec2 button_size(ImGui::GetFontSize() * 7.0f, 0.0f);
 			
-		float of = 103;
+		float of = 120;
 		ImGui::Checkbox(ZS_POS, &save.mbZsPos);
 		ImGui::SameLine(of);
 		ImGui::Checkbox(ZU_POS, &save.mbZuPos);
