@@ -14,82 +14,43 @@
 static std::mutex gClientsMutex;
 static SOCKET gListenSocket = INVALID_SOCKET;
 
-std::string GetLocalIPAddress(SOCKET listenSocket)
+std::string GetLocalIP()
 {
-	// Get the local IP address from the socket
-	sockaddr_in addr;
-	int addrLen = sizeof(addr);
-
-	if (getsockname(listenSocket, (struct sockaddr*)&addr, &addrLen) == -1)
+	PIP_ADAPTER_INFO adapterInfo;
+	DWORD dwBufLen = sizeof(IP_ADAPTER_INFO);
+	adapterInfo = (IP_ADAPTER_INFO*)malloc(sizeof(IP_ADAPTER_INFO));
+	if (adapterInfo == NULL)
 	{
-		Assert(false, ASSERT_MSG_INVALID);
-		return "NULL";
+		Assert(false, ASSERT_MSG_INVALID);		
 	}
 
-	if (addr.sin_addr.s_addr == INADDR_ANY)
+	if (GetAdaptersInfo(adapterInfo, &dwBufLen) == ERROR_BUFFER_OVERFLOW)
 	{
-		// If INADDR_ANY, we need to find the actual local address
-		ULONG family = AF_INET;
-		ULONG flags = GAA_FLAG_INCLUDE_PREFIX;
-		PIP_ADAPTER_ADDRESSES pAddresses = NULL;
-		ULONG outBufLen = 0;
-		DWORD dwRetVal = 0;
-
-		dwRetVal = GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen);
-		if (dwRetVal == ERROR_BUFFER_OVERFLOW)
-		{
-			pAddresses = (IP_ADAPTER_ADDRESSES*)malloc(outBufLen);
-			if (pAddresses == NULL)
-			{
-				Assert(false, ASSERT_MSG_INVALID);
-				return "";
-			}
-		}
-
-		dwRetVal = GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen);
-		if (dwRetVal == NO_ERROR)
-		{
-			for (PIP_ADAPTER_ADDRESSES pCurrAddresses = pAddresses; pCurrAddresses != NULL; pCurrAddresses = pCurrAddresses->Next)
-			{
-				for (PIP_ADAPTER_UNICAST_ADDRESS pUnicast = pCurrAddresses->FirstUnicastAddress; pUnicast != NULL; pUnicast = pUnicast->Next) {
-					char ipAddressString[INET_ADDRSTRLEN] = { 0 };
-					struct sockaddr_in* sa_in = (struct sockaddr_in*)pUnicast->Address.lpSockaddr;
-					inet_ntop(AF_INET, &(sa_in->sin_addr), ipAddressString, INET_ADDRSTRLEN);
-
-					// Skip loopback addresses
-					if (strcmp(ipAddressString, "127.0.0.1") != 0)
-					{
-						free(pAddresses);
-						return std::string(ipAddressString);
-					}
-				}
-			}
-		}
-		else
+		adapterInfo = (IP_ADAPTER_INFO*)malloc(dwBufLen);
+		if (adapterInfo == NULL) 
 		{
 			Assert(false, ASSERT_MSG_INVALID);
-		}
-
-		if (pAddresses)
-		{
-			free(pAddresses);
+			exit(1);
 		}
 	}
-	else
+
+	if (GetAdaptersInfo(adapterInfo, &dwBufLen) == NO_ERROR)
 	{
-		// Convert the address to a string
-		char ipStr[INET_ADDRSTRLEN];
-		if (inet_ntop(AF_INET, &(addr.sin_addr), ipStr, INET_ADDRSTRLEN) == NULL)
+		PIP_ADAPTER_INFO pAdapterInfo = adapterInfo;
+		while (pAdapterInfo)
 		{
-			Assert(false, ASSERT_MSG_INVALID);
-			return "NULL";
+			if (pAdapterInfo->Type == MIB_IF_TYPE_ETHERNET && pAdapterInfo->IpAddressList.IpAddress.String[0] != '0')
+			{
+				std::string ip = pAdapterInfo->IpAddressList.IpAddress.String;				
+				free(adapterInfo);
+				return ip;
+			}
+			pAdapterInfo = pAdapterInfo->Next;
 		}
-		return std::string(ipStr);
 	}
-
+	free(adapterInfo);
 	return "NULL";
 }
-
 
 
 InnoOJTServer::InnoOJTServer()
@@ -141,7 +102,8 @@ InnoOJTServer::InnoOJTServer()
 	freeaddrinfo(result);
 	WSACleanup();
 
-	mIP = ip;
+	mIP = GetLocalIP();
+	Assert(mIP != "NULL", ASSERT_MSG_INVALID);
 
 	InnoMessageQueue::initialize();
 
@@ -342,10 +304,6 @@ int InnoOJTServer::Listen(const int port)
 	char buf[256] = { 0, };
 	sprintf_s(buf, "Server is listening on port %d", port);
 	gLogListUI->WriteLine(buf);
-
-	// Listen 상태일때 ip 해당하는 소켓 ip로 변경
-	mIP = GetLocalIPAddress(gListenSocket);
-	Assert(mIP != "NULL", ASSERT_MSG_INVALID);
 
 	std::thread accept(handleAccept);
 	accept.detach();
