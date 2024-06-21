@@ -269,10 +269,22 @@ void InnoOJTClient::run()
 		return;
 	}
 
-	//서버 트레이닝중이라면 내위치를 전송	
-	if (mbServerTraining)
+	static float time = 0;
+	time += gDeltaTime;
+
+	if (time >= 1 / 60.f)
 	{
-		SendPos(InnoDataManager::GetInstance()->GetXPoses().back());
+		time -= 1 / 60.f;
+
+		//서버 트레이닝중이라면 내위치를 전송	
+		if (mbServerTraining)
+		{
+			SendPos(InnoDataManager::GetInstance()->GetXPoses().back());
+		}
+	}
+	else
+	{
+
 	}
 }
 
