@@ -32,6 +32,7 @@ void ShowDockSpace()
    dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoSplit;
    dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoUndocking;
    dockspace_flags |= ImGuiDockNodeFlags_::ImGuiDockNodeFlags_AutoHideTabBar;
+ 
 
     // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
     // because it would be confusing to have two docking targets within each others.

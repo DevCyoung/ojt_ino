@@ -7,11 +7,18 @@ public:
 	friend int APIENTRY::wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		LPWSTR lpCmdLine, int nCmdShow);		
 
-	SINGLETON_DECLARE(Editor);	
+	PUBLIC_SINGLETON_DECLARE(Editor);	
+
+public:
+	void CreateDevice(int width, int height);
+	void RemoveDevice();
+	bool mbInit;
+	bool mbRestore;
 
 private:
-	void run() const;
+	void run();
 	void present() const;
+
 };
 
 LRESULT WINAPI WndProcImGUI(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

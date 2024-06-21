@@ -337,6 +337,23 @@ void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 	assert(logList);
 
 	logList->WriteLine(outPacket.Message);
+
+	//Other Car Symbol
+	
+
+	if (strlen(outPacket.Message) < strlen("Other Car : "))
+	{
+		return;
+	}	
+
+	int i = 0;
+	for (; i < strlen(outPacket.Message); ++i)
+	{
+		if (outPacket.Message[i] == "Other Car : "[i])
+		{
+			continue;
+		}
+	}
 }
 
 void InnoOJTClient::RecivePos(const tPacketPos& outPacket)

@@ -7,7 +7,8 @@
 #include <implot.h>
 #include <imgui_internal.h>
 #include <imgui_theme.h>
-
+#include <Engine.h>
+#include <Editor.h>
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 #define offset 16.f
 
@@ -168,8 +169,8 @@ void InnoInputUI::drawForm()
 	const float xOtherPos = vecxOtehrPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 	float yPos = 0.f;
 
-	double xHistoryMax = xHistoryScale + xPos;
-	double xHistoryMin = -xHistoryScale + xPos;
+	double xHistoryMax =  10 + xPos;
+	double xHistoryMin = -10 + xPos;
 	double yHistoryMax = xHistoryScale;
 	double yHistoryMin = -xHistoryScale;
 
@@ -184,7 +185,7 @@ void InnoInputUI::drawForm()
 
 		//X스케일 고정
 		if (simulatorState != eInnoSimulatorState::None)
-		{
+		{						
 			ImPlot::SetupAxisLinks(ImAxis_X1, &xHistoryMin, &xHistoryMax);
 		}
 
@@ -774,6 +775,17 @@ void InnoInputUI::drawForm()
 			mbSaveClicked = false;
 		}
 	}
+
+	
+	if (ImGui::Button("help"))
+	{
+		int screenWidth, screenHeight;
+		//GetScreenResolution(screenWidth, screenHeight);
+		//Engine::GetInstance()->setWindowSize(screenWidth, screenHeight);
+		//Editor::GetInstance()->RemoveDevice();
+		//Editor::GetInstance()->CreateDevice();		
+		Editor::GetInstance()->mbInit = true;
+	}	
 	ImGui::End();
 #pragma endregion InputUI3
 

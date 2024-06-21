@@ -11,7 +11,6 @@ public:
 	void AddPanel(PanelUI* const panelUI);
 	PanelUI* FindPanelUIOrNull(const std::string& title);
 	void update();
-
 public:
 	void finalUpdate();
 	void render();

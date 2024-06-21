@@ -65,8 +65,23 @@ void ChannelRoomMoveUI::drawForm()
 
 				for (int i = 0; i < room.clients.size(); ++i)
 				{
-					InnoOJTServer::GetInstance()->SendLog(room.clients[i].ClientID, strlen("Training ready"), "Training Start");
+					InnoOJTServer::GetInstance()->SendLog(room.clients[i].ClientID, strlen("Training Start"), "Training Start");				
 					InnoOJTServer::GetInstance()->SendStart(room.clients[i].ClientID);
+				}
+
+				for (int i = 0; i < room.clients.size(); ++i)
+				{
+					for (int j = 0; j < room.clients.size(); ++j)
+					{
+						if (i == j)
+						{
+							continue;
+						}
+
+						char otherCarBuff[256] = { 0, };						
+						sprintf_s(otherCarBuff, "Other Car : %s", room.clients[i].Name.c_str());
+						InnoOJTServer::GetInstance()->SendLog(room.clients[j].ClientID, strlen(otherCarBuff), otherCarBuff);
+					}
 				}
 
 				InnoOJTServer::GetInstance()->mRoom.bTraining = true;
