@@ -159,6 +159,7 @@ static void handleClient(SOCKET clientSocket)
 					tPacketPos packetPos = {};
 					packetPos.PacketID = packetID;
 					packetPos.Position = pakcetMessage.Position;
+					packetPos.Speed = pakcetMessage.Speed;
 
 					innoServer->RecivePos(clientID, packetPos);
 				}
@@ -258,7 +259,7 @@ void InnoOJTServer::run()
 				continue;
 			}
 
-			SendPos(mRoom.clients[i].ClientID, mRoom.curPoses[j]);
+			SendPos(mRoom.clients[i].ClientID, mRoom.curPoses[j], mRoom.curSpeeds[j]);
 		}
 	}
 }
@@ -407,12 +408,12 @@ void InnoOJTServer::SendLog(int clientID, int messageLen, const char* message)
 	send_log(client.Socket, messageLen, message);
 }
 
-void InnoOJTServer::SendPos(int clientID, float pos)
+void InnoOJTServer::SendPos(int clientID, float pos, float speed)
 {
 	std::lock_guard<std::mutex> guard(gClientsMutex);
 	tInnoClient client = GetInncoClient(clientID);
 
-	send_pos(client.Socket, pos);
+	send_pos(client.Socket, pos, speed);
 }
 
 void InnoOJTServer::SendStop(int clientID)
@@ -448,6 +449,8 @@ void InnoOJTServer::RecivePos(int clientID, const tPacketPos& outPacket)
 		if (clientID == mRoom.clients[i].ClientID)
 		{
 			mRoom.curPoses[i] = outPacket.Position;
+			mRoom.curSpeeds[i] = outPacket.Speed;	
+
 			break;
 		}
 	}

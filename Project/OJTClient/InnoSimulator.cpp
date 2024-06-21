@@ -31,6 +31,7 @@ InnoSimulator::InnoSimulator()
 	, mFrameDeltaTime(0.f)
 	, mBumps()
 	, mBumpsCopy()
+	, mPrevBPos(0.f)
 {
 }
 
@@ -118,6 +119,8 @@ void InnoSimulator::Update()
 		InnoDataManager::GetInstance()->Clear();
 
 		mPlayerBPos = 0.f;
+		mPrevBPos = 0.f;
+
 		mCurTime = 0.f;
 		mPrevPos = mStartPos;
 		mFrameDeltaTime = 0.f;

@@ -127,6 +127,21 @@ static void ClientRecive(SOCKET serverSocket)
 					tPacketPos packetPos = {};
 					packetPos.PacketID = packetID;
 					packetPos.Position = pakcetMessage.Position;
+					packetPos.Speed = pakcetMessage.Speed;
+
+					static float logTime = 0.f;
+
+					logTime += gDeltaTime;
+					if (logTime >= 0.1f)
+					{
+						char logBUff[256] = { 0, };
+
+						sprintf_s(logBUff, "pos: %.2f, speed: %.2f", packetPos.Position, packetPos.Speed);
+
+						gLogListUIClient->WriteLine(logBUff);
+						logTime = 0.f;
+					}
+
 
 					innoClient->RecivePos(packetPos);
 				}
@@ -279,7 +294,7 @@ void InnoOJTClient::run()
 		//서버 트레이닝중이라면 내위치를 전송	
 		if (mbServerTraining)
 		{
-			SendPos(InnoDataManager::GetInstance()->GetXPoses().back());
+			SendPos(InnoDataManager::GetInstance()->GetXPoses().back(), InnoSimulator::GetInstance()->GetSpeed());
 		}
 	}
 	else
@@ -328,9 +343,9 @@ void InnoOJTClient::SendLog(int messageLen, const char* message)
 	send_log(mServerSocket, messageLen, message);
 }
 
-void InnoOJTClient::SendPos(float pos)
+void InnoOJTClient::SendPos(float pos, float speed)
 {
-	send_pos(mServerSocket, pos);
+	send_pos(mServerSocket, pos, speed);
 }
 
 void InnoOJTClient::SendStop()
