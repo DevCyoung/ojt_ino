@@ -3,32 +3,27 @@
 #include "PanelUIManager.h"
 #include "DockSpace.h"
 #include "Engine.h"
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_dx11.h"
-#include <d3d11.h>
-#pragma comment(lib, "d3dcompiler")
-#pragma comment(lib, "d3d11")
+
+
 
 // Data
-static ID3D11Device* g_pd3dDevice = nullptr;
-static ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
-static IDXGISwapChain* g_pSwapChain = nullptr;
+static ID3D11Device*			g_pd3dDevice = nullptr;
+static ID3D11DeviceContext*		g_pd3dDeviceContext = nullptr;
+static IDXGISwapChain*			g_pSwapChain = nullptr;
 static bool                     g_SwapChainOccluded = false;
 static UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
-static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
+static ID3D11RenderTargetView*	g_mainRenderTargetView = nullptr;
 
 // Forward declarations of helper functions
-bool CreateDeviceD3D(HWND hWnd);
-void CleanupDeviceD3D();
-void CreateRenderTarget();
-void CleanupRenderTarget();
+static bool CreateDeviceD3D(const HWND hWnd);
+static void CleanupDeviceD3D();
+static void CreateRenderTarget();
+static void CleanupRenderTarget();
 
 Editor::Editor()
 {
 	Engine* const engine = Engine::GetInstance();
-	HWND hwnd = engine->GetHwnd();		
+	const HWND hwnd = engine->GetHwnd();		
 
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(hwnd))
@@ -62,7 +57,7 @@ Editor::~Editor()
 	PanelUIManager::deleteInstance();	
 }
 
-void Editor::run()
+void Editor::run() const
 {		
 	PanelUIManager::GetInstance()->update();
 
@@ -95,8 +90,17 @@ void Editor::run()
 	}		
 }
 
+void Editor::present() const
+{        
+	// Present
+	//HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync
+	HRESULT hr = g_pSwapChain->Present(0, 0); // Present without vsync
+	g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
+}
+
+
 // Helper functions
-bool CreateDeviceD3D(HWND hWnd)
+bool CreateDeviceD3D(const HWND hWnd)
 {
 	// Setup swap chain
 	DXGI_SWAP_CHAIN_DESC sd;
@@ -115,15 +119,20 @@ bool CreateDeviceD3D(HWND hWnd)
 	sd.Windowed = TRUE;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-	UINT createDeviceFlags = 0;
-	//createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-	D3D_FEATURE_LEVEL featureLevel;
+	const UINT createDeviceFlags = 0;
 	const D3D_FEATURE_LEVEL featureLevelArray[2] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0, };
+	D3D_FEATURE_LEVEL featureLevel;
 	HRESULT res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
-	if (res == DXGI_ERROR_UNSUPPORTED) // Try high-performance WARP software driver if hardware is not available.
+
+	if (res == DXGI_ERROR_UNSUPPORTED)
+	{
 		res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
+	}
 	if (res != S_OK)
+	{
+		Assert(false, ASSERT_MSG_INVALID);
 		return false;
+	}
 
 	CreateRenderTarget();
 	return true;
@@ -132,22 +141,45 @@ bool CreateDeviceD3D(HWND hWnd)
 void CleanupDeviceD3D()
 {
 	CleanupRenderTarget();
-	if (g_pSwapChain) { g_pSwapChain->Release(); g_pSwapChain = nullptr; }
-	if (g_pd3dDeviceContext) { g_pd3dDeviceContext->Release(); g_pd3dDeviceContext = nullptr; }
-	if (g_pd3dDevice) { g_pd3dDevice->Release(); g_pd3dDevice = nullptr; }
+
+	Assert(g_pSwapChain != nullptr, ASSERT_MSG_NOT_NULL);
+	if (g_pSwapChain)
+	{
+		g_pSwapChain->Release();
+		g_pSwapChain = nullptr;
+	}
+
+	Assert(g_pd3dDeviceContext != nullptr, ASSERT_MSG_NOT_NULL);
+	if (g_pd3dDeviceContext)
+	{
+		g_pd3dDeviceContext->Release();
+		g_pd3dDeviceContext = nullptr;
+	}
+
+	Assert(g_pd3dDevice != nullptr, ASSERT_MSG_NOT_NULL);
+	if (g_pd3dDevice)
+	{
+		g_pd3dDevice->Release();
+		g_pd3dDevice = nullptr;
+	}
 }
 
 void CreateRenderTarget()
 {
-	ID3D11Texture2D* pBackBuffer;
+	ID3D11Texture2D* pBackBuffer = nullptr;
 	g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+	Assert(pBackBuffer, ASSERT_MSG_INVALID);
 	g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
 	pBackBuffer->Release();
 }
 
 void CleanupRenderTarget()
 {
-	if (g_mainRenderTargetView) { g_mainRenderTargetView->Release(); g_mainRenderTargetView = nullptr; }
+	Assert(g_mainRenderTargetView, ASSERT_MSG_NULL);
+	if (g_mainRenderTargetView)
+	{
+		g_mainRenderTargetView->Release(); g_mainRenderTargetView = nullptr;
+	}
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -181,12 +213,4 @@ LRESULT WINAPI WndProcImGUI(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return ::DefWindowProcW(hWnd, msg, wParam, lParam);
-}
-
-void Editor::present()
-{        
-	// Present
-	//HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync
-	HRESULT hr = g_pSwapChain->Present(0, 0); // Present without vsync
-	g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
 }

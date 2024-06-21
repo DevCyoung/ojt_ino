@@ -10,8 +10,8 @@ public:
 	SINGLETON_DECLARE(Editor);	
 
 private:
-	void run();
-	void present();
+	void run() const;
+	void present() const;
 };
 
 LRESULT WINAPI WndProcImGUI(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

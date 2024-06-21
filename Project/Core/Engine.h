@@ -1,11 +1,4 @@
 #pragma once
-#include <memory>
-#include <assert.h>
-//#include <Helper\Helper.h>
-
-class GraphicDeviceDX11;
-class RenderTargetRenderer;
-
 class Engine
 {
 	friend int APIENTRY::wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -16,18 +9,7 @@ private:
 	Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderTargetHeight);
 
 public:
-	Vector2 GetRenderTargetSize() const  
-	{  
-		return Vector2(static_cast<float>(mRenderTargetWidth), static_cast<float>(mRenderTargetHeight));
-	}
-
-	Vector2 GetWindowScreenSize() const
-	{
-		return Vector2(static_cast<float>(mWindowScreenWidth), static_cast<float>(mWindowScreenHeight));
-	}
-
 	HWND GetHwnd() const { Assert(mHwnd, ASSERT_MSG_NULL); return mHwnd; }
-	GraphicDeviceDX11* GetGraphicDevice() const { return mGraphicDevice; }
 
 private:
 	static void initialize(const HWND hWnd, const UINT renderTargetWidth, const UINT renderTargetHeight);
@@ -43,8 +25,6 @@ private:
 	UINT mRenderTargetHeight;
 	UINT mWindowScreenWidth;
 	UINT mWindowScreenHeight;
-
-	GraphicDeviceDX11* mGraphicDevice;	
 };
 
 #define gEngine Engine::GetInstance()

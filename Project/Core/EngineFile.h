@@ -21,7 +21,6 @@ namespace helper
 		void Write(const void* const buffer, const UINT elementSize);
 		void WriteLine(const std::wstring& str);
 
-
 		FILE* mFile;
 	};
 }

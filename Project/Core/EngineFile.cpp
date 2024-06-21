@@ -7,7 +7,7 @@ namespace helper
 	constexpr int MAX_FILE_PATH_SIZE = 256;
 
 	//const wchar_t
-	LPCWSTR FILTER_TEX = L"Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0";
+	constexpr	LPCWSTR FILTER_TEX = L"Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0";
 
 	DialogPath helper::OpenDialog()
 	{
@@ -107,24 +107,3 @@ namespace helper
 		fputwc(L'\n', mFile);
 	}
 }
-
-
-//
-//
-//
-//void helper::GetFileForRead(FILE** const file, const DialogPath& path)
-//{
-//	_wfopen_s(file, path.path.c_str(), L"rb");
-//
-//	Assert(*file, WCHAR_IS_INVALID_TYPE);
-//}
-//
-//void helper::GetFileForWrite(FILE** const file, const DialogPath& path)
-//{
-//	_wfopen_s(file, path.path.c_str(), L"wb");
-//
-//	Assert(*file, WCHAR_IS_INVALID_TYPE);
-//}
-//
-//
-//

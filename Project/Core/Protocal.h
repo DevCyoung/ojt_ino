@@ -44,7 +44,6 @@ struct tPacketMessage
 };
 
 // 직렬화 함수
-//ori 를 패킷버퍼로 바꿈
 void serializeData(const void* ori, size_t dataSize, void* packetBuffer);
 
 // 역직렬화 함수

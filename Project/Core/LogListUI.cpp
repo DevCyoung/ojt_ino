@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "LogListUI.h"
 #include "imgui_internal.h"
-std::mutex WriteMutex;
+
+static std::mutex WriteMutex;
 
 LogListUI::LogListUI()
 {

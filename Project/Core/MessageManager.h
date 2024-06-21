@@ -14,7 +14,7 @@ public:
 		mTitleMessages.push_back(message);
 	}
 
-	bool IsAddTitleMessage() { return mTimeInterval > 1.0f; }
+	bool IsAddTitleMessage() const { return mTimeInterval > 1.0f; }
 
 private:
 	void eventUpdate(const HWND hWnd);

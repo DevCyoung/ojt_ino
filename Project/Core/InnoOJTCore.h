@@ -31,14 +31,17 @@
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <d3d11.h>
+#include <memory>
 #include "imgui.h"
-#include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
-#include "imgui_helper.h"
-#include "DXMath.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_dx11.h"
 #include "Protocal.h"
 
-using namespace engine::math;
+#pragma comment(lib, "d3dcompiler")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "d3d11")
 
 #define DELETE_POINTER(p)		{ delete   p; p = nullptr; }
 #define DELETE_ARRAY(p)			{ delete[] p; p = nullptr; }
@@ -46,7 +49,6 @@ using namespace engine::math;
 #define DELETE_POINTER_NOT_NULL(p)  { Assert(p, ASSERT_MSG_NULL); DELETE_POINTER(p) }
 #define DELETE_ARRAY_NOT_NULL(p)	{ Assert(p, ASSERT_MSG_NULL); DELETE_ARRAY(p) }
 
-#pragma comment(lib, "ws2_32.lib")
 
 namespace mem
 {
@@ -163,14 +165,14 @@ private:													\
 	}														\
 static void deleteInstance()								\
 	{														\
-		Assert(sInstance, ASSERT_MSG_NULL);				\
+		Assert(sInstance, ASSERT_MSG_NULL);					\
 		delete sInstance;									\
 		sInstance = nullptr;								\
 	}														\
 public:														\
 	static CLASSNAME* GetInstance()							\
 	{														\
-		Assert(sInstance, ASSERT_MSG_NULL);				\
+		Assert(sInstance, ASSERT_MSG_NULL);					\
 		return sInstance;									\
 	}														\
 private:													\
@@ -191,14 +193,14 @@ public:														\
 	}														\
 static void deleteInstance()								\
 	{														\
-		Assert(sInstance, ASSERT_MSG_NULL);				\
+		Assert(sInstance, ASSERT_MSG_NULL);					\
 		delete sInstance;									\
 		sInstance = nullptr;								\
 	}														\
 public:														\
 	static CLASSNAME* GetInstance()							\
 	{														\
-		Assert(sInstance, ASSERT_MSG_NULL);				\
+		Assert(sInstance, ASSERT_MSG_NULL);					\
 		return sInstance;									\
 	}														\
 private:													\

@@ -69,9 +69,6 @@
     <ClInclude Include="PanelUIManager.h">
       <Filter>Source\Engine\Editor\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="DXMath.h">
-      <Filter>Source\Heper</Filter>
-    </ClInclude>
     <ClInclude Include="Editor.h">
       <Filter>Source\Engine\Editor</Filter>
     </ClInclude>
@@ -101,9 +98,6 @@
     </ClInclude>
     <ClInclude Include="Casting.h">
       <Filter>windows</Filter>
-    </ClInclude>
-    <ClInclude Include="StringHelper.h">
-      <Filter>Source\Heper</Filter>
     </ClInclude>
     <ClInclude Include="EngineFile.h">
       <Filter>Source\Heper</Filter>
@@ -149,17 +143,11 @@
     <ClCompile Include="Editor.cpp">
       <Filter>Source\Engine\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="DXMath.cpp">
-      <Filter>Source\Heper</Filter>
-    </ClCompile>
     <ClCompile Include="MessageManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="StringHelper.cpp">
-      <Filter>Source\Heper</Filter>
     </ClCompile>
     <ClCompile Include="EngineFile.cpp">
       <Filter>Source\Heper</Filter>
@@ -218,10 +206,5 @@
     <ClCompile Include="PathManager.cpp">
       <Filter>Source\Engine\Manager</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DXMath.inl">
-      <Filter>Source\Heper</Filter>
-    </None>
   </ItemGroup>
 </Project>

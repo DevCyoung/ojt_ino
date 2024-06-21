@@ -3,8 +3,9 @@
 
 InnoMessageQueue::InnoMessageQueue()
 	: mReciveBytes()
+	, mReciveMessageQueue()
 {
-
+	mReciveBytes.reserve(1000000);		
 }
 
 InnoMessageQueue::~InnoMessageQueue()
@@ -13,9 +14,11 @@ InnoMessageQueue::~InnoMessageQueue()
 
 void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 {
+	const BYTE* pByte = reinterpret_cast<const BYTE*>(data);
+
 	for (int i = 0; i < dataSize; ++i)
 	{
-		mReciveBytes.push_back(((const BYTE*)data)[i]);
+		mReciveBytes.push_back(pByte[i]);
 	}
 
 	while (mReciveBytes.size() >= sizeof(int))
@@ -88,7 +91,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 		}
 		else
 		{
-			assert(false);
+			Assert(false, ASSERT_MSG_INVALID);
 		}
 
 	}
@@ -102,15 +105,8 @@ void InnoMessageQueue::PushSendPacket(SOCKET socket, const void* data, int dataS
 	{
 		int sendSize = send(socket, (const char*)&data, dataSize, 0);
 
-		if (sendSize == SOCKET_ERROR)
-		{
-			assert(false);
-		}
-		else if (sendSize > dataSize)
-		{
-			assert(false);
-		}
-
+		Assert(sendSize != SOCKET_ERROR, ASSERT_MSG_INVALID);
+		Assert(sendSize <= dataSize, ASSERT_MSG_INVALID);
 
 		if (sendSize == dataSize)
 		{

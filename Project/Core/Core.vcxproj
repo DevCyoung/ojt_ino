@@ -155,7 +155,6 @@
     <ClInclude Include="Casting.h" />
     <ClInclude Include="cresource.h" />
     <ClInclude Include="DockSpace.h" />
-    <ClInclude Include="DXMath.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineFile.h" />
@@ -181,13 +180,11 @@
     <ClInclude Include="PathManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Protocal.h" />
-    <ClInclude Include="StringHelper.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DockSpace.cpp" />
-    <ClCompile Include="DXMath.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineFile.cpp" />
@@ -249,11 +246,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Protocal.cpp" />
-    <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="TimeManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DXMath.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
