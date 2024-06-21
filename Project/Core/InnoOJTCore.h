@@ -50,6 +50,29 @@
 #define DELETE_ARRAY_NOT_NULL(p)	{ Assert(p, ASSERT_MSG_NULL); DELETE_ARRAY(p) }
 
 
+struct Vector3
+{
+	float x;
+	float y;
+	float z;
+
+	Vector3()
+		: x(0.f)
+		, y(0.f)
+		, z(0.f)
+	{
+	}
+	Vector3(float _x, float _y, float _z)
+		: x(_x)
+		, y(_y)
+		, z(_z)
+	{
+	}
+};
+
+#define XM_PI 3.14159265359
+
+
 namespace mem
 {
 	template<typename T, UINT Size>

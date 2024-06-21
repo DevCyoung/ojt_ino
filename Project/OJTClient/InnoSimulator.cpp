@@ -7,7 +7,7 @@
 
 static bool compare(const Vector3& a, const Vector3& b)
 {
-	return a[0] < b[0];
+	return a.x < b.x;
 }
 
 InnoSimulator::InnoSimulator()
@@ -167,9 +167,9 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 
 	if (!mBumpsCopy.empty())
 	{
-		float bumpStart = mBumpsCopy[0][0];
-		float bumpEnd = mBumpsCopy[0][1];
-		float bumpAmp = mBumpsCopy[0][2];
+		float bumpStart = mBumpsCopy[0].x;
+		float bumpEnd = mBumpsCopy[0].y;
+		float bumpAmp = mBumpsCopy[0].z;
 
 		float t1 = bumpStart / mSpeed;
 		float t2 = bumpEnd / mSpeed;
@@ -233,11 +233,11 @@ void InnoSimulator::sort()
 {
 	for (int i = 0; i < mBumps.size(); ++i)
 	{
-		if (mBumps[i][0] > mBumps[i][1])
+		if (mBumps[i].x > mBumps[i].y)
 		{
-			float temp = mBumps[i][1];
-			mBumps[i][1] = mBumps[i][0];
-			mBumps[i][0] = temp;
+			float temp = mBumps[i].y;
+			mBumps[i].y = mBumps[i].x;
+			mBumps[i].x = temp;
 		}
 	}
 

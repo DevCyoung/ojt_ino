@@ -219,13 +219,13 @@ void InnoInputUI::drawForm()
 			}
 			else
 			{
-				ShowBump(i, yPos, bumpers[i][0], bumpers[i][1]);
+				ShowBump(i, yPos, bumpers[i].x, bumpers[i].y);
 			}			
 		}
 
 		if (simulatorState == eInnoSimulatorState::None && current_bump_item < bumpers.size())
 		{
-			ShowBump(itemIdx, yPos, bumpers[current_bump_item][0], bumpers[current_bump_item][1], ImVec4(255, 255, 0, 255));
+			ShowBump(itemIdx, yPos, bumpers[current_bump_item].x, bumpers[current_bump_item].y, ImVec4(255, 255, 0, 255));
 
 		}
 
@@ -608,9 +608,9 @@ void InnoInputUI::drawForm()
 	if (false == changeFlag && bumps.size() > current_bump_item)
 	{
 
-		float ShowBumpStart = bumps[current_bump_item][0];
-		float ShowBumpEnd = bumps[current_bump_item][1];
-		float ShowBumpAmp = bumps[current_bump_item][2];		
+		float ShowBumpStart = bumps[current_bump_item].x;
+		float ShowBumpEnd = bumps[current_bump_item].y;
+		float ShowBumpAmp = bumps[current_bump_item].z;		
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.f);
 		ShowInputFloat("##ShowBumpStart", INNO_BUMP_START, &ShowBumpStart, inputTextFlag, 107, 93, 5.0f, INNO_BUMP_START_TOOLTIP);
 		ShowInputFloat("##ShowBumpEnd", INNO_BUMP_END, &ShowBumpEnd, inputTextFlag, 107, 93, 5.0f, INNO_BUMP_END_TOOLTIP);
