@@ -24,7 +24,7 @@ void RoomUI::drawForm()
 	for (auto client : channel_clients)
 	{
 		char buff[256] = { 0, };
-		sprintf_s(buff, "%s : %d : Room", client.IP.c_str(), client.ClientID);
+		sprintf_s(buff, "%s : %d : Room", client.Name.c_str(), client.ClientID);
 		ImGui::Text(buff);
 	}
 

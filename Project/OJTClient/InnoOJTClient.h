@@ -27,11 +27,13 @@ public:
 	void SendLog(int messageLen, const char* message);
 	void SendPos(float pos);
 	void SendStop();
+	void SendName(int nameLen, const char* name);
 
 	void ReciveLog(const tPacketLog& outPacket);
 	void RecivePos(const tPacketPos& outPacket);	
 	void ReciveStop(const tPacketStop& packet);
 	void ReciveStart(const tPacketStart& packet);
+	void ReciveName(const tPacketName& packet);
 
 	bool mbServerTraining;
 	bool mbServerTrainingFinish;	

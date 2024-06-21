@@ -8,5 +8,6 @@ public:
 	void drawForm() override;
 
 	bool mbSaveClicked;
+	char mName[256];
 };
 

@@ -163,6 +163,16 @@ static void handleClient(SOCKET clientSocket)
 					innoServer->RecivePos(clientID, packetPos);
 				}
 					break;
+				case Name:
+				{
+					tPacketName packetName = {};
+					packetName.PacketID = packetID;
+					packetName.NameLen  = pakcetMessage.MessageLen;
+					memcpy(packetName.Name, pakcetMessage.buffer, INNO_MAX_POS_SIZE);
+
+					innoServer->ReciveName(clientID, packetName);
+				}
+				break;
 				default:
 				{
 					assert(false);
@@ -223,14 +233,14 @@ void InnoOJTServer::run()
 	static float trainingTime = 0.f;
 
 	trainingTime += gDeltaTime;
-	if (trainingTime < INN_FRAME_DELTA_TIME)
+	if (trainingTime < INNO_SERVER_BROAD_CAST_FRAME)
 	{
 		return;
 	}
 
-	while (trainingTime > INN_FRAME_DELTA_TIME)
+	while (trainingTime > INNO_SERVER_BROAD_CAST_FRAME)
 	{
-		trainingTime -= INN_FRAME_DELTA_TIME;
+		trainingTime -= INNO_SERVER_BROAD_CAST_FRAME;
 	}
 
 	if (!mRoom.bTraining)
@@ -332,6 +342,10 @@ int InnoOJTServer::Accept(SOCKET clientSocket)
 
 	// 새로운 클라이언트를 처리하는 쓰레드 시작	
 	mClientThreads[innoClient.ClientID] = std::thread(handleClient, clientSocket);
+
+	//SendName
+	char buff2[100] = "Null User";
+	send_name(clientSocket, 100, buff2);
 	return S_OK;
 }
 
@@ -417,6 +431,10 @@ void InnoOJTServer::SendStart(int clientID)
 	send_start(client.Socket);
 }
 
+void InnoOJTServer::SendName(int clientID)
+{
+}
+
 void InnoOJTServer::ReciveLog(int clientID, const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUI"));
@@ -430,6 +448,36 @@ void InnoOJTServer::RecivePos(int clientID, const tPacketPos& outPacket)
 		if (clientID == mRoom.clients[i].ClientID)
 		{
 			mRoom.curPoses[i] = outPacket.Position;
+			break;
+		}
+	}
+}
+
+void InnoOJTServer::ReciveName(int clientID, const tPacketName& outPacket)
+{
+	for (int i = 0; i < mClients.size(); ++i)
+	{
+		if (clientID == mClients[i].ClientID)
+		{
+			mClients[i].Name = outPacket.Name;
+			break;
+		}
+	}
+
+	for (int i = 0; i < mRoom.clients.size(); ++i)
+	{
+		if (clientID == mRoom.clients[i].ClientID)
+		{
+			mRoom.clients[i].Name = outPacket.Name;
+			break;
+		}
+	}
+
+	for (int i = 0; i < mChannel.clients.size(); ++i)
+	{
+		if (clientID == mChannel.clients[i].ClientID)
+		{
+			mChannel.clients[i].Name = outPacket.Name;
 			break;
 		}
 	}

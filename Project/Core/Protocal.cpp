@@ -101,3 +101,14 @@ void send_start(SOCKET socket)
 
 	send(socket, &packet, sizeof(tPacketStart));
 }
+
+void send_name(SOCKET socket, int nameLen, const char* name)
+{
+	tPacketName packet = {};
+
+	packet.PacketID = ePacketID::Name;
+	packet.NameLen = nameLen;
+	memcpy(packet.Name, name, nameLen);
+
+	send(socket, &packet, sizeof(tPacketName));
+}

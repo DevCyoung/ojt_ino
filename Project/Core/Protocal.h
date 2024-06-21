@@ -10,6 +10,7 @@ enum ePacketID
 	Pos,
 	Start,
 	Stop,
+	Name,
 };
 
 struct tPacketLog
@@ -35,6 +36,13 @@ struct tPacketStop
 	ePacketID PacketID;
 };
 
+struct tPacketName
+{
+	ePacketID PacketID;
+	int NameLen;
+	char Name[INNO_MAX_POS_SIZE];
+};
+
 struct tPacketMessage
 {
 	ePacketID PacketID;
@@ -58,3 +66,4 @@ void send_log(SOCKET socket, int messageLen, const char* message);
 void send_pos(SOCKET socket, float pos);
 void send_stop(SOCKET socket);
 void send_start(SOCKET socket);
+void send_name(SOCKET socket, int nameLen, const char* name);

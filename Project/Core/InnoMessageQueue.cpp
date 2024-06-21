@@ -89,6 +89,23 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 
 			mReciveMessageQueue.push(packetMessage);
 		}
+		else if (Name == packetID)
+		{
+			constexpr int PACKET_SIZE = sizeof(tPacketName);
+			if (mReciveBytes.size() < sizeof(tPacketName))
+			{
+				break;
+			}
+
+			tPacketName packet = {};
+			deserializeData(mReciveBytes.data(), PACKET_SIZE, &packet);
+			mReciveBytes.erase(mReciveBytes.begin(), mReciveBytes.begin() + PACKET_SIZE);
+
+			packetMessage.MessageLen = packet.NameLen;
+			memcpy(packetMessage.buffer, packet.Name, INNO_MAX_POS_SIZE);
+
+			mReciveMessageQueue.push(packetMessage);
+		}
 		else
 		{
 			Assert(false, ASSERT_MSG_INVALID);

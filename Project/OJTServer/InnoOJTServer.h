@@ -18,6 +18,7 @@ struct tInnoClient
 {
 	int ClientID;
 	std::string IP;
+	std::string Name;
 	SOCKET Socket;
 };
 
@@ -52,10 +53,12 @@ public:
 	void SendLog(int clientID, int messageLen, const char* message);
 	void SendPos(int clientID, float pos);
 	void SendStop(int clientID);
-	void SendStart(int clientID);	
+	void SendStart(int clientID);
+	void SendName(int clientID);
 
 	void ReciveLog(int clientID, const tPacketLog& outPacket);
 	void RecivePos(int clientID, const tPacketPos& outPacket);
+	void ReciveName(int clientID, const tPacketName& outPacket);
 	//void ReciveStop(int clientID, const tPacketStop& outPacket);	
 
 	void RemoveClient(const SOCKET clientSocket);

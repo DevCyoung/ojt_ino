@@ -2,7 +2,10 @@
 #include "InnoOJTClient.h"
 #include "InnoDataManager.h"
 #include <InnoMessageQueue.h>	//메세지큐 헤더추가
+#include "InnoInputUI.h"
+
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
+#define gInputUI (static_cast<InnoInputUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("InnoInputUI")))
 
 static std::mutex gClientMutex;
 
@@ -148,6 +151,16 @@ static void ClientRecive(SOCKET serverSocket)
 					gLogListUIClient->WriteLine("Recive: Stop");
 				}
 					break;
+				case Name:
+				{
+					tPacketName packetName = {};
+					packetName.PacketID = packetID;
+
+					innoClient->ReciveName(packetName);
+
+					gLogListUIClient->WriteLine("Recive: Name");
+				}
+					break;	
 				default:
 				{
 					assert(false);					
@@ -313,6 +326,11 @@ void InnoOJTClient::SendStop()
 	send_stop(mServerSocket);
 }
 
+void InnoOJTClient::SendName(int nameLen, const char* name)
+{
+	send_name(mServerSocket, nameLen, name);
+}
+
 void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 {
 	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
@@ -339,4 +357,9 @@ void InnoOJTClient::ReciveStart(const tPacketStart& packet)
 	InnoSimulator::GetInstance()->ServerStart();
 
 	mbServerTraining = true;
+}
+
+void InnoOJTClient::ReciveName(const tPacketName& packet)
+{
+	SendName(strlen(gInputUI->mName), gInputUI->mName);
 }

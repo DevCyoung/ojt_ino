@@ -20,6 +20,7 @@ static void ShowLoadingProgressBar(const ImVec2& size_arg);
 
 InnoInputUI::InnoInputUI()
 	:mbSaveClicked(false)
+	, mName("who are you?")
 {
 	SetTitle("InnoInputUI");
 }
@@ -95,6 +96,7 @@ void InnoInputUI::drawForm()
 	const bool bConnected = InnoOJTClient::GetInstance()->IsConnected();
 
 	static char IPBuffer[256] = "127.0.0.1";
+	static char ConnectName[256] = "Gest";
 	static int portNumber = INNO_DEFAULT_PORT;
 
 	ImGuiInputTextFlags inputTextFlag = 0;
@@ -635,6 +637,8 @@ void InnoInputUI::drawForm()
 	{
 		ShowInputText("##Server IP", "Server IP", IPBuffer, 16, inputTextFlag);
 		ShowInputInt("##PortNumber", "Port", &portNumber, inputTextFlag);
+		ShowInputText("##Connect Name", "Name", mName, 16, inputTextFlag);
+
 	}
 
 	if (bConnecting)

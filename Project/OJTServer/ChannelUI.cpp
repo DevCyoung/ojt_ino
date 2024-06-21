@@ -24,7 +24,7 @@ void ChannelUI::drawForm()
 	for (auto client : clients)
 	{
 		char buff[256] = { 0, };
-		sprintf_s(buff, "%s : %d Channel", client.IP.c_str(), client.ClientID);
+		sprintf_s(buff, "%s : %d Channel", client.Name.c_str(), client.ClientID);
 		ImGui::Text(buff);
 	}
 
