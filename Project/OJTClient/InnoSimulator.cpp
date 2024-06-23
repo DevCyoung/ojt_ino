@@ -180,7 +180,16 @@ void InnoSimulator::Update()
 template<typename T>
 T Innolerp(const T& a, const T& b, float t) 
 {
-	return a + (b - a) * t;
+	T ret = a + (b - a) * t;
+	if (ret < a)
+	{
+		ret = a;
+	}
+	if (ret > b)
+	{
+		ret = b;
+	}
+	return ret;
 }
 
 tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTime)
@@ -195,7 +204,7 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 	if (distance > 1.f)
 	{
 		//curOtherPos가 mPlayerBPos로 보간
-		curOtherPos = Innolerp(curOtherPos, mPlayerBPos, deltaTime);
+		curOtherPos = Innolerp(curOtherPos, mPlayerBPos, deltaTime * 10);
 	}
 
 	float zr = 0.f;	
