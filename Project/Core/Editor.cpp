@@ -192,8 +192,23 @@ void Editor::run()
 		RestoreWindowFromFullscreen(Engine::GetInstance()->mHwnd);
 
 		//Engine::GetInstance()->setWindowSize(1280, 740);
-		//
+		
 		CreateDevice(1280, 740);
+		{
+			// 타이틀 바를 비활성화하는 예제
+			HWND hWnd = Engine::GetInstance()->mHwnd;
+			//LONG style = GetWindowLong(hWnd, GWL_STYLE);
+			//style &= ~WS_CAPTION; // WS_CAPTION 스타일을 제거하여 타이틀 바를 비활성화
+			//SetWindowLong(hWnd, GWL_STYLE, style);
+			//SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+
+			// 타이틀 바를 활성화하는 예제
+			LONG style = GetWindowLong(hWnd, GWL_STYLE);
+			style |= WS_CAPTION; // WS_CAPTION 스타일을 추가하여 타이틀 바를 활성화
+			SetWindowLong(hWnd, GWL_STYLE, style);
+			//SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+		}
+
 		Engine::GetInstance()->setWindowSize(1280, 740);
 
 		mbRestore = false;
