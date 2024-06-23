@@ -3,6 +3,7 @@
 #include "InnnoSave.h"
 #include "InnoSimulator.h"
 #include "InnoInputUI.h"
+#define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 void ShowDockSpace()
 {
@@ -92,6 +93,29 @@ void ShowDockSpace()
             }
             ImGui::EndMenu();
         }
+        else if (ImGui::BeginMenu("Mode"))
+        {
+            float slide = InnoSimulator::GetInstance()->InnoSimulator::GetInstance()->timeHistory;
+            if (ImGui::SliderFloat("Time History", &slide, 1.f, 100.f, "%.2f"))
+            {
+                InnoSimulator::GetInstance()->InnoSimulator::GetInstance()->timeHistory = slide;
+            }
+            bool mode = InnoSimulator::GetInstance()->InnoSimulator::GetInstance()->mAccMode;
+            if (ImGui::Checkbox("Acc Mode(Input Space)", &mode))
+            {
+                InnoSimulator::GetInstance()->InnoSimulator::GetInstance()->mAccMode = mode;
+                if (mode)
+                {
+                    gLogListUIClient->WriteLine("Turn on Acc");
+                }
+                if (!mode)
+                {
+                    gLogListUIClient->WriteLine("Turn off Acc");
+                }
+            }
+            ImGui::EndMenu();
+        }
+        
         ImGui::EndMenuBar();
     }
 

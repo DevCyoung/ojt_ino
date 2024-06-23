@@ -9,7 +9,6 @@
 #include <imgui_theme.h>
 #include <Editor.h>
 #include <InputManager.h>
-
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 #define offset 16.f
 
@@ -172,9 +171,21 @@ void InnoInputUI::drawForm()
 	const float xOtherPos = vecxOtehrPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 	float yPos = 0.f;
 
+	static double timeScale = 10;
+	timeScale = InnoSimulator::GetInstance()->InnoSimulator::GetInstance()->timeHistory;
 
-	double xHistoryMax =  10 + xPos;
-	double xHistoryMin = -10 + xPos;
+
+	if (gInput->GetKey(eKeyCode::A))
+	{
+		timeScale += gDeltaTime * 100;
+	}
+	else if (gInput->GetKey(eKeyCode::D))
+	{
+		timeScale -= gDeltaTime * 100;
+	}
+
+	double xHistoryMax = timeScale + xPos;
+	double xHistoryMin = -timeScale + xPos;
 	double yHistoryMax = xHistoryScale;
 	double yHistoryMin = -xHistoryScale;
 
@@ -787,17 +798,6 @@ void InnoInputUI::drawForm()
 			mbSaveClicked = false;
 		}
 	}
-
-	
-	if (ImGui::Button("help"))
-	{
-		int screenWidth, screenHeight;
-		//GetScreenResolution(screenWidth, screenHeight);
-		//Engine::GetInstance()->setWindowSize(screenWidth, screenHeight);
-		//Editor::GetInstance()->RemoveDevice();
-		//Editor::GetInstance()->CreateDevice();		
-		Editor::GetInstance()->mbInit = true;
-	}	
 	ImGui::End();
 #pragma endregion InputUI3
 
@@ -883,8 +883,8 @@ static void ShowGraph(const char* label, const float* values, const float* times
 	if (ImPlot::BeginPlot(key.c_str(), ImVec2(-1, axxSize)))
 	{
 		const float history = INNO_GRAPH_HISTORY_SECOND;
-		double max = 0.0001f;
-		double min = -0.0001f;
+		double max = 0.01f;
+		double min = -0.01f;
 
 		for (int i = 0; i < dataCount; ++i)
 		{

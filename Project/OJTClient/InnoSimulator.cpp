@@ -32,6 +32,10 @@ InnoSimulator::InnoSimulator()
 	, mBumps()
 	, mBumpsCopy()
 	, mPrevBPos(0.f)
+	, timeHistory(10.f)
+	, mAccMode(false)
+	, mSpeedMin(1.f)
+	, mSpeedMax(30.f)
 {
 }
 
@@ -109,6 +113,7 @@ void InnoSimulator::Finish()
 
 void InnoSimulator::Update()
 {
+
 	if (mState == eInnoSimulatorState::None)
 	{
 		return;
@@ -137,19 +142,22 @@ void InnoSimulator::Update()
 		mState = eInnoSimulatorState::Playing;
 	}
 	else if (mState == eInnoSimulatorState::Playing)
-	{	
+	{
 		float speed = GetSpeed();
-
-		if (gInput->GetKey(eKeyCode::SPACE))
+		if (mAccMode)
 		{
-			speed += 3 * gDeltaTime;
-			SetSpeed(speed);
+			if (gInput->GetKey(eKeyCode::SPACE))
+			{
+				speed += 3 * gDeltaTime;
+				SetSpeed(speed);
+			}
+			else
+			{
+				speed -= 3 * gDeltaTime;
+				SetSpeed(speed);
+			}
 		}
-		else
-		{		
-			speed -= 3 * gDeltaTime;
-			SetSpeed(speed);
-		}
+
 		
 
 		mCurTime += gDeltaTime;	

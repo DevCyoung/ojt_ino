@@ -104,7 +104,10 @@ public:
 	void SetBump(int idx, Vector3 bump);
 
 	bool IsPlaying() { return mState == eInnoSimulatorState::Playing; }
-
+	float timeHistory;
+	bool	mAccMode;
+	float mSpeedMin;
+	float mSpeedMax;
 private:
 	void sort();
 
@@ -132,6 +135,8 @@ private:
 
 	std::vector<Vector3> mBumpsCopy;
 	std::vector<Vector3> mBumps;
+
+
 };
 
 
