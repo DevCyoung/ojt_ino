@@ -92,7 +92,11 @@ static void ClientRecive(SOCKET serverSocket)
 
 	while (true)
 	{
+		
+		
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
+		
+
 		std::lock_guard<std::mutex> guard(gClientMutex);
 		
 		if (bytesReceived > 0)
@@ -142,8 +146,13 @@ static void ClientRecive(SOCKET serverSocket)
 						logTime = 0.f;
 					}
 
-
-					innoClient->RecivePos(packetPos);
+					//다음에 들어오는시간
+					static LARGE_INTEGER start;					
+					float timeDelay = TimeManager::GetInstance()->EndTime(&start);
+					static std::vector<float> times;
+					times.push_back(timeDelay);
+					innoClient->RecivePos(packetPos);					
+					TimeManager::GetInstance()->StartTime(&start);
 				}
 					break;
 				case Start:
