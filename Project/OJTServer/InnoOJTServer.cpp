@@ -328,9 +328,6 @@ int InnoOJTServer::Listen(const int port)
 
 int InnoOJTServer::Accept(SOCKET clientSocket)
 {	
-	char buff[256] = { 0, };
-	sprintf_s(buff, "Accept: %s", GetClientIP(clientSocket).c_str());
-	gLogListUI->WriteLine(buff);
 	std::string ip(GetClientIP(clientSocket).c_str());
 
 	tInnoClient innoClient = {};
@@ -356,7 +353,7 @@ void InnoOJTServer::EnterRoom(int clientID)
 
 	if (mRoom.clients.size() >= 2)
 	{
-		gLogListUI->WriteWarning("Room Clientes 2");
+		gLogListUI->WriteWarning("The room is already full with two people");
 		return;
 	}
 
@@ -365,7 +362,9 @@ void InnoOJTServer::EnterRoom(int clientID)
 	{
 		if (iter->ClientID == clientID)
 		{
-			gLogListUI->WriteWarning("He's Already Room");
+			char buff[256] = { 0, };
+			sprintf_s(buff, "%s is already in the room", iter->Name.c_str());
+			gLogListUI->WriteWarning(buff);
 			return;
 		}
 	}
@@ -373,12 +372,16 @@ void InnoOJTServer::EnterRoom(int clientID)
 	tInnoClient client = {};
 	if (TryGetInncoClient(clientID, &client))
 	{
-		gLogListUI->WriteLine("Enter room");
+		char buff[256] = { 0, };
+		sprintf_s(buff, "Enter room %s", client.Name.c_str());
+		gLogListUI->WriteLine(buff);	
 		mRoom.clients.push_back(client);
 	}	
 	else
 	{
-		gLogListUI->WriteWarning("Invalid client");
+		char buff[256] = { 0, };
+		sprintf_s(buff, "%d invalid client", client.ClientID);
+		gLogListUI->WriteWarning(buff);		
 	}
 }
 
@@ -391,8 +394,10 @@ void InnoOJTServer::ExitRoom(int clientID)
 	{
 		if (iter->ClientID == clientID)
 		{
+			char buff[256] = { 0, };
+			sprintf_s(buff, "%s has left the room", iter->Name.c_str());
+			gLogListUI->WriteLine(buff);
 			mRoom.clients.erase(iter);
-			gLogListUI->WriteLine("Exit Room");
 			return;
 		}
 	}
@@ -463,6 +468,11 @@ void InnoOJTServer::ReciveName(int clientID, const tPacketName& outPacket)
 		if (clientID == mClients[i].ClientID)
 		{
 			mClients[i].Name = outPacket.Name;
+
+			char buff[256] = { 0, };
+			sprintf_s(buff, "Accept: %s %s", mClients[i].Name.c_str(), mClients[i].IP.c_str());
+			gLogListUI->WriteLine(buff);
+
 			break;
 		}
 	}
