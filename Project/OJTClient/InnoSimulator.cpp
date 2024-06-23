@@ -204,7 +204,7 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 	if (distance > 1.f)
 	{
 		//curOtherPos가 mPlayerBPos로 보간
-		curOtherPos = Innolerp(curOtherPos, mPlayerBPos, deltaTime * 10);
+		curOtherPos = Innolerp(curOtherPos, mPlayerBPos, deltaTime);
 	}
 
 	float zr = 0.f;	
