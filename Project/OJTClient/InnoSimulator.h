@@ -108,6 +108,7 @@ private:
 	float mSamplingTime;
 	float mFrameDeltaTime;
 	float mPrevPos;
+	float mPrevBPos;
 	float mStartPos;
 	float mX[4] = { 0, };
 	float mXDot[4] = { 0, };

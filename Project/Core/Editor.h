@@ -7,17 +7,14 @@ public:
 	friend int APIENTRY::wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		LPWSTR lpCmdLine, int nCmdShow);		
 
-	PUBLIC_SINGLETON_DECLARE(Editor);	
-
+	SINGLETON_DECLARE(Editor);	
 public:
-	void CreateDevice(int width, int height);
-	void RemoveDevice();
 	bool mbInit;
 	bool mbRestore;
 	bool mbFullScreen;
-
-private:
+	void CreateDevice(int width, int height);
 	void run();
+	void RemoveDevice();
 	void present() const;
 
 };

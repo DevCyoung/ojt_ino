@@ -31,6 +31,7 @@ struct tInnoRoom
 {
 	bool bTraining;
 	float curPoses[INNO_MAX_ROOM_USER];
+	float curSpeeds[INNO_MAX_ROOM_USER];
 	float curTime;
 	std::vector<tInnoClient> clients;
 };
@@ -51,7 +52,7 @@ public:
 	void ExitRoom(int clientID);
 
 	void SendLog(int clientID, int messageLen, const char* message);
-	void SendPos(int clientID, float pos);
+	void SendPos(int clientID, float pos, float speed);
 	void SendStop(int clientID);
 	void SendStart(int clientID);
 	void SendName(int clientID);

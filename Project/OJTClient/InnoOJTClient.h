@@ -25,7 +25,7 @@ public:
 	int GetServerPort();
 
 	void SendLog(int messageLen, const char* message);
-	void SendPos(float pos);
+	void SendPos(float pos, float speed);
 	void SendStop();
 	void SendName(int nameLen, const char* name);
 

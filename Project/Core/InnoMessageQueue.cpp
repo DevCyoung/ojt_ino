@@ -58,6 +58,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 			mReciveBytes.erase(mReciveBytes.begin(), mReciveBytes.begin() + PACKET_SIZE);
 
 			packetMessage.Position = packet.Position;
+			packetMessage.Speed = packet.Speed;
 
 			mReciveMessageQueue.push(packetMessage);
 		}

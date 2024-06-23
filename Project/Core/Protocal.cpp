@@ -74,12 +74,13 @@ void send_log(SOCKET socket, int messageLen, const char* message)
 	send(socket, &packet, sizeof(tPacketLog));
 }
 
-void send_pos(SOCKET socket, float pos)
+void send_pos(SOCKET socket, float pos, float speed)
 {
 	tPacketPos packet = {};
 
 	packet.PacketID = ePacketID::Pos;
 	packet.Position = pos;
+	packet.Speed = speed;
 
 	send(socket, &packet, sizeof(tPacketPos));
 }

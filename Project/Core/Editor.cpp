@@ -65,7 +65,7 @@ void ToggleFullscreen(HWND hWnd)
 	//	return;
 	//}
 	//
-	
+
 	//HRESULT hr = g_pSwapChain->SetFullscreenState(!fullscreen, nullptr);
 	//
 	//if (FAILED(hr))
@@ -93,7 +93,7 @@ void ToggleFullscreen(HWND hWnd)
 	{
 		//Editor::GetInstance()->mbInit = true;
 		Editor::GetInstance()->mbRestore = true;
-	
+
 	}
 
 	fullscreen = !fullscreen;
@@ -112,7 +112,7 @@ Editor::Editor()
 {
 	CreateDevice(Engine::GetInstance()->mRenderTargetWidth, Engine::GetInstance()->mRenderTargetHeight);
 
-	PanelUIManager::initialize();	
+	PanelUIManager::initialize();
 }
 
 Editor::~Editor()
@@ -172,7 +172,7 @@ void Editor::RemoveDevice()
 }
 
 void Editor::run()
-{		
+{
 
 	int moniterWidth = GetSystemMetrics(SM_CXSCREEN);
 	int moniterHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -191,7 +191,7 @@ void Editor::run()
 	if (mbRestore)
 	{
 		RemoveDevice();
-		RestoreWindowFromFullscreen(Engine::GetInstance()->mHwnd);				
+		RestoreWindowFromFullscreen(Engine::GetInstance()->mHwnd);
 		CreateDevice(screenWidth, screenHeight);
 		HWND hWnd = Engine::GetInstance()->mHwnd;
 		LONG style = GetWindowLong(hWnd, GWL_STYLE);
@@ -210,15 +210,15 @@ void Editor::run()
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
-	
-	ImGui::NewFrame();	
+
+	ImGui::NewFrame();
 
 	bool show_app_dockspace = true;
 	if (show_app_dockspace)
 	{
 		ShowDockSpace();
 	}
-	
+
 	PanelUIManager::GetInstance()->finalUpdate();
 	PanelUIManager::GetInstance()->render();
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -231,11 +231,11 @@ void Editor::run()
 	{
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
-	}		
+	}
 }
 
 void Editor::present() const
-{        
+{
 	// Present
 	//HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync
 	HRESULT hr = g_pSwapChain->Present(0, 0); // Present without vsync

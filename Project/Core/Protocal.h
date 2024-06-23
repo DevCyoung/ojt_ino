@@ -24,6 +24,7 @@ struct tPacketPos
 {
 	ePacketID PacketID;
 	float Position;
+	float Speed;
 };
 
 struct tPacketStart
@@ -48,6 +49,7 @@ struct tPacketMessage
 	ePacketID PacketID;
 	int MessageLen;
 	float Position;
+	float Speed;
 	char buffer[INNO_MAX_POS_SIZE];
 };
 
@@ -63,7 +65,7 @@ int getPacketId(const char* buffer);
 
 void send(SOCKET socket, const void* data, int dataSize);
 void send_log(SOCKET socket, int messageLen, const char* message);
-void send_pos(SOCKET socket, float pos);
+void send_pos(SOCKET socket, float pos, float speed);
 void send_stop(SOCKET socket);
 void send_start(SOCKET socket);
 void send_name(SOCKET socket, int nameLen, const char* name);
