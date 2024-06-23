@@ -7,6 +7,7 @@
 #include <implot.h>
 #include <imgui_internal.h>
 #include <imgui_theme.h>
+#include <Editor.h>
 
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 #define offset 16.f
@@ -178,7 +179,15 @@ void InnoInputUI::drawForm()
 		yPos = 3.f;
 	}
 
-	if (ImPlot::BeginPlot("##ScreenUI", ImVec2(-1, 420)))
+	const bool bFullScreen = Editor::GetInstance()->mbFullScreen;
+	ImVec2 plotSize = ImVec2(-1, 416);
+
+	if (bFullScreen)
+	{
+		plotSize = ImVec2(-1, 397);
+	}
+
+	if (ImPlot::BeginPlot("##ScreenUI", plotSize))
 	{
 		float xPosStart = vecxPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 
