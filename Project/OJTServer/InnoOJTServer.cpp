@@ -250,6 +250,7 @@ void InnoOJTServer::run()
 	}
 
 	//BroadCast
+	static std::vector<float> poses;
 	for (int i = 0; i < mRoom.clients.size(); ++i)
 	{
 		for (int j = 0; j < mRoom.clients.size(); ++j)
@@ -259,6 +260,10 @@ void InnoOJTServer::run()
 				continue;
 			}
 
+			if (i == 0)
+			{
+				poses.push_back(mRoom.curPoses[j]);
+			}
 			SendPos(mRoom.clients[i].ClientID, mRoom.curPoses[j], mRoom.curSpeeds[j]);
 		}
 	}

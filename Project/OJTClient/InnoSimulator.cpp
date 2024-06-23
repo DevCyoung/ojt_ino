@@ -196,34 +196,35 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 {
 	//mSamplingTime 이전프레임과 지금프레임의 거리
 	//도로의 높이
+	//기본적으론 포지션으로 그림
 	const float curPos = mPrevAPos + mSpeed * deltaTime;
 	float curOtherPos = mPrevBPos + mPlayerBSpeed * deltaTime;
-
-	const float distance = abs( abs(mPlayerBPos) - abs(curOtherPos) );
-
-	if (distance > 10.f)
-	{		
-		//내위치가 더작을때
-		if (curOtherPos < mPlayerBPos)
-		{
-			curOtherPos = InnolerpAToB(curOtherPos, mPlayerBPos, deltaTime * 100.f);
-		}
-		else
-		{
-			float ret = (curOtherPos - mPlayerBPos) * deltaTime * 100.f;
-			if (ret > curOtherPos)
-			{
-				ret = curOtherPos;
-			}
-			if (ret < mPlayerBPos)
-			{
-				ret = mPlayerBPos;
-			}
-			curOtherPos = ret;
-		}
-
-		//curOtherPos가 mPlayerBPos로 보간		
-	}
+	curOtherPos  = mPlayerBPos;
+	//const float distance = abs( abs(mPlayerBPos) - abs(curOtherPos) );
+	//
+	//if (distance > 10.f)
+	//{		
+	//	//내위치가 더작을때
+	//	if (curOtherPos < mPlayerBPos)
+	//	{
+	//		curOtherPos = InnolerpAToB(curOtherPos, mPlayerBPos, deltaTime * 100.f);
+	//	}
+	//	else
+	//	{
+	//		float ret = (curOtherPos - mPlayerBPos) * deltaTime * 100.f;
+	//		if (ret > curOtherPos)
+	//		{
+	//			ret = curOtherPos;
+	//		}
+	//		if (ret < mPlayerBPos)
+	//		{
+	//			ret = mPlayerBPos;
+	//		}
+	//		curOtherPos = ret;
+	//	}
+	//
+	//	//curOtherPos가 mPlayerBPos로 보간		
+	//}
 
 	float zr = 0.f;	
 	if (!mBumpsCopy.empty())
