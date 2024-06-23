@@ -11,7 +11,7 @@ private:
 public:
 	HWND GetHwnd() const { Assert(mHwnd, ASSERT_MSG_NULL); return mHwnd; }
 
-private:
+public:
 	static void initialize(const HWND hWnd, const UINT renderTargetWidth, const UINT renderTargetHeight);
 	void setWindowSize(const UINT windowScreenWidth, const UINT windowScreenHeight);
 	void run();
@@ -19,7 +19,7 @@ private:
 	void update();
 	void eventUpdate();
 
-private:
+public:
 	HWND mHwnd;
 	UINT mRenderTargetWidth;
 	UINT mRenderTargetHeight;

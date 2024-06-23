@@ -8,9 +8,13 @@ public:
 		LPWSTR lpCmdLine, int nCmdShow);		
 
 	SINGLETON_DECLARE(Editor);	
-
-private:
-	void run() const;
+public:
+	bool mbInit;
+	bool mbRestore;
+	bool mbFullScreen;
+	void CreateDevice(int width, int height);
+	void run();
+	void RemoveDevice();
 	void present() const;
 };
 
