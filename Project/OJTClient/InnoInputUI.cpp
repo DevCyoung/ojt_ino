@@ -164,7 +164,7 @@ void InnoInputUI::drawForm()
 	ImGui::SetNextWindowClass(&window_InputScreen);
 	ImGui::Begin("ScreenUI");
 
-	const bool bFullScreen = Editor::GetInstance()->mbFullScreen;
+	//const bool bFullScreen = Editor::GetInstance()->mbFullScreen;
 
 	const double xHistoryScale = 10.f;
 	const float xPos = vecxPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
