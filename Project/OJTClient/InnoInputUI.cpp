@@ -8,6 +8,7 @@
 #include <imgui_internal.h>
 #include <imgui_theme.h>
 #include <Editor.h>
+#include <InputManager.h>
 
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 #define offset 16.f

@@ -41,8 +41,10 @@ private:
 public:
 	//void SetPlayerAPos(float playerAPos) { mPlayerAPos = playerAPos; }
 	void SetPlayerBPos(float playerBPos) { mPlayerBPos = playerBPos; }
+	void SetPlayerBSpeed(float playerBSpeed) { mPlayerBSpeed = playerBSpeed; }
 	//float GetPlayerPosA() { return mPlayerAPos; }
 	float GetPlayerPosB() { return mPlayerBPos; }
+	float GetPlayerSpeedB() { return mPlayerBSpeed; }
 
 	void Play();	// 시뮬레이션을 시작합니다 (None -> Start -> Playing)
 	void Stop();	// 시뮬레이션을 종료합니다. 에디터모드가 됩니다. (Playing -> Stop-> Editing)
@@ -67,7 +69,12 @@ public:
 		if (mSpeed < 1.f)
 		{
 			mSpeed = 1.f;
-		}		
+		}
+		//스피드 최대값은 30
+		else if (mSpeed > 30.f)
+		{
+			mSpeed = 30.f;
+		}
 	}
 	void SetSamplingTime(const float samplingTime) { mSamplingTime = samplingTime; }
 	void SetBumpStart(float bumpStart) { mBumpStart = bumpStart; }
@@ -105,6 +112,7 @@ private:
 	eInnoSimulatorState mState;
 	float mCurTime;
 	float mPlayerBPos;
+	float mPlayerBSpeed;
 	float mMS;
 	float mMU;
 	float mKS;
@@ -116,8 +124,8 @@ private:
 	float mBumpAmp;
 	float mSamplingTime;
 	float mFrameDeltaTime;
-	float mPrevPos;
-	float mPrevBPos;
+	float mPrevAPos;
+	float mPrevBPos;	
 	float mStartPos;
 	float mX[4] = { 0, };
 	float mXDot[4] = { 0, };

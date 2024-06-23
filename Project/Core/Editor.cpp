@@ -195,7 +195,7 @@ void Editor::run()
 		CreateDevice(screenWidth, screenHeight);
 		HWND hWnd = Engine::GetInstance()->mHwnd;
 		LONG style = GetWindowLong(hWnd, GWL_STYLE);
-		style |= WS_CAPTION;
+		style |= WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		SetWindowLong(hWnd, GWL_STYLE, style);
 		Engine::GetInstance()->setWindowSize(screenWidth, screenHeight);
 

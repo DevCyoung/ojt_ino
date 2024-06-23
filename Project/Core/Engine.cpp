@@ -3,7 +3,7 @@
 #include "TimeManager.h"
 #include "MessageManager.h"
 #include "PathManager.h"
-
+#include "InputManager.h"
 
 
 Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderTargetHeight)
@@ -16,6 +16,7 @@ Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderT
 	setWindowSize(mRenderTargetWidth, mRenderTargetHeight);		
 	//SetWindowToFullscreen(hWnd);
 
+	InputManager::initialize();
 	TimeManager::initialize();
 	MessageManager::initialize();		
 	PathManager::initialize();
@@ -23,6 +24,7 @@ Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderT
 
 Engine::~Engine()
 {
+	InputManager::deleteInstance();
 	PathManager::deleteInstance();
 	MessageManager::deleteInstance();	
 	TimeManager::deleteInstance();		
@@ -58,7 +60,8 @@ void Engine::updateWindowInfo()
 
 void Engine::update()
 {
-	TimeManager::GetInstance()->update();	
+	TimeManager::GetInstance()->update();
+	InputManager::GetInstance()->update(mHwnd);
 }
 
 void Engine::eventUpdate()

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "InnoSimulator.h"
 #include "InnoDataManager.h"
-
+#include <InputManager.h>
 #define gLogListUIClient (static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient")))
 
 
@@ -23,7 +23,7 @@ InnoSimulator::InnoSimulator()
 	, mBumpEnd(3.0f)
 	, mBumpAmp(0.05f)
 	, mSamplingTime(0.001f)
-	, mPrevPos(0.f)
+	, mPrevAPos(0.f)
 	, mX{ 0.f }
 	, mXDot{ 0.f }
 	, mPlayerBPos(0.f)
@@ -122,7 +122,8 @@ void InnoSimulator::Update()
 		mPrevBPos = 0.f;
 
 		mCurTime = 0.f;
-		mPrevPos = mStartPos;
+		mPrevAPos = mStartPos;
+
 		mFrameDeltaTime = 0.f;
 
 		//Start, End 앞뒤조정 범프정렬
@@ -136,7 +137,21 @@ void InnoSimulator::Update()
 		mState = eInnoSimulatorState::Playing;
 	}
 	else if (mState == eInnoSimulatorState::Playing)
-	{		
+	{	
+		float speed = GetSpeed();
+
+		if (gInput->GetKey(eKeyCode::SPACE))
+		{
+			speed += 3 * gDeltaTime;
+			SetSpeed(speed);
+		}
+		else
+		{		
+			speed -= 3 * gDeltaTime;
+			SetSpeed(speed);
+		}
+		
+
 		mCurTime += gDeltaTime;	
 		mFrameDeltaTime += gDeltaTime;
 
@@ -162,12 +177,26 @@ void InnoSimulator::Update()
 	}
 }
 
+template<typename T>
+T Innolerp(const T& a, const T& b, float t) 
+{
+	return a + (b - a) * t;
+}
+
 tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTime)
 {
 	//mSamplingTime 이전프레임과 지금프레임의 거리
 	//도로의 높이
-	const float curPos = mPrevPos + mSpeed * deltaTime;
+	const float curPos = mPrevAPos + mSpeed * deltaTime;
+	float curOtherPos = mPrevBPos + mPlayerBSpeed * deltaTime;
 
+	const float distance = abs(abs(mPlayerBPos) - abs(curOtherPos));
+
+	if (distance > 1.f)
+	{
+		//curOtherPos가 mPlayerBPos로 보간
+		curOtherPos = Innolerp(curOtherPos, mPlayerBPos, deltaTime);
+	}
 
 	float zr = 0.f;	
 	if (!mBumpsCopy.empty())
@@ -180,19 +209,13 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 		const float t2 = bumpEnd / mSpeed;
 
 		//Road 체크 변경
-		if (bumpStart <= curPos && curPos <= bumpEnd)
+		if (bumpStart <= curPos && curPos < bumpEnd)
 		{
 			zr = bumpAmp * sin(2.0f * XM_PI / (bumpEnd - bumpStart) / 2.0f * (curPos - bumpStart));
 		}
-
-		//Road 체크
-		//if (t1 <= sampleTime && sampleTime < t2)
-		//{
-		//	zr = bumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
-		//}
 		
 		//Bump제거
-		if (curPos > bumpEnd)
+		if (curPos >= bumpEnd)
 		{
 			mBumpsCopy.erase(mBumpsCopy.begin());
 		}
@@ -219,11 +242,12 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 	sampleData.ZuSpeed = mX[3];
 	sampleData.ZuAcc = mXDot[3];
 	sampleData.Zr = zr;
-	sampleData.xPos = curPos;
 	sampleData.xSpeed = mSpeed;
-	sampleData.xPosOther = mPlayerBPos;
+	sampleData.xPos = curPos;
+	sampleData.xPosOther = curOtherPos;// mPlayerBPos;
 
-	mPrevPos = sampleData.xPos;
+	mPrevAPos = sampleData.xPos;
+	mPrevBPos = sampleData.xPosOther;
 	return sampleData;
 }
 

@@ -387,6 +387,7 @@ void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 {
 	//서버로부터 B위치를 수신
 	InnoSimulator::GetInstance()->SetPlayerBPos(outPacket.Position);
+	InnoSimulator::GetInstance()->SetPlayerBSpeed(outPacket.Speed);
 }
 
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
