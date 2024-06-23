@@ -164,10 +164,13 @@ void InnoInputUI::drawForm()
 	ImGui::SetNextWindowClass(&window_InputScreen);
 	ImGui::Begin("ScreenUI");
 
+	const bool bFullScreen = Editor::GetInstance()->mbFullScreen;
+
 	const double xHistoryScale = 10.f;
 	const float xPos = vecxPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 	const float xOtherPos = vecxOtehrPos[dataPos + INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 	float yPos = 0.f;
+
 
 	double xHistoryMax =  10 + xPos;
 	double xHistoryMin = -10 + xPos;
@@ -179,7 +182,14 @@ void InnoInputUI::drawForm()
 		yPos = 3.f;
 	}
 
-	if (ImPlot::BeginPlot("##ScreenUI", ImVec2(-1, 420)))
+	ImVec2 plotSize = ImVec2(-1, 416);
+
+	if (bFullScreen)
+	{
+		plotSize = ImVec2(-1, 397);
+	}
+
+	if (ImPlot::BeginPlot("##ScreenUI", plotSize))
 	{
 		float xPosStart = vecxPos[INNO_CLIENT_FRAME_PER_SECOND * INNO_GRAPH_HISTORY_SECOND - 1];
 

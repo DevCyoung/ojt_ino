@@ -108,6 +108,7 @@ static void CleanupRenderTarget();
 Editor::Editor()
 	: mbInit(false)
 	, mbRestore(false)
+	, mbFullScreen(false)
 {
 	CreateDevice(Engine::GetInstance()->mRenderTargetWidth, Engine::GetInstance()->mRenderTargetHeight);
 
@@ -172,46 +173,34 @@ void Editor::RemoveDevice()
 
 void Editor::run()
 {		
+
+	int moniterWidth = GetSystemMetrics(SM_CXSCREEN);
+	int moniterHeight = GetSystemMetrics(SM_CYSCREEN);
+	int screenWidth = Engine::GetInstance()->mRenderTargetWidth;
+	int screenHeight = Engine::GetInstance()->mRenderTargetHeight;
 	if (mbInit)
 	{
 		RemoveDevice();
-
-		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
 		SetWindowToFullscreen(Engine::GetInstance()->mHwnd);
+		CreateDevice(moniterWidth, moniterHeight);
 
-		CreateDevice(screenWidth, screenHeight);
 		mbInit = false;
+		mbFullScreen = true;
 	}
 
 	if (mbRestore)
 	{
 		RemoveDevice();
-
-		RestoreWindowFromFullscreen(Engine::GetInstance()->mHwnd);
-
-		//Engine::GetInstance()->setWindowSize(1280, 740);
-		
-		CreateDevice(1280, 740);
-		{
-			// 타이틀 바를 비활성화하는 예제
-			HWND hWnd = Engine::GetInstance()->mHwnd;
-			//LONG style = GetWindowLong(hWnd, GWL_STYLE);
-			//style &= ~WS_CAPTION; // WS_CAPTION 스타일을 제거하여 타이틀 바를 비활성화
-			//SetWindowLong(hWnd, GWL_STYLE, style);
-			//SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-
-			// 타이틀 바를 활성화하는 예제
-			LONG style = GetWindowLong(hWnd, GWL_STYLE);
-			style |= WS_CAPTION; // WS_CAPTION 스타일을 추가하여 타이틀 바를 활성화
-			SetWindowLong(hWnd, GWL_STYLE, style);
-			//SetWindowPos(hWnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-		}
-
-		Engine::GetInstance()->setWindowSize(1280, 740);
+		RestoreWindowFromFullscreen(Engine::GetInstance()->mHwnd);				
+		CreateDevice(screenWidth, screenHeight);
+		HWND hWnd = Engine::GetInstance()->mHwnd;
+		LONG style = GetWindowLong(hWnd, GWL_STYLE);
+		style |= WS_CAPTION;
+		SetWindowLong(hWnd, GWL_STYLE, style);
+		Engine::GetInstance()->setWindowSize(screenWidth, screenHeight);
 
 		mbRestore = false;
+		mbFullScreen = false;
 	}
 
 	PanelUIManager::GetInstance()->update();

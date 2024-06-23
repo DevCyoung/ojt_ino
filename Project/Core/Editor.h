@@ -14,6 +14,7 @@ public:
 	void RemoveDevice();
 	bool mbInit;
 	bool mbRestore;
+	bool mbFullScreen;
 
 private:
 	void run();
