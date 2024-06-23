@@ -166,23 +166,33 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 {
 	//mSamplingTime 이전프레임과 지금프레임의 거리
 	//도로의 높이
-	float zr = 0.f;	
+	const float curPos = mPrevPos + mSpeed * deltaTime;
 
+
+	float zr = 0.f;	
 	if (!mBumpsCopy.empty())
 	{
-		float bumpStart = mBumpsCopy[0].x;
-		float bumpEnd = mBumpsCopy[0].y;
-		float bumpAmp = mBumpsCopy[0].z;
+		const float bumpStart = mBumpsCopy[0].x;
+		const float bumpEnd = mBumpsCopy[0].y;
+		const float bumpAmp = mBumpsCopy[0].z;
 
-		float t1 = bumpStart / mSpeed;
-		float t2 = bumpEnd / mSpeed;
+		const float t1 = bumpStart / mSpeed;
+		const float t2 = bumpEnd / mSpeed;
 
-		if (t1 <= sampleTime && sampleTime < t2)
+		//Road 체크 변경
+		if (bumpStart <= curPos && curPos <= bumpEnd)
 		{
-			zr = bumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
+			zr = bumpAmp * sin(2.0f * XM_PI / (bumpEnd - bumpStart) / 2.0f * (curPos - bumpStart));
 		}
 
-		if (sampleTime >= t2)
+		//Road 체크
+		//if (t1 <= sampleTime && sampleTime < t2)
+		//{
+		//	zr = bumpAmp * sin(2.0f * XM_PI / (t2 - t1) / 2.0f * (sampleTime - t1));
+		//}
+		
+		//Bump제거
+		if (curPos > bumpEnd)
 		{
 			mBumpsCopy.erase(mBumpsCopy.begin());
 		}
@@ -209,7 +219,7 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 	sampleData.ZuSpeed = mX[3];
 	sampleData.ZuAcc = mXDot[3];
 	sampleData.Zr = zr;
-	sampleData.xPos = mPrevPos + mSpeed * deltaTime;
+	sampleData.xPos = curPos;
 	sampleData.xSpeed = mSpeed;
 	sampleData.xPosOther = mPlayerBPos;
 

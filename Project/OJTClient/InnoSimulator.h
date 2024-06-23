@@ -59,7 +59,16 @@ public:
 	void SetKS(const float ks) { mKS = ks; }
 	void SetCS(const float cs) { mCS = cs; }
 	void SetKT(const float kt) { mKT = kt; }
-	void SetSpeed(const float speed) { mSpeed = speed; }
+	void SetSpeed(const float speed) 
+	{ 		
+		mSpeed = speed; 
+
+		//스피드 최소값은 1
+		if (mSpeed < 1.f)
+		{
+			mSpeed = 1.f;
+		}		
+	}
 	void SetSamplingTime(const float samplingTime) { mSamplingTime = samplingTime; }
 	void SetBumpStart(float bumpStart) { mBumpStart = bumpStart; }
 	void SetBumpEnd(float bumpEnd) { mBumpEnd = bumpEnd; }
