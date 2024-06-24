@@ -88,7 +88,7 @@ static void ClientRecive(SOCKET serverSocket)
 
 	InnoOJTClient* const innoClient = InnoOJTClient::GetInstance();
 
-	char buffer[INNO_MAX_RECEIVE_BUFFER_SIZE];
+	//char buffer[INNO_MAX_RECEIVE_BUFFER_SIZE];
 
 	while (true)
 	{
