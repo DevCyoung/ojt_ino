@@ -273,7 +273,7 @@ tInnoSampleData InnoSimulator::CreateSampleData(float sampleTime, float deltaTim
 	sampleData.Zr = zr;
 	sampleData.xSpeed = mSpeed;
 	sampleData.xPos = curPos;
-	sampleData.xPosOther = curOtherPos;// mPlayerBPos;
+	sampleData.xPosOther = mPlayerBPos;// mPlayerBPos;
 
 	mPrevAPos = sampleData.xPos;
 	mPrevBPos = sampleData.xPosOther;
