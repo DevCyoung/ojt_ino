@@ -5,9 +5,9 @@
 static std::mutex WriteMutex;
 
 LogListUI::LogListUI()
+	: mLogs()
 {
 	SetTitle("LogListUI");
-
 	mLogs.reserve(30000);
 }
 
@@ -23,9 +23,7 @@ void LogListUI::drawForm()
 	ImGui::Begin(GetTitle().c_str());
 	std::lock_guard guard(WriteMutex);
 
-	static int count = mLogs.size();
-
-	
+	static int logCount = mLogs.size();
 
 	for (auto& log: mLogs)
 	{
@@ -50,11 +48,10 @@ void LogListUI::drawForm()
 		ImGui::PopStyleColor();
 	}
 
-	if (count != mLogs.size())
+	if (logCount != mLogs.size())
 	{
 		ImGui::SetScrollHereY();
-
-		count = mLogs.size();
+		logCount = mLogs.size();
 	}
 
 	ImGui::End();

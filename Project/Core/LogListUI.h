@@ -22,7 +22,6 @@ public:
 	~LogListUI();
 	// PanelUI을(를) 통해 상속됨
 	void drawForm() override;
-
 	void WriteLine(const std::string& message);
 	void WriteError(const std::string& message);
 	void WriteWarning(const std::string& message);

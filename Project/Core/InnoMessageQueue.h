@@ -8,7 +8,7 @@ public:
 
 public:
 	void PushRecivePacket(const void* data, int dataSize);
-	void PushSendPacket(SOCKET socket, const void* data, int dataSize);
+	void PushSendPacket(const SOCKET socket, const void* data, int dataSize);
 	void Clear();
 	bool IsEmpty() { return mReciveMessageQueue.empty(); }
 	tPacketMessage PopPacketMessage()

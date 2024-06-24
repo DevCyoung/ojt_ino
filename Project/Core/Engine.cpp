@@ -13,9 +13,7 @@ Engine::Engine(const HWND hWnd, const UINT renderTargetWidth, const UINT renderT
 	, mWindowScreenWidth(renderTargetWidth)
 	, mWindowScreenHeight(renderTargetHeight)
 {
-	setWindowSize(mRenderTargetWidth, mRenderTargetHeight);		
-	//SetWindowToFullscreen(hWnd);
-
+	setWindowSize(mRenderTargetWidth, mRenderTargetHeight);
 	InputManager::initialize();
 	TimeManager::initialize();
 	MessageManager::initialize();		
@@ -78,10 +76,8 @@ void Engine::setWindowSize(const UINT windowScreenWidth, const UINT windowScreen
 		0, 0,
 		static_cast<LONG>(windowScreenWidth), static_cast<LONG>(windowScreenHeight)
 	};
-	//SetWindowLong(mHwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE | WS_MINIMIZEBOX);
 
 	AdjustWindowRect(&windowScreen, WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, GetMenu(mHwnd) != nullptr);
-
 
 	const int ADJUST_WIDTH = static_cast<int>(windowScreen.right - windowScreen.left);
 	const int ADJUST_HEIGHT = static_cast<int>(windowScreen.bottom - windowScreen.top);
@@ -89,16 +85,9 @@ void Engine::setWindowSize(const UINT windowScreenWidth, const UINT windowScreen
 	const int LEFT_X_POS = GetSystemMetrics(SM_CXSCREEN) / 2 - static_cast<int>(ADJUST_WIDTH) / 2;
 	const int LEFT_Y_POS = GetSystemMetrics(SM_CYSCREEN) / 2 - static_cast<int>(ADJUST_HEIGHT) / 2 - 17;
 
-
-
 	SetWindowPos(mHwnd, nullptr,
 		LEFT_X_POS, LEFT_Y_POS,
 		ADJUST_WIDTH, ADJUST_HEIGHT, 0);
-
-	
 	ShowWindow(mHwnd, true);
-
-	
-
 	UpdateWindow(mHwnd);
 }

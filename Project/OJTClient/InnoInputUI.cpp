@@ -194,7 +194,7 @@ void InnoInputUI::drawForm()
 		yPos = 3.f;
 	}
 
-	const bool bFullScreen = Editor::GetInstance()->mbFullScreen;
+	const bool bFullScreen = Editor::GetInstance()->IsFullScreen();
 	ImVec2 plotSize = ImVec2(-1, 416);
 
 	if (bFullScreen)
@@ -328,8 +328,6 @@ void InnoInputUI::drawForm()
 			sprintf_s(buffMyCar, "Other Car (%.2f)", x);
 			ImPlot::PlotText(buffMyCar, x, y + 1.f);
 		}
-
-		
 
 		//OtherCar가 화면 밖으로 나갈때 그리기
 		if (bConnected)
@@ -662,7 +660,6 @@ void InnoInputUI::drawForm()
 		ShowInputText("##Server IP", "Server IP", IPBuffer, 16, inputTextFlag);
 		ShowInputInt("##PortNumber", "Port", &portNumber, inputTextFlag);
 		ShowInputText("##Connect Name", "Name", mName, 16, inputTextFlag);
-
 	}
 
 	if (bConnecting)

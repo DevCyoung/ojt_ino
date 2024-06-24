@@ -8,9 +8,7 @@ PanelLoader::PanelLoader()
 	LogListUI* logListUI = new LogListUI();
 	logListUI->SetTitle("LogListUIClient");
 	PanelUIManager::GetInstance()->AddPanel(logListUI);
-	PanelUIManager::GetInstance()->AddPanel(new InnoInputUI);	
-
-	
+	PanelUIManager::GetInstance()->AddPanel(new InnoInputUI);
 }
 
 PanelLoader::~PanelLoader()

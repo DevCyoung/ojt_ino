@@ -51,52 +51,19 @@ void RestoreWindowFromFullscreen(HWND hWnd)
 		SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE);
 }
 
-void GetScreenResolution(int& width, int& height)
-{
-	width = GetSystemMetrics(SM_CXSCREEN);
-	height = GetSystemMetrics(SM_CYSCREEN);
-}
-
 void ToggleFullscreen(HWND hWnd)
 {
-	//if (!g_pSwapChain)
-	//{
-	//	//std::cerr << "Swap chain is not initialized." << std::endl;
-	//	return;
-	//}
-	//
-
-	//HRESULT hr = g_pSwapChain->SetFullscreenState(!fullscreen, nullptr);
-	//
-	//if (FAILED(hr))
-	//{
-	//	//std::cerr << "Failed to toggle fullscreen mode. HRESULT: " << hr << std::endl;
-	//}
-	//else
-	//{
-	//	// 성공적으로 전환했음을 알리는 메시지 박스 표시 (선택 사항)
-	//	//MessageBox(hWnd, fullscreen ? L"창 모드로 전환되었습니다." : L"전체 화면 모드로 전환되었습니다.", L"알림", MB_OK);
-	//}
-
-	//Engine::deleteInstance();
-	//Engine::initialize(hWnd, )
-
-	static BOOL fullscreen = true;
-	//g_pSwapChain->GetFullscreenState(&fullscreen, nullptr);
-
-	if (fullscreen)
+	static BOOL bFullscreen = true;
+	if (bFullscreen)
 	{
-		//Editor::GetInstance()->mbInit = true;
-		Editor::GetInstance()->mbInit = true;
+		Editor::GetInstance()->SetInit(true);
 	}
 	else
 	{
-		//Editor::GetInstance()->mbInit = true;
-		Editor::GetInstance()->mbRestore = true;
-
+		Editor::GetInstance()->SetRestore(true);
 	}
 
-	fullscreen = !fullscreen;
+	bFullscreen = !bFullscreen;
 }
 
 // Forward declarations of helper functions
@@ -110,20 +77,18 @@ Editor::Editor()
 	, mbRestore(false)
 	, mbFullScreen(false)
 {
-	CreateDevice(Engine::GetInstance()->mRenderTargetWidth, Engine::GetInstance()->mRenderTargetHeight);
-
+	createDevice(Engine::GetInstance()->mRenderTargetWidth, Engine::GetInstance()->mRenderTargetHeight);
 	PanelUIManager::initialize();
 }
 
 Editor::~Editor()
 {
 	// Cleanup
-	RemoveDevice();
-
+	removeDevice();
 	PanelUIManager::deleteInstance();
 }
 
-void Editor::CreateDevice(int width, int height)
+void Editor::createDevice(int width, int height)
 {
 	Engine* const engine = Engine::GetInstance();
 	const HWND hwnd = engine->GetHwnd();
@@ -154,7 +119,7 @@ void Editor::CreateDevice(int width, int height)
 
 }
 
-void Editor::RemoveDevice()
+void Editor::removeDevice()
 {
 	ImPlot::DestroyContext();
 
@@ -180,9 +145,9 @@ void Editor::run()
 	int screenHeight = Engine::GetInstance()->mRenderTargetHeight;
 	if (mbInit)
 	{
-		RemoveDevice();
+		removeDevice();
 		SetWindowToFullscreen(Engine::GetInstance()->mHwnd);
-		CreateDevice(moniterWidth, moniterHeight);
+		createDevice(moniterWidth, moniterHeight);
 
 		mbInit = false;
 		mbFullScreen = true;
@@ -190,9 +155,9 @@ void Editor::run()
 
 	if (mbRestore)
 	{
-		RemoveDevice();
+		removeDevice();
 		RestoreWindowFromFullscreen(Engine::GetInstance()->mHwnd);
-		CreateDevice(screenWidth, screenHeight);
+		createDevice(screenWidth, screenHeight);
 		HWND hWnd = Engine::GetInstance()->mHwnd;
 		LONG style = GetWindowLong(hWnd, GWL_STYLE);
 		style |= WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;

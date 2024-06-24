@@ -92,13 +92,13 @@ static void ClientRecive(SOCKET serverSocket)
 
 	while (true)
 	{
-		
-		
+
+
 		int bytesReceived = recv(serverSocket, recvbuf, recvbuflen, 0);
-		
+
 
 		std::lock_guard<std::mutex> guard(gClientMutex);
-		
+
 		if (bytesReceived > 0)
 		{
 			//bytesReceived 가 0이상일때 패킷받기
@@ -124,8 +124,8 @@ static void ClientRecive(SOCKET serverSocket)
 					gLogListUIClient->WriteLine("Recive: Log");
 
 					innoClient->ReciveLog(packetLog);
-				}					
-					break;
+				}
+				break;
 				case Pos:
 				{
 					tPacketPos packetPos = {};
@@ -133,28 +133,15 @@ static void ClientRecive(SOCKET serverSocket)
 					packetPos.Position = pakcetMessage.Position;
 					packetPos.Speed = pakcetMessage.Speed;
 
-					//static float logTime = 0.f;
-					//
-					//logTime += gDeltaTime;
-					//if (logTime >= 0.1f)
-					//{
-					//	char logBUff[256] = { 0, };
-					//
-					//	sprintf_s(logBUff, "pos: %.2f, speed: %.2f", packetPos.Position, packetPos.Speed);
-					//
-					//	gLogListUIClient->WriteLine(logBUff);
-					//	logTime = 0.f;
-					//}
-
 					//다음에 들어오는시간
-					static LARGE_INTEGER start;					
+					static LARGE_INTEGER start;
 					float timeDelay = TimeManager::GetInstance()->EndTime(&start);
 					static std::vector<float> times;
 					times.push_back(timeDelay);
-					innoClient->RecivePos(packetPos);					
+					innoClient->RecivePos(packetPos);
 					TimeManager::GetInstance()->StartTime(&start);
 				}
-					break;
+				break;
 				case Start:
 				{
 					tPacketStart packetStart = {};
@@ -164,7 +151,7 @@ static void ClientRecive(SOCKET serverSocket)
 
 					gLogListUIClient->WriteLine("Recive: Start");
 				}
-					break;
+				break;
 				case Stop:
 				{
 					tPacketStop packetStop = {};
@@ -174,7 +161,7 @@ static void ClientRecive(SOCKET serverSocket)
 
 					gLogListUIClient->WriteLine("Recive: Stop");
 				}
-					break;
+				break;
 				case Name:
 				{
 					tPacketName packetName = {};
@@ -184,24 +171,21 @@ static void ClientRecive(SOCKET serverSocket)
 
 					gLogListUIClient->WriteLine("Recive: Name");
 				}
-					break;	
+				break;
 				default:
 				{
-					assert(false);					
+					Assert(false, ASSERT_MSG_INVALID);
 				}
-					break;
+				break;
 				}
-
 			}
-
-
-		}		
+		}
 		else if (bytesReceived == 0)
 		{
 			InnoSimulator::GetInstance()->ServerStop();
 
 			gLogListUIClient->WriteLine("Connection closed by server.");
-			innoClient->mClientState = eClientState::None;			
+			innoClient->mClientState = eClientState::None;
 			closesocket(innoClient->mServerSocket);
 			innoClient->mServerSocket = INVALID_SOCKET;
 			break;
@@ -306,10 +290,6 @@ void InnoOJTClient::run()
 			SendPos(InnoDataManager::GetInstance()->GetXPoses().back(), InnoSimulator::GetInstance()->GetSpeed());
 		}
 	}
-	else
-	{
-
-	}
 }
 
 int InnoOJTClient::Connect(const std::string& ip, const int port)
@@ -369,27 +349,7 @@ void InnoOJTClient::SendName(int nameLen, const char* name)
 
 void InnoOJTClient::ReciveLog(const tPacketLog& outPacket)
 {
-	LogListUI* logList = static_cast<LogListUI*>(PanelUIManager::GetInstance()->FindPanelUIOrNull("LogListUIClient"));
-	assert(logList);
-
-	logList->WriteLine(outPacket.Message);
-
-	//Other Car Symbol
-	
-
-	if (strlen(outPacket.Message) < strlen("Other Car : "))
-	{
-		return;
-	}	
-
-	int i = 0;
-	for (; i < strlen(outPacket.Message); ++i)
-	{
-		if (outPacket.Message[i] == "Other Car : "[i])
-		{
-			continue;
-		}
-	}
+	gLogListUIClient->WriteLine(outPacket.Message);
 }
 
 void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
@@ -402,14 +362,12 @@ void InnoOJTClient::RecivePos(const tPacketPos& outPacket)
 void InnoOJTClient::ReciveStop(const tPacketStop& packet)
 {
 	InnoSimulator::GetInstance()->Stop();
-
 	mbServerTraining = false;
 }
 
 void InnoOJTClient::ReciveStart(const tPacketStart& packet)
 {
 	InnoSimulator::GetInstance()->ServerStart();
-
 	mbServerTraining = true;
 }
 

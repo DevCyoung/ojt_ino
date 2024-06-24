@@ -34,7 +34,7 @@
     <Filter Include="Source\Heper\ImGUI\Dock">
       <UniqueIdentifier>{619fa3ec-e442-4579-a405-2b28077dbe36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Heper\Protocal">
+    <Filter Include="Source\Protocal">
       <UniqueIdentifier>{fd9dd1d5-970b-4746-b636-480ea9f6e76f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -103,7 +103,7 @@
       <Filter>Source\Heper</Filter>
     </ClInclude>
     <ClInclude Include="Protocal.h">
-      <Filter>Source\Heper\Protocal</Filter>
+      <Filter>Source\Protocal</Filter>
     </ClInclude>
     <ClInclude Include="implot.h">
       <Filter>Source\Heper\ImGUI\implot</Filter>
@@ -118,7 +118,7 @@
       <Filter>Source\Heper\ImGUI\Dock</Filter>
     </ClInclude>
     <ClInclude Include="InnoMessageQueue.h">
-      <Filter>Source\Heper\Protocal</Filter>
+      <Filter>Source\Protocal</Filter>
     </ClInclude>
     <ClInclude Include="LogListUI.h">
       <Filter>Source\Engine\Editor\Panel</Filter>
@@ -180,7 +180,7 @@
       <Filter>Source\Heper\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="Protocal.cpp">
-      <Filter>Source\Heper\Protocal</Filter>
+      <Filter>Source\Protocal</Filter>
     </ClCompile>
     <ClCompile Include="implot.cpp">
       <Filter>Source\Heper\ImGUI\implot</Filter>
@@ -198,7 +198,7 @@
       <Filter>Source\Heper\ImGUI\Dock</Filter>
     </ClCompile>
     <ClCompile Include="InnoMessageQueue.cpp">
-      <Filter>Source\Heper\Protocal</Filter>
+      <Filter>Source\Protocal</Filter>
     </ClCompile>
     <ClCompile Include="LogListUI.cpp">
       <Filter>Source\Engine\Editor\Panel</Filter>

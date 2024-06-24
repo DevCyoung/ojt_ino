@@ -60,15 +60,11 @@ public:
 	void ReciveLog(int clientID, const tPacketLog& outPacket);
 	void RecivePos(int clientID, const tPacketPos& outPacket);
 	void ReciveName(int clientID, const tPacketName& outPacket);
-	//void ReciveStop(int clientID, const tPacketStop& outPacket);	
 
 	void RemoveClient(const SOCKET clientSocket);
-
 	void DisConnect();
-
 	void RoomInit();
 
-	static inline int serializeNumber = 0;
 	tInnoClient GetInncoClient(SOCKET socket);
 	tInnoClient GetInncoClient(int clientID);
 	bool TryGetInncoClient(SOCKET socket, tInnoClient* outInnoClient);
@@ -77,6 +73,7 @@ public:
 	std::string GetClientIP(SOCKET clientSocket);
 	std::string GetServerIP() { return mIP; }
 
+	static inline int serializeNumber = 0;
 public:
 	PanelUIManager* mPanelManager;
 	ChannelUI* mChannelUI;	
@@ -88,7 +85,7 @@ public:
 	std::vector<tInnoClient> mClients;
 	std::thread mClientThreads[INNO_MAX_THREAD_SIZE];
 
-	std::string mIP;	
+	std::string mIP;
 
 	eServerState mServerState;
 };

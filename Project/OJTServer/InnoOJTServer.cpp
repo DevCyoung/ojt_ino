@@ -176,7 +176,7 @@ static void handleClient(SOCKET clientSocket)
 				break;
 				default:
 				{
-					assert(false);
+					Assert(false, ASSERT_MSG_INVALID);
 				}
 					break;
 				}
@@ -617,7 +617,6 @@ void InnoOJTServer::DisConnect()
 		clientSockets.push_back(mClients[i].Socket);
 	}
 
-	//mRoom.clients.clear();
 	RoomInit();
 
 	mChannel.clients.clear();

@@ -23,12 +23,12 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 
 	while (mReciveBytes.size() >= sizeof(int))
 	{
-		ePacketID packetID = (ePacketID)getPacketId((const char*)mReciveBytes.data());
+		const ePacketID PACKET_ID = (ePacketID)getPacketId((const char*)mReciveBytes.data());
 
 		tPacketMessage packetMessage = {};
-		packetMessage.PacketID = packetID;
+		packetMessage.PacketID = PACKET_ID;
 
-		if (Log == packetID)
+		if (Log == PACKET_ID)
 		{
 			constexpr int PACKET_SIZE = sizeof(tPacketLog);
 			if (mReciveBytes.size() < PACKET_SIZE)
@@ -45,7 +45,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 
 			mReciveMessageQueue.push(packetMessage);
 		}
-		else if (Pos == packetID)
+		else if (Pos == PACKET_ID)
 		{
 			constexpr int PACKET_SIZE = sizeof(tPacketPos);
 			if (mReciveBytes.size() < PACKET_SIZE)
@@ -62,7 +62,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 
 			mReciveMessageQueue.push(packetMessage);
 		}
-		else if (Start == packetID)
+		else if (Start == PACKET_ID)
 		{
 			constexpr int PACKET_SIZE = sizeof(tPacketStart);
 			if (mReciveBytes.size() < sizeof(tPacketStart))
@@ -76,7 +76,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 
 			mReciveMessageQueue.push(packetMessage);
 		}
-		else if (Stop == packetID)
+		else if (Stop == PACKET_ID)
 		{
 			constexpr int PACKET_SIZE = sizeof(tPacketStop);
 			if (mReciveBytes.size() < sizeof(tPacketStop))
@@ -90,7 +90,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 
 			mReciveMessageQueue.push(packetMessage);
 		}
-		else if (Name == packetID)
+		else if (Name == PACKET_ID)
 		{
 			constexpr int PACKET_SIZE = sizeof(tPacketName);
 			if (mReciveBytes.size() < sizeof(tPacketName))
@@ -115,23 +115,23 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 	}
 }
 
-void InnoMessageQueue::PushSendPacket(SOCKET socket, const void* data, int dataSize)
+void InnoMessageQueue::PushSendPacket(const SOCKET socket, const void* data, int dataSize)
 {
 	const BYTE* pByte = (const BYTE*)data;
 
 	while (1)
 	{
-		int sendSize = send(socket, (const char*)&data, dataSize, 0);
+		const int SEND_SIZE = send(socket, (const char*)&data, dataSize, 0);
+		
+		Assert(SEND_SIZE != SOCKET_ERROR, ASSERT_MSG_INVALID);
+		Assert(SEND_SIZE <= dataSize, ASSERT_MSG_INVALID);
 
-		Assert(sendSize != SOCKET_ERROR, ASSERT_MSG_INVALID);
-		Assert(sendSize <= dataSize, ASSERT_MSG_INVALID);
-
-		if (sendSize == dataSize)
+		if (SEND_SIZE == dataSize)
 		{
 			break;
 		}
 
-		dataSize -= sendSize;
+		dataSize -= SEND_SIZE;
 	}	
 }
 

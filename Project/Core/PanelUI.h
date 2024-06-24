@@ -23,7 +23,6 @@ private:
 	virtual void update() {};
 	virtual void finalUpdate() {};
 	virtual void drawForm() = 0;
-
 	void render();
 
 	bool mbRender;

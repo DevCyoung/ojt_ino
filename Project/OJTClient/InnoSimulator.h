@@ -39,18 +39,16 @@ private:
 	void finish();
 
 public:
-	//void SetPlayerAPos(float playerAPos) { mPlayerAPos = playerAPos; }
 	void SetPlayerBPos(float playerBPos) { mPlayerBPos = playerBPos; }
 	void SetPlayerBSpeed(float playerBSpeed) { mPlayerBSpeed = playerBSpeed; }
-	//float GetPlayerPosA() { return mPlayerAPos; }
 	float GetPlayerPosB() { return mPlayerBPos; }
 	float GetPlayerSpeedB() { return mPlayerBSpeed; }
 
-	void Play();	// 시뮬레이션을 시작합니다 (None -> Start -> Playing)
-	void Stop();	// 시뮬레이션을 종료합니다. 에디터모드가 됩니다. (Playing -> Stop-> Editing)
-	void ServerStop();
-	void ServerStart();	// 시뮬레이션을 강제로 실행시킨다.
-	void Finish();  // 에디터모드를 종료합니다. (Edting -> Finish -> None)
+	void Play();	
+	void Stop();	
+	void ServerStop();	
+	void ServerStart();	
+	void Finish();  
 
 	void Update();
 	eInnoSimulatorState GetSimulatorState() { return mState; }
@@ -104,8 +102,8 @@ public:
 	void SetBump(int idx, Vector3 bump);
 
 	bool IsPlaying() { return mState == eInnoSimulatorState::Playing; }
-	float timeHistory;
 	bool	mAccMode;
+	float timeHistory;
 	float mSpeedMin;
 	float mSpeedMax;
 private:
@@ -135,75 +133,4 @@ private:
 
 	std::vector<Vector3> mBumpsCopy;
 	std::vector<Vector3> mBumps;
-
-
 };
-
-
-//float mMS;	//Sprung Mass
-//float mMU;	//UnSprung Mass
-//float mKS;	//코일 스프링
-//float mCS;	//뎀프
-//float mKT;	//
-//x[0] = Zs(위치)
-//x[1] = Zs(속도)
-//x[2] = Zu(위치)
-//x[3] = Zu(속도)	
-//float x[4];
-//xdot[0] = Zs(속도)
-//xdot[1] = Zs(가속도)
-//xdot[2] = Zu(속도)
-//xdot[3] = Zu(가속도)
-//float xdot[4];
-
-//struct tInnoSampleData
-//{
-//	float Time;
-//
-//	float ZsPos;
-//	float ZsSpeed;
-//	float ZsAcc;
-//
-//	float ZuPos;
-//	float ZuSpeed;
-//	float ZuAcc;
-//
-//	float Zr;
-//
-//	float xPos;
-//	float xSpeed;
-//};
-
-//void InnoQuarterCarSimulator::SaveData(const wchar_t* const filePath)
-//{	
-//	std::wofstream outFile(filePath);
-//
-//	wchar_t buffer[256] = L"Time\tZs Pos\tZs Speed\tZs Acc\tZu Pos\tZu Speed\tZu Acc\tZr\txPos\txSpeed";
-//	outFile << buffer;
-//	outFile << std::endl;
-//	//TODO
-//	//for (size_t i = 0; i < mSampleDatas.size(); ++i)
-//	//{
-//	//	outFile << mSampleDatas[i].SimTime;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].ZsPos;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].ZsSpeed;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].ZsAcc;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].ZuPos;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].ZuSpeed;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].ZuAcc;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].Zr;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].xPos;
-//	//	outFile << "\t";
-//	//	outFile << mSampleDatas[i].xSpeed;
-//	//	outFile << std::endl;
-//	//}
-//	outFile.close();
-//}

@@ -125,20 +125,15 @@ void InnoSimulator::Update()
 
 		mPlayerBPos = 0.f;
 		mPrevBPos = 0.f;
-
 		mCurTime = 0.f;
 		mPrevAPos = mStartPos;
-
 		mFrameDeltaTime = 0.f;
 
-		//Start, End 앞뒤조정 범프정렬
 		sort();
 
 		mBumpsCopy = mBumps;
-
 		ZeroMemory(mX, sizeof(mX));
 		ZeroMemory(mXDot, sizeof(mXDot));
-
 		mState = eInnoSimulatorState::Playing;
 	}
 	else if (mState == eInnoSimulatorState::Playing)
@@ -157,8 +152,6 @@ void InnoSimulator::Update()
 				SetSpeed(speed);
 			}
 		}
-
-		
 
 		mCurTime += gDeltaTime;	
 		mFrameDeltaTime += gDeltaTime;
