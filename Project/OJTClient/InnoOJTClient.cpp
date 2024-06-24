@@ -133,18 +133,18 @@ static void ClientRecive(SOCKET serverSocket)
 					packetPos.Position = pakcetMessage.Position;
 					packetPos.Speed = pakcetMessage.Speed;
 
-					static float logTime = 0.f;
-
-					logTime += gDeltaTime;
-					if (logTime >= 0.1f)
-					{
-						char logBUff[256] = { 0, };
-
-						sprintf_s(logBUff, "pos: %.2f, speed: %.2f", packetPos.Position, packetPos.Speed);
-
-						gLogListUIClient->WriteLine(logBUff);
-						logTime = 0.f;
-					}
+					//static float logTime = 0.f;
+					//
+					//logTime += gDeltaTime;
+					//if (logTime >= 0.1f)
+					//{
+					//	char logBUff[256] = { 0, };
+					//
+					//	sprintf_s(logBUff, "pos: %.2f, speed: %.2f", packetPos.Position, packetPos.Speed);
+					//
+					//	gLogListUIClient->WriteLine(logBUff);
+					//	logTime = 0.f;
+					//}
 
 					//다음에 들어오는시간
 					static LARGE_INTEGER start;					

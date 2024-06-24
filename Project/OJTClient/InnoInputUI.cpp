@@ -339,13 +339,13 @@ void InnoInputUI::drawForm()
 			{
 				char buffMyCar[256] = { 0, };
 				sprintf_s(buffMyCar, "Other Car (%.2f)", x);
-				ImPlot::PlotText(buffMyCar, xHistoryMin + 2, -yPos);
+				ImPlot::PlotText(buffMyCar, (xHistoryMax - xHistoryMin) * 0.1f + xHistoryMin, -yPos);
 			}
 			else if (x > xHistoryMax)
 			{
 				char buffMyCar[256] = { 0, };
 				sprintf_s(buffMyCar, "Other Car (%.2f)", x);
-				ImPlot::PlotText(buffMyCar, xHistoryMax - 2, -yPos);
+				ImPlot::PlotText(buffMyCar, xHistoryMax - (xHistoryMax - xHistoryMin) * 0.1f, -yPos);
 			}
 		}
 

@@ -151,7 +151,7 @@ static void handleClient(SOCKET clientSocket)
 					packetLog.MessageLen = pakcetMessage.MessageLen;
 					memcpy(packetLog.Message, pakcetMessage.buffer, INNO_MAX_POS_SIZE);
 
-					innoServer->ReciveLog(clientID, packetLog);
+					innoServer->ReciveLog(clientID, packetLog);	
 				}
 					break;
 				case Pos:
