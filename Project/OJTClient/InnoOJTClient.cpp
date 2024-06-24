@@ -83,12 +83,12 @@ int InnoOJTClient::GetServerPort()
 
 static void ClientRecive(SOCKET serverSocket)
 {
-	char recvbuf[INNO_MAX_PACKET_SIZE];
-	int recvbuflen = INNO_MAX_PACKET_SIZE;
+	char recvbuf[INNO_MAX_RECEIVE_BUFFER_SIZE];
+	int recvbuflen = INNO_MAX_RECEIVE_BUFFER_SIZE;
 
 	InnoOJTClient* const innoClient = InnoOJTClient::GetInstance();
 
-	char buffer[INNO_AMX_PACKET_BUFFER_SIZE];
+	char buffer[INNO_MAX_RECEIVE_BUFFER_SIZE];
 
 	while (true)
 	{
@@ -119,7 +119,7 @@ static void ClientRecive(SOCKET serverSocket)
 					tPacketLog packetLog = {};
 					packetLog.PacketID = packetID;
 					packetLog.MessageLen = pakcetMessage.MessageLen;
-					memcpy(packetLog.Message, pakcetMessage.buffer, INNO_MAX_POS_SIZE);
+					memcpy(packetLog.Message, pakcetMessage.buffer, INNO_MAX_BUFFER_SIZE);
 
 					gLogListUIClient->WriteLine("Recive: Log");
 

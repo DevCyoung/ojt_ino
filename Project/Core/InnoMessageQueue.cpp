@@ -41,7 +41,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 			mReciveBytes.erase(mReciveBytes.begin(), mReciveBytes.begin() + PACKET_SIZE);
 
 			packetMessage.MessageLen = packet.MessageLen;
-			memcpy(packetMessage.buffer, packet.Message, INNO_MAX_POS_SIZE);
+			memcpy(packetMessage.buffer, packet.Message, INNO_MAX_BUFFER_SIZE);
 
 			mReciveMessageQueue.push(packetMessage);
 		}
@@ -103,7 +103,7 @@ void InnoMessageQueue::PushRecivePacket(const void* data, int dataSize)
 			mReciveBytes.erase(mReciveBytes.begin(), mReciveBytes.begin() + PACKET_SIZE);
 
 			packetMessage.MessageLen = packet.NameLen;
-			memcpy(packetMessage.buffer, packet.Name, INNO_MAX_POS_SIZE);
+			memcpy(packetMessage.buffer, packet.Name, INNO_MAX_BUFFER_SIZE);
 
 			mReciveMessageQueue.push(packetMessage);
 		}

@@ -122,8 +122,8 @@ InnoOJTServer::~InnoOJTServer()
 // 클라이언트 핸들링 함수
 static void handleClient(SOCKET clientSocket)
 {
-	char recvbuf[INNO_MAX_PACKET_SIZE];
-	int recvbuflen = INNO_MAX_PACKET_SIZE;
+	char recvbuf[INNO_MAX_RECEIVE_BUFFER_SIZE];
+	int recvbuflen = INNO_MAX_RECEIVE_BUFFER_SIZE;
 
 	InnoOJTServer* innoServer = InnoOJTServer::GetInstance();
 
@@ -149,7 +149,7 @@ static void handleClient(SOCKET clientSocket)
 					tPacketLog packetLog = {};
 					packetLog.PacketID = packetID;
 					packetLog.MessageLen = pakcetMessage.MessageLen;
-					memcpy(packetLog.Message, pakcetMessage.buffer, INNO_MAX_POS_SIZE);
+					memcpy(packetLog.Message, pakcetMessage.buffer, INNO_MAX_BUFFER_SIZE);
 
 					innoServer->ReciveLog(clientID, packetLog);	
 				}
@@ -169,7 +169,7 @@ static void handleClient(SOCKET clientSocket)
 					tPacketName packetName = {};
 					packetName.PacketID = packetID;
 					packetName.NameLen  = pakcetMessage.MessageLen;
-					memcpy(packetName.Name, pakcetMessage.buffer, INNO_MAX_POS_SIZE);
+					memcpy(packetName.Name, pakcetMessage.buffer, INNO_MAX_BUFFER_SIZE);
 
 					innoServer->ReciveName(clientID, packetName);
 				}

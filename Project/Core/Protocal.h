@@ -1,7 +1,6 @@
 #pragma once
-#define INNO_MAX_POS_SIZE 123
-#define INNO_MAX_PACKET_SIZE 1024
-#define INNO_AMX_PACKET_BUFFER_SIZE 1024
+#define INNO_MAX_BUFFER_SIZE 256
+#define INNO_MAX_RECEIVE_BUFFER_SIZE 1024
 #define INNO_DEFAULT_PORT 5400
 
 enum ePacketID
@@ -17,7 +16,7 @@ struct tPacketLog
 {
 	ePacketID PacketID;
 	int MessageLen;
-	char Message[INNO_MAX_POS_SIZE];
+	char Message[INNO_MAX_BUFFER_SIZE];
 };
 
 struct tPacketPos
@@ -41,7 +40,7 @@ struct tPacketName
 {
 	ePacketID PacketID;
 	int NameLen;
-	char Name[INNO_MAX_POS_SIZE];
+	char Name[INNO_MAX_BUFFER_SIZE];
 };
 
 struct tPacketMessage
@@ -50,7 +49,7 @@ struct tPacketMessage
 	int MessageLen;
 	float Position;
 	float Speed;
-	char buffer[INNO_MAX_POS_SIZE];
+	char buffer[INNO_MAX_BUFFER_SIZE];
 };
 
 // 직렬화 함수
