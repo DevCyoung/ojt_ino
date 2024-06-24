@@ -35,7 +35,7 @@ static int getPort(SOCKET socket) {
 	return ntohs(addr.sin_port);
 }
 
-static std::string getIPAddress(SOCKET socket) {
+static std::string getIPAddress(SOCKET socket) {		
 	sockaddr_in addr;
 	int addrLen = sizeof(addr);
 
